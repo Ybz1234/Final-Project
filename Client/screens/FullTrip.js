@@ -43,7 +43,7 @@ const FullTrip = ({ route, navigation }) => {
   const envDevDeleteUsersFlightTicket = async () => {
     try {
       const response = await fetch(
-        `https://final-project-sqlv.onrender.com/api/FlightTicket/deleteUserFlightTickets`,
+        `https://final-project-sqlv.onrender.com/api/devEnv/deleteUsersFlightsTickets`,
         {
           method: "DELETE",
           headers: {
