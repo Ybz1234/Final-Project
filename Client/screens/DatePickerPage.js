@@ -12,6 +12,10 @@ const PageDatePicker = ({ route, navigation }) => {
   const flyMeATravel = async () => {
     console.log(new Date());
     console.log("flyMeATravel!!");
+    console.log(cityNameArr);
+    console.log(date);
+    console.log(daysArr);
+    
     try {
       const response = await axios.post(
         "https://final-project-sqlv.onrender.com/api/FlightTicket/",
