@@ -1,8 +1,8 @@
-// import { Router } from "express";
-// import { deleteUsersFlightsTicket } from "./devEnv.controller";
+import { Router } from "express";
+import { deleteUsersFlightsTicket } from "./devEnv.controller";
 
-// const devEnvRouter = Router();
+const devEnvRouter = Router();
 
-// devEnvRouter.delete("/deleteUsersFlightsTickets", deleteUsersFlightsTicket);
+devEnvRouter.delete("/deleteUsersFlightsTickets", deleteUsersFlightsTicket);
 
-// export default devEnvRouter
+export default devEnvRouter

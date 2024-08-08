@@ -1,5 +1,5 @@
-// import { deleteUsersFlightsTicketDB } from "./devEnv.db";
+import { deleteUsersFlightsTicketDB } from "./devEnv.db";
 
-// export async function deleteUsersFlightsTicketM(id: string){
-//     return await deleteUsersFlightsTicketDB(id);
-// }
+export async function deleteUsersFlightsTicketM(id: string){
+    return await deleteUsersFlightsTicketDB(id);
+}
