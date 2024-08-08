@@ -1,0 +1,35 @@
+{
+  "name": "ts-node-starter-kit",
+  "version": "1.0.0",
+  "description": "This is a simple starter kit for a Node.js project using TypeScript. It includes a basic setup for TypeScript, Nodemon, and a tsconfig.json file. ",
+  "main": "./dist/main.js",
+  "scripts": {
+    "start": "node ./dist/main.js",
+    "build": "npx tsc",
+    "dev": "nodemon ./src/main.ts",
+    "start:insertAirports": "npx tsc && node ./dist/scripts/ap/insertAirports.js",
+    "start:insertFlights": "npx tsc && node ./dist/scripts/ap/insertFlights.js",
+    "start:insertHotels": "npx tsc && node ./dist/scripts/hotels/insertHotels.js",
+    "start:insertAttractions": "npx tsc && node ./dist/scripts/attractions/insertAttractions.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/mssql": "^9.1.5",
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cloudinary": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.7.0"
+  }
+}

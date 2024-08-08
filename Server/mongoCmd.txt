@@ -1,0 +1,318 @@
+mongodb+srv://inonv31:2paqIrfGTOqLzU7B@flyandtravelc.e4es3tk.mongodb.net/?retryWrites=true&w=majority&appName=flyAndTravelC
+
+postman
+{
+    "userId": "667e745b85bee8cf5b8c3253",
+    "sourceAirport": {
+        "address": {
+            "full_address": "Wien-Flughafen, 1300 Schwechat, Austria",
+            "location": {
+                "lat": 48.110278,
+                "long": 16.569722
+            }
+        },
+        "name": "Vienna International Airport",
+        "city": "Vienna",
+        "country": "Austria",
+        "iata": "VIE",
+        "icao": "LOWW"
+    },
+    "airports": [
+        {
+            "address": {
+                "full_address": "Bulevard Bruksel 1, 1540 Sofia, Bulgaria",
+                "location": {
+                    "lat": 42.695,
+                    "long": 23.406111
+                }
+            },
+            "name": "Sofia Airport",
+            "city": "Sofia",
+            "country": "Bulgaria",
+            "iata": "SOF",
+            "icao": "LBSF"
+        }
+    ],
+    "dates": [
+        {
+            "startDate": "2024-07-02T04:41:57.880+00:00",
+            "endDate": "2024-11-05T04:41:57.880+00:00"
+        }
+    ]
+}
+{
+    "userId": "667e745b85bee8cf5b8c3253",
+    "sourceAirport": {
+        "address": {
+            "full_address": "Lentäjäntie, 1300 Vantaa, Finland",
+            "location": {
+                "lat": 60.317222,
+                "long": 24.963333
+            }
+        },
+        "name": "Helsinki Airport",
+        "city": "Helsinki",
+        "country": "Finland",
+        "iata": "HEL",
+        "icao": "EFHK"
+    },
+    "airports": [
+        {
+            "address": {
+    "full_address": "Alameda das Comunidades Portuguesas, 1700-111 Lisboa, Portugal",
+    "location": {
+      "lat": 38.774167,
+      "long": -9.134167
+    }
+  },
+  "name": "Humberto Delgado Airport",
+  "city": "Lisbon",
+  "country": "Portugal",
+  "iata": "LIS",
+  "icao": "LPPT"
+        }
+    ],
+    "dates": [
+        {
+            "startDate": "2024-08-02T04:41:57.880+00:00",
+            "endDate": "2024-10-05T04:41:57.880+00:00"
+        }
+    ]
+}
+
+
+
+
+
+db.collection.drop("flight_ticket")
+
+show dbs
+use flyAndTravel_DB
+show collections
+
+db.flights.findOne()
+
+
+db.flights.aggregate([
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Departure_Id",
+      foreignField: "_id",
+      as: "departure_info" 
+    }
+  },
+  {
+    $unwind: "$departure_info" 
+  },
+  {
+    $project: { 
+      _id: 1,
+      Departure_Id: 1,
+      Arrival_Id: 1,
+      From_Time: 1,
+      Until_Time: 1,
+      departure_info: 1 
+    }
+  }])
+
+6680419293d21b3eaf26b843
+db.flights.findOne({Departure_Id: "6680418693d21b3eaf26b83a"}) 
+db.airports.findOne({_Id: "668041b493d21b3eaf26b85b"}) 
+
+
+//display flights with departure_info
+
+db.flights.aggregate([
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Departure_Id",
+      foreignField: "_id",
+      as: "departure_info" 
+    },
+  }])
+
+//display flights with departure_info and arrival info
+
+db.flights.aggregate([
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Departure_Id",
+      foreignField: "_id",
+      as: "departure_info" 
+    },
+  }, 
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Arrival_Id",
+      foreignField: "_id",
+      as: "Arrival_info" 
+	},
+  }
+])
+  
+//----------------------------------------with unwind
+  
+  db.flights.aggregate([
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Departure_Id",
+      foreignField: "_id",
+      as: "departure_info" 
+    },
+  }, 
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Arrival_Id",
+      foreignField: "_id",
+      as: "Arrival_info" 
+	},
+  },
+  {$unwind: "$departure_info"},
+  {$unwind: "$Arrival_info"},
+  {$match:{"departure_info.city":"Prague"}}
+])
+  
+ //display only flights with departure from certain city
+   db.flights.aggregate([
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Departure_Id",
+      foreignField: "_id",
+      as: "departure_info" 
+    },
+  }, 
+  {$unwind: "$departure_info"},
+  {$match:{"departure_info.city":"Prague",}}
+  ])
+  
+  
+   //display only flights with departure from certain city and date
+   db.flights.aggregate([
+  {
+    $lookup: {
+      from: "airports",
+      localField: "Departure_Id",
+      foreignField: "_id",
+      as: "departure_info" 
+    },
+  }, 
+  {$unwind: "$departure_info"},
+  {$match:{"departure_info.city":"Prague","From_Time": {$gte: ISODate("2024-07-02T10:43:32.678Z")}}}
+  ])
+  
+
+//final form 
+//of getting filght from departure airport with certain date 
+// to arrival airport with certain date with projection and sorted
+  
+db.flights.aggregate([
+	{
+		$lookup: {
+			from: "airports",
+			localField: "Departure_Id",
+			foreignField: "_id",
+			as: "departure_info" 
+		},
+	}, 
+	{
+		$lookup: {
+			from: "airports",
+			localField: "Arrival_Id",
+			foreignField: "_id",
+			as: "Arrival_info" 
+		},
+	},
+	{
+		$unwind: "$departure_info"
+	},
+	{
+		$unwind: "$Arrival_info"
+	},
+	{
+		$match:	{
+			"departure_info.city": "Prague",
+			"Arrival_info.city": "Barcelona",
+			"From_Time": {
+				$gte: ISODate("2024-07-02T00:00:00.000Z"),
+				$lte: ISODate("2024-07-05T00:00:00.000Z")
+			}
+		}
+	},
+	{
+		$project: {
+			"departure_info._id": 0,
+			"departure_info.address": 0,
+			"departure_info.icao": 0,
+			"Arrival_info._id": 0,
+			"Arrival_info.address": 0,
+			"Arrival_info.icao": 0
+		}
+	},
+	{
+		$sort: {"From_Time":1}
+	}
+])
+
+
+
+
+// Flight ticket easy information with a function that gets a flight id (trip segment of flights):
+function getFlightAirports(flightId) {
+  return db.flights.aggregate([
+    {
+      $match: {
+        _id: ObjectId(flightId)
+      }
+    },
+    {
+      $lookup: {
+        from: "airports",
+        localField: "Departure_Id",
+        foreignField: "_id",
+        as: "departureAirport"
+      }
+    },
+    {
+      $lookup: {
+        from: "airports",
+        localField: "Arrival_Id",
+        foreignField: "_id",
+        as: "arrivalAirport"
+      }
+    },
+    {
+      $unwind: "$departureAirport"
+    },
+    {
+      $unwind: "$arrivalAirport"
+    },
+    {
+      $project: {
+        _id: 0,
+        departure: {
+          name: "$departureAirport.name",
+          city: "$departureAirport.city",
+          country: "$departureAirport.country",
+          iata: "$departureAirport.iata"
+        },
+        arrival: {
+          name: "$arrivalAirport.name",
+          city: "$arrivalAirport.city",
+          country: "$arrivalAirport.country",
+          iata: "$arrivalAirport.iata"
+        }
+      }
+    }
+  ]).toArray();
+}
+
+
+
+
