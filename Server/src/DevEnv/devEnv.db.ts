@@ -11,7 +11,7 @@ export async function deleteUsersFlightsTicketDB(id: string) {
         const result = await mongo
             .db(DB_INFO.db)
             .collection(flight_ticket_collection)
-            .deleteOne({ _id: new ObjectId(id) });
+            .deleteMany({ _id: new ObjectId(id) });
 
         console.log(`Delete operation result:`, result);
         
