@@ -135,7 +135,7 @@ export async function signUpUser(req: Request, res: Response) {
     const result = await registerUserM(newUser);
 
     // Call the Python script after successful registration
-    const pythonProcess = spawn('python', ['C:/Users/jonat/FinalProject/Python/travelAndFlyMail/main.py', email, firstName]);
+    const pythonProcess = spawn('python', ['C:/Users/jonat/Final-Project/Python/main.py', email, firstName]);
     pythonProcess.stdout.on('data', (data) => {
       console.log(`Python script output: ${data}`);
     });
