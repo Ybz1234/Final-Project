@@ -12,7 +12,7 @@ const Drawer = createDrawerNavigator();
 function MyDrawer() {
   return (
     <PaperProvider>
-      <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Navigator initialRouteName="SignUp">
         <Drawer.Screen name="Home" component={Home} />
         <Drawer.Screen name="SignUp" component={SignUp} />
         <Drawer.Screen name="FullTrip" component={FullTrip} />
