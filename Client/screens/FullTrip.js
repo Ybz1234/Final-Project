@@ -11,7 +11,7 @@ const FullTrip = ({ route, navigation }) => {
   const fetchFlightDetails = async () => {
     try {
       const response = await fetch(
-        `http://10.0.0.4:5555/api/FlightTicket/userUpToDateFlightTickets`,
+        `https://final-project-sqlv.onrender.com/api/FlightTicket/userUpToDateFlightTickets`,
         {
           method: "POST",
           headers: {

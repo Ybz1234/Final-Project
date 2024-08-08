@@ -66,7 +66,7 @@ const Home = ({ navigation }) => {
       return;
     }
 
-    navigation.navigate("DatePicker", { cityNameArr });
+    navigation.navigate("DatePickerPage", { cityNameArr });
   };
   const removeCity = (index) => {
     setCityNameArr((prevArr) => prevArr.filter((_, i) => i !== index));

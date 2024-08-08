@@ -14,7 +14,7 @@ const PageDatePicker = ({ route, navigation }) => {
     console.log("flyMeATravel!!");
     try {
       const response = await axios.post(
-        "http://10.0.0.4:5555/api/FlightTicket/",
+        "https://final-project-sqlv.onrender.com/api/FlightTicket/",
         {
           userId: "667e745b85bee8cf5b8c3253",
           airportNameArr: cityNameArr,

@@ -21,7 +21,7 @@ export default function SignUp({ navigation }) {
 
   const handleSignIn = async () => {
     try {
-      const response = await fetch("http://10.0.0.4:5555/api/users/signIn", {
+      const response = await fetch("https://final-project-sqlv.onrender.com/api/users/signIn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function SignUp({ navigation }) {
 
     try {
       const response = await fetch(
-        "http://192.168.1.251:5555/api/users/signUp",
+        "https://final-project-sqlv.onrender.com/api/users/signUp",
         {
           method: "POST",
           headers: {
