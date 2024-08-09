@@ -3,6 +3,14 @@ import { Request, Response } from "express";
 import { spawn } from "child_process";
 import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM } from "./user.model";
 import { ObjectId } from "mongodb";
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+const DB_INFO = {
+  connectionString: process.env.CONNECTION_STRING,
+  db: process.env.DB_NAME,
+};
+const collection = "users";
 
 export async function testy(req: Request, res: Response) {
   res.status(200).json({ message: "hello" });
@@ -134,18 +142,87 @@ export async function signUpUser(req: Request, res: Response) {
 
     const result = await registerUserM(newUser);
 
-    // Call the Python script after successful registration
-    const pythonProcess = spawn('python', ['C:/Users/jonat/Final-Project/Python/main.py', email, firstName]);
-    pythonProcess.stdout.on('data', (data) => {
-      console.log(`Python script output: ${data}`);
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-      console.error(`Python script error: ${data}`);
-    });
+    await Promise.all([
+      sendEmail(email, firstName),
+      exportToCsv('output_file.csv'),
+      exportToExcel('output_file.xlsx')
+    ]);
 
     res.status(201).json(result);
   } catch (error) {
-    res.status(500).json(error);
+    console.error('Error in sign up:', error);
+    res.status(500).json({ message: 'Internal server error', error });
   }
+}
+
+function runPythonScript(args: string[], callback: (data: Buffer) => void, errorCallback: (data: Buffer) => void): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const pythonProcess = spawn('python', args);
+
+    pythonProcess.stdout.on('data', (data) => {
+      callback(data);
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      errorCallback(data);
+    });
+
+    pythonProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error(`Python script exited with code ${code}`);
+        reject(new Error(`Python script exited with code ${code}`));
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+function sendEmail(email: string, firstName: string): Promise<void> {
+  const args: string[] = [
+    'C:/Users/jonat/Final-Project/Python/main.py',
+    'send_email',
+    email,
+    firstName
+  ];
+
+  return runPythonScript(
+    args,
+    (data) => console.log(`Email script output: ${data}`),
+    (data) => console.error(`Email script error: ${data}`)
+  );
+}
+
+function exportToCsv(outputFile: string): Promise<void> {
+  const args: string[] = [
+    'C:/Users/jonat/Final-Project/Python/main.py',
+    'export_csv',
+    DB_INFO.connectionString ?? "",
+    DB_INFO.db ?? "",
+    collection,
+    outputFile
+  ];
+
+  return runPythonScript(
+    args,
+    (data) => console.log(`CSV export script output: ${data}`),
+    (data) => console.error(`CSV export script error: ${data}`)
+  );
+}
+
+function exportToExcel(outputFile: string): Promise<void> {
+  const args: string[] = [
+    'C:/Users/jonat/Final-Project/Python/main.py',
+    'export_excel',
+    DB_INFO.connectionString ?? "",
+    DB_INFO.db ?? "",
+    collection,
+    outputFile
+  ];
+
+  return runPythonScript(
+    args,
+    (data) => console.log(`Excel export script output: ${data}`),
+    (data) => console.error(`Excel export script error: ${data}`)
+  );
 }

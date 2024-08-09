@@ -1,80 +1,52 @@
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email_validator import validate_email, EmailNotValidError
 import sys
-
-SMTP_SERVER = 'smtp.gmail.com'
-SMTP_PORT = 587
-SMTP_USERNAME = 'travelAndFlyEurope@gmail.com'
-SMTP_PASSWORD = 'oyaa hkmg fosg cgvg'
-
-
-def validate_recipient_email(to_email):
-    try:
-        valid = validate_email(to_email)
-        return valid.email
-    except EmailNotValidError as e:
-        print(f"Invalid email address: {str(e)}")
-        return None
-
-
-def create_email_message(to_email, user_name):
-    """Create the email message."""
-    subject = "Welcome to Our Service"
-    body = f"""
-    Hi {user_name},
-
-    Welcome to our service! We are thrilled to have you on board. 
-
-    Here are some steps to get you started:
-    - Step 1: Choose your preferred destinations.
-    - Step 2: Select your preferred dates.
-    - Step 3: Fly with confidence.
-
-    If you have any questions or need assistance, feel free to reach out to our support team.
-
-    Best regards,
-    The Team
-    """
-
-    msg = MIMEMultipart()
-    msg['From'] = SMTP_USERNAME
-    msg['To'] = to_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-    return msg
-
-
-def send_email(msg):
-    try:
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
-        server.login(SMTP_USERNAME, SMTP_PASSWORD)
-        server.sendmail(msg['From'], msg['To'], msg.as_string())
-        server.quit()
-        print(f'Welcome email sent successfully to {msg["To"]}')
-    except Exception as e:
-        print(f'Failed to send email: {str(e)}')
-
-
-def send_welcome_email(to_email, user_name):
-    to_email = validate_recipient_email(to_email)
-    if not to_email:
-        return
-
-    msg = create_email_message(to_email, user_name)
-    send_email(msg)
-
+from pymongo import MongoClient
+from email_service import send_welcome_email
+from user_data_export import export_to_csv, export_to_excel
+from database import fetch_user_data, get_mongo_client
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python script.py <to_email> <user_name>")
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <operation> [arguments]")
         return
-    to_email = sys.argv[1]
-    user_name = sys.argv[2]
-    send_welcome_email(to_email, user_name)
 
+    operation = sys.argv[1]
+
+    if operation == 'send_email':
+        if len(sys.argv) < 4:
+            print("Usage: python main.py send_email <to_email> <user_name>")
+            return
+        to_email = sys.argv[2]
+        user_name = sys.argv[3]
+        send_welcome_email(to_email, user_name)
+
+    elif operation == 'export_csv':
+        if len(sys.argv) < 6:
+            print("Usage: python main.py export_csv <connection_string> <db_name> <collection_name> <output_file>")
+            return
+        connection_string = sys.argv[2]
+        db_name = sys.argv[3]
+        collection_name = sys.argv[4]
+        output_file = sys.argv[5]
+
+        client = get_mongo_client(connection_string)
+        user_data = fetch_user_data(client, db_name, collection_name)
+        export_to_csv(user_data, output_file)
+
+    elif operation == 'export_excel':
+        if len(sys.argv) < 6:
+            print("Usage: python main.py export_excel <connection_string> <db_name> <collection_name> <output_file>")
+            return
+        connection_string = sys.argv[2]
+        db_name = sys.argv[3]
+        collection_name = sys.argv[4]
+        output_file = sys.argv[5]
+
+        client = get_mongo_client(connection_string)
+        user_data = fetch_user_data(client, db_name, collection_name)
+        export_to_excel(user_data, output_file)
+
+    else:
+        print("Invalid operation. Supported operations: send_email, export_csv, export_excel")
 
 if __name__ == '__main__':
     main()
