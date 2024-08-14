@@ -150,11 +150,11 @@ export async function signUpUser(req: Request, res: Response) {
 
     const result = await registerUserM(newUser);
 
-    await Promise.all([
-      sendEmail(email, firstName),
-      exportToCsv('output_file.csv'),
-      exportToExcel('output_file.xlsx')
-    ]);
+    // await Promise.all([
+    //   sendEmail(email, firstName),
+    //   exportToCsv('output_file.csv'),
+    //   exportToExcel('output_file.xlsx')
+    // ]);
 
     const token = generateToken(result.insertedId.toString());
     console.log("token", token);
@@ -166,72 +166,72 @@ export async function signUpUser(req: Request, res: Response) {
   }
 }
 
-function runPythonScript(args: string[], callback: (data: Buffer) => void, errorCallback: (data: Buffer) => void): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const pythonScriptPath = path.resolve(__dirname, '../Python/main.py');
-    const pythonProcess = spawn('python', [pythonScriptPath, ...args]);
+// function runPythonScript(args: string[], callback: (data: Buffer) => void, errorCallback: (data: Buffer) => void): Promise<void> {
+//   return new Promise((resolve, reject) => {
+//     const pythonScriptPath = path.resolve(__dirname, '../Python/main.py');
+//     const pythonProcess = spawn('python', [pythonScriptPath, ...args]);
 
-    pythonProcess.stdout.on('data', (data) => {
-      callback(data);
-    });
+//     pythonProcess.stdout.on('data', (data) => {
+//       callback(data);
+//     });
 
-    pythonProcess.stderr.on('data', (data) => {
-      errorCallback(data);
-    });
+//     pythonProcess.stderr.on('data', (data) => {
+//       errorCallback(data);
+//     });
 
-    pythonProcess.on('close', (code) => {
-      if (code !== 0) {
-        console.error(`Python script exited with code ${code}`);
-        reject(new Error(`Python script exited with code ${code}`));
-      } else {
-        resolve();
-      }
-    });
-  });
-}
+//     pythonProcess.on('close', (code) => {
+//       if (code !== 0) {
+//         console.error(`Python script exited with code ${code}`);
+//         reject(new Error(`Python script exited with code ${code}`));
+//       } else {
+//         resolve();
+//       }
+//     });
+//   });
+// }
 
-function sendEmail(email: string, firstName: string): Promise<void> {
-  const args: string[] = [
-    'send_email',
-    email,
-    firstName
-  ];
+// function sendEmail(email: string, firstName: string): Promise<void> {
+//   const args: string[] = [
+//     'send_email',
+//     email,
+//     firstName
+//   ];
 
-  return runPythonScript(
-    args,
-    (data) => console.log(`Email script output: ${data}`),
-    (data) => console.error(`Email script error: ${data}`)
-  );
-}
+//   return runPythonScript(
+//     args,
+//     (data) => console.log(`Email script output: ${data}`),
+//     (data) => console.error(`Email script error: ${data}`)
+//   );
+// }
 
-function exportToCsv(outputFile: string): Promise<void> {
-  const args: string[] = [
-    'export_csv',
-    DB_INFO.connectionString ?? "",
-    DB_INFO.db ?? "",
-    collection,
-    outputFile
-  ];
+// function exportToCsv(outputFile: string): Promise<void> {
+//   const args: string[] = [
+//     'export_csv',
+//     DB_INFO.connectionString ?? "",
+//     DB_INFO.db ?? "",
+//     collection,
+//     outputFile
+//   ];
 
-  return runPythonScript(
-    args,
-    (data) => console.log(`CSV export script output: ${data}`),
-    (data) => console.error(`CSV export script error: ${data}`)
-  );
-}
+//   return runPythonScript(
+//     args,
+//     (data) => console.log(`CSV export script output: ${data}`),
+//     (data) => console.error(`CSV export script error: ${data}`)
+//   );
+// }
 
-function exportToExcel(outputFile: string): Promise<void> {
-  const args: string[] = [
-    'export_excel',
-    DB_INFO.connectionString ?? "",
-    DB_INFO.db ?? "",
-    collection,
-    outputFile
-  ];
+// function exportToExcel(outputFile: string): Promise<void> {
+//   const args: string[] = [
+//     'export_excel',
+//     DB_INFO.connectionString ?? "",
+//     DB_INFO.db ?? "",
+//     collection,
+//     outputFile
+//   ];
 
-  return runPythonScript(
-    args,
-    (data) => console.log(`Excel export script output: ${data}`),
-    (data) => console.error(`Excel export script error: ${data}`)
-  );
-}
+//   return runPythonScript(
+//     args,
+//     (data) => console.log(`Excel export script output: ${data}`),
+//     (data) => console.error(`Excel export script error: ${data}`)
+//   );
+// }
