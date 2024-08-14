@@ -9,7 +9,7 @@ import attractionRecomendationRoutes from "./attractionRecomendation/attractionR
 import devEnvRouter from "./DevEnv/devEnv.routes";
 import cors from "cors";
 
-const PORT = process.env.PORT || 5555;
+const PORT = process.env.PORT || 1234;
 
 const app = express();
 app.use(express.json());
