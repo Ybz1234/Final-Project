@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View, ScrollView, Alert } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Alert, Button as RNButton } from "react-native";
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { Button } from "react-native-paper";
 import { cities2 } from "../LatLng/LatLng2";
 import PageFrame from "../components/PageFrame";
 import Tag from "../components/Tag";
@@ -17,13 +16,10 @@ const Home = ({ navigation }) => {
     const AutoCoords = autoLocation(region.latitude, region.longitude, cities2);
     setPosition({ latitude: AutoCoords.lat, longitude: AutoCoords.lng });
   };
+
   const addMarker = async (e) => {
     const newMarker = e.nativeEvent.coordinate;
-    const AutoCoords = autoLocation(
-      newMarker.latitude,
-      newMarker.longitude,
-      cities2
-    );
+    const AutoCoords = autoLocation(newMarker.latitude, newMarker.longitude, cities2);
     setMarkers([
       ...markers,
       { latitude: AutoCoords.lat, longitude: AutoCoords.lng },
@@ -32,19 +28,21 @@ const Home = ({ navigation }) => {
     setCityName(name);
     setCityNameArr((prevArr) => [...prevArr, name]);
   };
+
   const CleanMarks = () => {
     setMarkers([]);
     setCityNameArr([]);
     setCityName("");
   };
+
   const calcDis = (pointA, pointB) => {
     return Math.sqrt(
       Math.pow(pointB.lat - pointA.lat, 2) +
         Math.pow(pointB.lng - pointA.lng, 2)
     );
   };
+
   const autoLocation = (lat, lng, markers) => {
-    // console.log(markers);
     const customMarker = { lat, lng };
     if (markers.length < 1) {
       return customMarker;
@@ -60,26 +58,32 @@ const Home = ({ navigation }) => {
     }
     return mainMarker;
   };
+
   const handleNextPage = () => {
     if (checkNameArr()) {
       Alert.alert("Cannot add same city twice in a row");
       return;
     }
-
     navigation.navigate("DatePickerPage", { cityNameArr });
   };
+
   const removeCity = (index) => {
     setCityNameArr((prevArr) => prevArr.filter((_, i) => i !== index));
-    //? prevArr.filter((_, i) => i !== index): This part filters the prevArr array. The filter method creates a new array that includes only the elements for which the provided function returns true.
-    //? (_, i): These are the parameters for the function passed to filter. The underscore _ represents the current element (which we don't need in this case), and i represents the
   };
+
   const checkNameArr = () => {
     for (let index = 0; index < cityNameArr.length - 1; index++) {
       if (cityNameArr[index] === cityNameArr[index + 1]) {
         return true;
       }
-      return false;
     }
+    return false;
+  };
+
+  const handleSignOut = () => {
+    // Clear user data or perform sign-out actions
+    Alert.alert("Signed out");
+    navigation.navigate("SignUp");
   };
 
   return (
@@ -99,83 +103,56 @@ const Home = ({ navigation }) => {
           showsUserLocation={true}
           showsMyLocationButton={true}
           showsCompass={true}
-          showsBuildings={true}
-          style={styles.map}
-          onRegionChange={onRegionChange}
-          initialRegion={{
-            latitude: 48.2082,
-            longitude: 16.3738,
-            latitudeDelta: 12.1922,
-            longitudeDelta: 0.0421,
-          }}
+          showsScale={true}
+          onRegionChangeComplete={onRegionChange}
           onPress={addMarker}
+          style={styles.map}
         >
           {markers.map((marker, index) => (
             <Marker key={index} coordinate={marker} />
           ))}
         </MapView>
         <View style={styles.buttonContainer}>
-          <Button onPress={CleanMarks}>Reset</Button>
-          <Button
-            style={styles.button}
-            onPress={() => {
-              handleNextPage();
-            }}
-          >
-            Next
-          </Button>
+          <RNButton title="Clean" onPress={CleanMarks} />
+          <RNButton title="Continue" onPress={handleNextPage} />
+          <RNButton title="Sign Out" onPress={handleSignOut} />
         </View>
       </ScrollView>
     </PageFrame>
   );
 };
 
-export default Home;
-
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    alignItems: "center",
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    backgroundColor: "#E3F2FD",
-    borderRadius: 10,
+    flexGrow: 1,
   },
-  listContainer: {
-    width: "90%",
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
     marginVertical: 20,
   },
   map: {
     width: "100%",
-    height: 300,
-    borderRadius: 10,
-    marginVertical: 20,
-  },
-  list: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  item: {
-    width: "48%",
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+    height: 400,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "90%",
-    marginVertical: 15,
+    marginVertical: 20,
+    paddingHorizontal: 10,
   },
-  button: {
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "#42A5F5",
-    color: "#FFF",
+  listContainer: {
+    padding: 20,
+  },
+  list: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  item: {
+    marginRight: 10,
+    marginBottom: 10,
   },
 });
+
+export default Home;

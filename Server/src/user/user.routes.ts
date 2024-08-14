@@ -1,25 +1,25 @@
 import { Router } from "express";
-import {
-  getAllUsers,
-  getUserById,
-  addUser,
-  updateUser,
-  deleteUser,
-  testy,
-  signInUser,
-  signUpUser,
+import { 
+  testy, 
+  getAllUsers, 
+  getUserById, 
+  updateUser, 
+  deleteUser, 
+  signInUser, 
+  signUpUser, 
+  signOutUser 
 } from "./user.controller";
+import { authenticateToken } from "./auth.utils";
 
-const UserRouter = Router();
+const router = Router();
 
-UserRouter
-  .get("/getAllUsers", getAllUsers)
-  .get("/getById", getUserById)
-  // .post("/createUser", addUser)
-  .put("/updateUser/:id", updateUser)
-  .delete("/deleteUser", deleteUser)
-  .get("/test", testy)
-  .post("/signIn", signInUser)
-  .post("/signUp", signUpUser);
+router.get('/testy', testy);
+router.get('/users', getAllUsers);
+router.get('/user/:id', getUserById);
+router.put('/user/:id', updateUser);
+router.delete('/user', deleteUser);
+router.post('/signin', signInUser);
+router.post('/signup', signUpUser);
+router.post('/signout', authenticateToken, signOutUser); // This requires authentication, but it's optional
 
-export default UserRouter;
+export default router;
