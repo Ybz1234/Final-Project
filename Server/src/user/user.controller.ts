@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { spawn } from "child_process";
+import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM } from "./user.model";
 import { generateToken, authenticateToken } from "./auth.utils";
@@ -167,7 +168,8 @@ export async function signUpUser(req: Request, res: Response) {
 
 function runPythonScript(args: string[], callback: (data: Buffer) => void, errorCallback: (data: Buffer) => void): Promise<void> {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python', args);
+    const pythonScriptPath = path.resolve(__dirname, '../Python/main.py');
+    const pythonProcess = spawn('python', [pythonScriptPath, ...args]);
 
     pythonProcess.stdout.on('data', (data) => {
       callback(data);
@@ -190,7 +192,6 @@ function runPythonScript(args: string[], callback: (data: Buffer) => void, error
 
 function sendEmail(email: string, firstName: string): Promise<void> {
   const args: string[] = [
-    'C:/Users/jonat/Final-Project/Python/main.py',
     'send_email',
     email,
     firstName
@@ -205,7 +206,6 @@ function sendEmail(email: string, firstName: string): Promise<void> {
 
 function exportToCsv(outputFile: string): Promise<void> {
   const args: string[] = [
-    'C:/Users/jonat/Final-Project/Python/main.py',
     'export_csv',
     DB_INFO.connectionString ?? "",
     DB_INFO.db ?? "",
@@ -222,7 +222,6 @@ function exportToCsv(outputFile: string): Promise<void> {
 
 function exportToExcel(outputFile: string): Promise<void> {
   const args: string[] = [
-    'C:/Users/jonat/Final-Project/Python/main.py',
     'export_excel',
     DB_INFO.connectionString ?? "",
     DB_INFO.db ?? "",
