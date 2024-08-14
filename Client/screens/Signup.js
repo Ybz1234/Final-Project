@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Card } from "react-native-paper";
 import PageFrame from "../components/PageFrame";
+import CryptoJS from "crypto-js";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
@@ -21,13 +22,14 @@ export default function SignUp({ navigation }) {
 
   const handleSignIn = async () => {
     try {
+      const hashedPassword = CryptoJS.SHA256(password).toString();
       const response = await fetch("https://final-project-sqlv.onrender.com/api/users/signIn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ id: 0, firstName, lastName, email, password }),
+        body: JSON.stringify({ email, password: hashedPassword }),
       });
 
       const data = await response.json();
@@ -46,27 +48,22 @@ export default function SignUp({ navigation }) {
   };
 
   const handleSignUp = async () => {
-    console.log("handleSignUp");
-
+    console.log("Start Front-End: ", email, password, firstName, lastName);
     try {
-      const response = await fetch(
-        "https://final-project-sqlv.onrender.com/api/users/signUp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password, firstName, lastName }),
-        }
-      );
+      const hashedPassword = CryptoJS.SHA256(password).toString();
+      const response = await fetch("https://final-project-sqlv.onrender.com/api/users/signUp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password: hashedPassword, firstName, lastName }),
+      });
 
       const data = await response.json();
       console.log(data);
-
       if (response.ok) {
         setUser(data);
         Alert.alert("Sign Up Successful", `Hello, ${firstName} ${lastName}!`);
-
         setTimeout(() => {
           navigation.navigate("Home");
         }, 2500);
@@ -74,6 +71,7 @@ export default function SignUp({ navigation }) {
         Alert.alert("Sign Up Failed", "Unable to sign up, please try again.");
       }
     } catch (error) {
+      console.log(error.message);
       Alert.alert("Sign Up Failed", error.message);
     }
   };
@@ -128,7 +126,7 @@ export default function SignUp({ navigation }) {
         />
         <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
           <Text style={styles.switchText}>
-            Go to {isSignUp ? "Login" : "Sign Up"}
+            {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
           </Text>
         </TouchableOpacity>
       </Card>

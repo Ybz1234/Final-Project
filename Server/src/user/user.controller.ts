@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-
-import { spawn } from "child_process";
-import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM } from "./user.model";
 import { ObjectId } from "mongodb";
+import { spawn } from "child_process";
 import * as dotenv from 'dotenv';
+import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM } from "./user.model";
+import { generateToken, authenticateToken } from "./auth.utils";
 dotenv.config();
 
 const DB_INFO = {
@@ -15,6 +15,7 @@ const collection = "users";
 export async function testy(req: Request, res: Response) {
   res.status(200).json({ message: "hello" });
 }
+
 export async function getAllUsers(req: Request, res: Response) {
   try {
     let users = await getAll();
@@ -103,6 +104,11 @@ export async function deleteUser(req: Request, res: Response) {
   }
 }
 
+export async function signOutUser(req: Request, res: Response) {
+  // This function is mainly for the client-side to clear their stored token
+  res.status(200).json({ message: "You have been signed out successfully." });
+}
+
 export async function signInUser(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
@@ -117,7 +123,8 @@ export async function signInUser(req: Request, res: Response) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    res.status(200).json(user);
+    const token = generateToken(user._id.toString());
+    res.status(200).json({ user, token });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -148,7 +155,10 @@ export async function signUpUser(req: Request, res: Response) {
       exportToExcel('output_file.xlsx')
     ]);
 
-    res.status(201).json(result);
+    const token = generateToken(result.insertedId.toString());
+    console.log("token", token);
+    
+    res.status(201).json({ result, token });
   } catch (error) {
     console.error('Error in sign up:', error);
     res.status(500).json({ message: 'Internal server error', error });
