@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
+import axios from 'axios';
 import { spawn } from "child_process";
 import * as path from 'path';
 import * as dotenv from 'dotenv';
@@ -12,6 +13,8 @@ const DB_INFO = {
   db: process.env.DB_NAME,
 };
 const collection = "users";
+const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-sa7p.onrender.com";
+
 
 export async function testy(req: Request, res: Response) {
   res.status(200).json({ message: "hello" });
@@ -148,12 +151,13 @@ export async function signUpUser(req: Request, res: Response) {
       role: "user",
     };
 
+    // Assume registerUserM is defined elsewhere
     const result = await registerUserM(newUser);
 
     await Promise.all([
       sendEmail(email, firstName),
       exportToCsv('output_file.csv'),
-      exportToExcel('output_file.xlsx')
+      // exportToExcel('output_file.xlsx')
     ]);
 
     const token = generateToken(result.insertedId.toString());
@@ -166,62 +170,30 @@ export async function signUpUser(req: Request, res: Response) {
   }
 }
 
-function runPythonScript(args: string[], callback: (data: Buffer) => void, errorCallback: (data: Buffer) => void): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const pythonScriptPath = path.resolve(__dirname, '../../Python/main.py');
-    console.log('pythonScriptPath: ', pythonScriptPath);
-    console.log("Dirname: ", __dirname);
-    
-    
-    const pythonProcess = spawn('python', [pythonScriptPath, ...args]);
-
-    pythonProcess.stdout.on('data', (data) => {
-      callback(data);
+async function sendEmail(email: string, firstName: string): Promise<void> {
+  try {
+    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/send_email`, {
+      to_email: email,
+      user_name: firstName
     });
-
-    pythonProcess.stderr.on('data', (data) => {
-      errorCallback(data);
-    });
-
-    pythonProcess.on('close', (code) => {
-      if (code !== 0) {
-        console.error(`Python script exited with code ${code}`);
-        reject(new Error(`Python script exited with code ${code}`));
-      } else {
-        resolve();
-      }
-    });
-  });
+    console.log(`Email script output: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error(`Email script error: ${error}`);
+  }
 }
 
-function sendEmail(email: string, firstName: string): Promise<void> {
-  const args: string[] = [
-    'send_email',
-    email,
-    firstName
-  ];
-
-  return runPythonScript(
-    args,
-    (data) => console.log(`Email script output: ${data}`),
-    (data) => console.error(`Email script error: ${data}`)
-  );
-}
-
-function exportToCsv(outputFile: string): Promise<void> {
-  const args: string[] = [
-    'export_csv',
-    DB_INFO.connectionString ?? "",
-    DB_INFO.db ?? "",
-    collection,
-    outputFile
-  ];
-
-  return runPythonScript(
-    args,
-    (data) => console.log(`CSV export script output: ${data}`),
-    (data) => console.error(`CSV export script error: ${data}`)
-  );
+async function exportToCsv(outputFile: string): Promise<void> {
+  try {
+    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_csv`, {
+      connection_string: process.env.CONNECTION_STRING,
+      db_name: process.env.DB_NAME,
+      collection_name: 'users',
+      output_file: outputFile
+    });
+    console.log(`CSV export script output: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error(`CSV export script error: ${error}`);
+  }
 }
 
 // async function exportToExcel(outputFile: string): Promise<void> {
