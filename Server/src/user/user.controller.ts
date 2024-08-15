@@ -195,6 +195,7 @@ async function exportToCsv(outputFile: string): Promise<void> {
   }
 }
 
+// Will add a Python installation for that
 // async function exportToExcel(outputFile: string): Promise<void> {
 //   try {
 //     const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_excel`, {
