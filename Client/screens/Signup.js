@@ -60,7 +60,8 @@ export default function SignUp({ navigation }) {
       });
 
       const data = await response.json();
-      console.log(data);
+      console.log("Data: ", data);
+      console.log("Respone: ", response);
       if (response.ok) {
         setUser(data);
         Alert.alert("Sign Up Successful", `Hello, ${firstName} ${lastName}!`);
