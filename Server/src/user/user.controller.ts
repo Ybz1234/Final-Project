@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import axios from 'axios';
-import { spawn } from "child_process";
-import * as path from 'path';
 import * as dotenv from 'dotenv';
 import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM } from "./user.model";
 import { generateToken, authenticateToken } from "./auth.utils";
