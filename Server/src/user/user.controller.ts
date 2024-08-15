@@ -224,18 +224,16 @@ function exportToCsv(outputFile: string): Promise<void> {
   );
 }
 
-function exportToExcel(outputFile: string): Promise<void> {
-  const args: string[] = [
-    'export_excel',
-    DB_INFO.connectionString ?? "",
-    DB_INFO.db ?? "",
-    collection,
-    outputFile
-  ];
-
-  return runPythonScript(
-    args,
-    (data) => console.log(`Excel export script output: ${data}`),
-    (data) => console.error(`Excel export script error: ${data}`)
-  );
-}
+// async function exportToExcel(outputFile: string): Promise<void> {
+//   try {
+//     const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_excel`, {
+//       connection_string: process.env.CONNECTION_STRING,
+//       db_name: process.env.DB_NAME,
+//       collection_name: 'users',
+//       output_file: outputFile
+//     });
+//     console.log(`Excel export script output: ${JSON.stringify(response.data)}`);
+//   } catch (error) {
+//     console.error(`Excel export script error: ${error}`);
+//   }
+// }
