@@ -1,3 +1,0 @@
-email-validator
-pymongo
-pandas
