@@ -91,8 +91,6 @@ use flyAndTravel_DB
 show collections
 
 db.flights.findOne()
-
-
 db.flights.aggregate([
   {
     $lookup: {
@@ -119,8 +117,6 @@ db.flights.aggregate([
 6680419293d21b3eaf26b843
 db.flights.findOne({Departure_Id: "6680418693d21b3eaf26b83a"}) 
 db.airports.findOne({_Id: "668041b493d21b3eaf26b85b"}) 
-
-
 //display flights with departure_info
 
 db.flights.aggregate([
