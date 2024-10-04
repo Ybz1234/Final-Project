@@ -5,6 +5,7 @@ import Home from "../screens/Home";
 import SignUp from "../screens/Signup";
 import FullTrip from "../screens/FullTrip";
 import PageDatePicker from "../screens/DatePickerPage";
+import OnboardingScreen from "../screens/OnboardingScreen";
 // import FullDestiantion from "../screens/FullDestiantion";
 
 const Drawer = createDrawerNavigator();
@@ -17,6 +18,7 @@ function MyDrawer() {
         <Drawer.Screen name="SignUp" component={SignUp} />
         <Drawer.Screen name="FullTrip" component={FullTrip} />
         <Drawer.Screen name="DatePickerPage" component={PageDatePicker} />
+        <Drawer.Screen name="OnboardingScreen" component={OnboardingScreen} />
         {/* <Drawer.Screen name="FullDestiantion" component={FullDestiantion} /> */}
       </Drawer.Navigator>
     </PaperProvider>

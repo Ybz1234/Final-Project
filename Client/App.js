@@ -7,6 +7,8 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
 import Toast from "react-native-toast-message";
+import * as Font from "expo-font";
+
 import { createNavigationContainerRef } from "@react-navigation/native";
 const navigationRef = createNavigationContainerRef();
 
@@ -68,6 +70,8 @@ function App() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
   useEffect(() => {
     // Register for push notifications
     registerForPushNotificationsAsync()
@@ -107,7 +111,31 @@ function App() {
         Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      "Roboto-Black": require("./assets/Roboto/Roboto-Black.ttf"),
+      "Roboto-BlackItalic": require("./assets/Roboto/Roboto-BlackItalic.ttf"),
+      "Roboto-Bold": require("./assets/Roboto/Roboto-Bold.ttf"),
+      "Roboto-BoldItalic": require("./assets/Roboto/Roboto-BoldItalic.ttf"),
+      "Roboto-Italic": require("./assets/Roboto/Roboto-Italic.ttf"),
+      "Roboto-Light": require("./assets/Roboto/Roboto-Light.ttf"),
+      "Roboto-LightItalic": require("./assets/Roboto/Roboto-LightItalic.ttf"),
+      "Roboto-Medium": require("./assets/Roboto/Roboto-Medium.ttf"),
+      "Roboto-MediumItalic": require("./assets/Roboto/Roboto-MediumItalic.ttf"),
+      "Roboto-Regular": require("./assets/Roboto/Roboto-Regular.ttf"),
+      "Roboto-Thin": require("./assets/Roboto/Roboto-Thin.ttf"),
+      "Roboto-ThinItalic": require("./assets/Roboto/Roboto-ThinItalic.ttf"),
+    });
+    setFontsLoaded(true);
+  };
 
+  useEffect(() => {
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null; // Or use a loading component
+  }
   return (
     <NavigationContainer ref={navigationRef}>
       <MyDrawer />

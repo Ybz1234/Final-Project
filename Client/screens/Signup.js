@@ -40,6 +40,25 @@ export default function SignUp({ navigation }) {
       body: JSON.stringify(message),
     });
   };
+  const sendSignUpPushNotification = async () => {
+    const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: "Sign Up Successfully!",
+      body: "Read the introduction to get started on your travel!",
+      // data: { navigate: "AboutScreen" },
+    };
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-Encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  };
   const handleSignIn = async () => {
     try {
       const hashedPassword = CryptoJS.SHA256(password).toString();
@@ -95,9 +114,9 @@ export default function SignUp({ navigation }) {
       console.log("Respone: ", response);
       if (response.ok) {
         setUser(data);
-        Alert.alert("Sign Up Successful", `Hello, ${firstName} ${lastName}!`);
         setTimeout(() => {
-          navigation.navigate("Home");
+          sendSignUpPushNotification();
+          navigation.navigate("OnboardingScreen");
         }, 2500);
       } else {
         Alert.alert("Sign Up Failed", "Unable to sign up, please try again.");
@@ -232,7 +251,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
     letterSpacing: 1,
-    fontFamily: "HelveticaNeue-Bold",
+    fontFamily: "Roboto-BoldItalic",
   },
   card: {
     padding: 16,
@@ -250,6 +269,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    fontFamily: "Roboto-BoldItalic",
     color: "#29A3A3",
     textAlign: "center",
     marginBottom: 8,
