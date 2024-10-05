@@ -3,19 +3,29 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
-
+import { Image } from "react-native-animatable";
 const PageDatePicker = ({ route, navigation }) => {
-  const { cityNameArr } = route.params;
+  const { cityNameArr } = route?.params;
+
   const cityArr = cityNameArr.slice(1, cityNameArr.length);
+
   const [date, setDate] = useState(null);
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
   const flyMeATravel = async () => {
+    if (cityNameArr === undefined) {
+      return (
+        <>
+          <Image source={require("../assets/plane.gif")}></Image>
+        </>
+      );
+    }
+
     console.log(new Date());
     console.log("flyMeATravel!!");
     console.log(cityNameArr);
     console.log(date);
     console.log(daysArr);
-    
+
     try {
       const response = await axios.post(
         "https://final-project-sqlv.onrender.com/api/FlightTicket/",

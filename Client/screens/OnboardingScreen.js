@@ -29,7 +29,7 @@ const OnboardingScreen = () => {
         "Select your starting date and set the duration for each destination.",
     },
     {
-      title: "Review Recommendations and Customize!",
+      title: "View Recommended Routes!",
       description:
         "Check the routes that were built and recommended, and change them if you desire.",
     },
@@ -172,7 +172,7 @@ const OnboardingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#29A3A3",
+    backgroundColor: "#70DBDB",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
@@ -217,17 +217,17 @@ const styles = StyleSheet.create({
   },
   mapImage: {
     width: 200,
-    height: 150,
+    height: 160,
   },
   pinContainer: {
     position: "absolute",
-    left: 20,
+    left: 30,
     top: -30,
   },
   pinContainer2: {
     position: "absolute",
-    left: 130,
-    top: -50,
+    left: 140,
+    top: -35,
   },
   navContainer: {
     flexDirection: "row",
