@@ -11,7 +11,7 @@ export default PageFrame;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "lightblue",
+    backgroundColor: "#29A3A3",
     alignItems: "center",
     width: "100%",
     height: "100%",

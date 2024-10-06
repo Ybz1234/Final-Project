@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, Alert, Button as RNButton } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Alert,
+  Button as RNButton,
+} from "react-native";
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { cities2 } from "../LatLng/LatLng2";
@@ -19,7 +26,11 @@ const Home = ({ navigation }) => {
 
   const addMarker = async (e) => {
     const newMarker = e.nativeEvent.coordinate;
-    const AutoCoords = autoLocation(newMarker.latitude, newMarker.longitude, cities2);
+    const AutoCoords = autoLocation(
+      newMarker.latitude,
+      newMarker.longitude,
+      cities2
+    );
     setMarkers([
       ...markers,
       { latitude: AutoCoords.lat, longitude: AutoCoords.lng },
