@@ -63,7 +63,10 @@ const FullTrip = ({ route, navigation }) => {
   return (
     <PageFrame>
       <Button title="Activate Card" onPress={fetchFlightDetails} />
-      <Button title="Delete user's flight ticket" onPress={envDevDeleteUsersFlightTicket} />
+      <Button
+        title="Delete user's flight ticket"
+        onPress={envDevDeleteUsersFlightTicket}
+      />
       {isDataFetched && detailedFlightTickets.length > 0 ? (
         <CardsSlide
           flightTickets={detailedFlightTickets}
