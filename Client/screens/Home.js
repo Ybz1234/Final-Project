@@ -151,6 +151,22 @@ const Home = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <View style={styles.buttonContainerbot}>
+        <Button
+          mode="elevated"
+          style={styles.button2}
+          onPress={CleanMarks}
+          icon="trash-can"
+          color="#FFFFFF"
+        ></Button>
+        <Button
+          mode="elevated"
+          style={styles.button2}
+          onPress={handleNextPage}
+          icon="airplane-takeoff"
+          color="#FFFFFF"
+        ></Button>
+      </View>
     </PageFrame>
   );
 };
@@ -183,7 +199,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: 300,
+    height: 450,
     borderRadius: 10,
   },
   button: {
@@ -194,6 +210,19 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  buttonContainerbot: {
+    flexDirection: "row",
+    marginHorizontal: 10,
+    paddingHorizontal: -30,
+  },
+  button2: {
+    width: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    marginTop: 10,
+    marginHorizontal: 30,
   },
 });
 
