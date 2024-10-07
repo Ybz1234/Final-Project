@@ -50,7 +50,7 @@ const Home = ({ navigation }) => {
   const calcDis = (pointA, pointB) => {
     return Math.sqrt(
       Math.pow(pointB.lat - pointA.lat, 2) +
-        Math.pow(pointB.lng - pointA.lng, 2)
+      Math.pow(pointB.lng - pointA.lng, 2)
     );
   };
 
@@ -92,42 +92,10 @@ const Home = ({ navigation }) => {
     return false;
   };
 
-  const handleSignOut = () => {
-    // Clear user data or perform sign-out actions
-    Alert.alert("Signed out");
-    navigation.navigate("SignUp");
-  };
-
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Headline style={styles.headline}>Choose your destinations</Headline>
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.button}
-            onPress={CleanMarks}
-            icon="trash-can"
-            color="#FFFFFF"
-          >
-            Clean
-          </Button>
-          <Button
-            style={styles.button}
-            onPress={handleNextPage}
-            icon="airplane-takeoff"
-            color="#FFFFFF"
-          >
-            Fly Me A Travel
-          </Button>
-          <Button
-            style={styles.button}
-            onPress={handleSignOut}
-            icon="logout"
-            color="#FFFFFF"
-          >
-            Sign Out
-          </Button>
-        </View>
         <MapView
           style={styles.map}
           showsUserLocation={true}
@@ -157,15 +125,21 @@ const Home = ({ navigation }) => {
           style={styles.button2}
           onPress={CleanMarks}
           icon="trash-can"
-          color="#FFFFFF"
-        ></Button>
+          labelStyle={styles.buttonLabel}
+          iconColor="white"
+        >
+          Clean
+        </Button>
         <Button
           mode="elevated"
           style={styles.button2}
           onPress={handleNextPage}
           icon="airplane-takeoff"
-          color="#FFFFFF"
-        ></Button>
+          labelStyle={styles.buttonLabel}
+          iconColor="white"
+        >
+          Fly Me A Travel
+        </Button>
       </View>
     </PageFrame>
   );
@@ -213,16 +187,31 @@ const styles = StyleSheet.create({
   },
   buttonContainerbot: {
     flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: 10,
-    paddingHorizontal: -30,
+    paddingHorizontal: 10,
   },
   button2: {
-    width: "15%",
+    width: "45%",
+    paddingVertical: 8,
+    borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
     marginTop: 10,
-    marginHorizontal: 30,
+    marginHorizontal: 10,
+    backgroundColor: "#1B3E90",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  buttonLabel: {
+    color: "white",
+    fontSize: 17,              // Font size
+    fontWeight: "bold",        // Bold text
+    fontFamily: "Roboto-Medium",
   },
 });
 
