@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
-    backgroundColor: "#29A3A3",
+    backgroundColor: "#70DBDB",
   },
   headlineContainer: {
     marginBottom: 24,
@@ -259,7 +259,6 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     backgroundColor: "white",
     borderRadius: 8,
-    elevation: 4,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,

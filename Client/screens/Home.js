@@ -11,6 +11,7 @@ import MapView, { Marker } from "react-native-maps";
 import { cities2 } from "../LatLng/LatLng2";
 import PageFrame from "../components/PageFrame";
 import Tag from "../components/Tag";
+import { Button, Headline } from "react-native-paper";
 
 const Home = ({ navigation }) => {
   const [position, setPosition] = useState(null);
@@ -99,8 +100,47 @@ const Home = ({ navigation }) => {
 
   return (
     <PageFrame>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Choose your destinations</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Headline style={styles.headline}>Choose your destinations</Headline>
+        <View style={styles.buttonContainer}>
+          <Button
+            style={styles.button}
+            onPress={CleanMarks}
+            icon="trash-can"
+            color="#FFFFFF"
+          >
+            Clean
+          </Button>
+          <Button
+            style={styles.button}
+            onPress={handleNextPage}
+            icon="airplane-takeoff"
+            color="#FFFFFF"
+          >
+            Fly Me A Travel
+          </Button>
+          <Button
+            style={styles.button}
+            onPress={handleSignOut}
+            icon="logout"
+            color="#FFFFFF"
+          >
+            Sign Out
+          </Button>
+        </View>
+        <MapView
+          style={styles.map}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+          showsCompass={true}
+          showsScale={true}
+          onRegionChangeComplete={onRegionChange}
+          onPress={addMarker}
+        >
+          {markers.map((marker, index) => (
+            <Marker key={index} coordinate={marker} />
+          ))}
+        </MapView>
         <View style={styles.listContainer}>
           <View style={styles.list}>
             {cityNameArr.map((item, index) => (
@@ -110,59 +150,79 @@ const Home = ({ navigation }) => {
             ))}
           </View>
         </View>
-        <MapView
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-          showsCompass={true}
-          showsScale={true}
-          onRegionChangeComplete={onRegionChange}
-          onPress={addMarker}
-          style={styles.map}
-        >
-          {markers.map((marker, index) => (
-            <Marker key={index} coordinate={marker} />
-          ))}
-        </MapView>
-        <View style={styles.buttonContainer}>
-          <RNButton title="Clean" onPress={CleanMarks} />
-          <RNButton title="Continue" onPress={handleNextPage} />
-          <RNButton title="Sign Out" onPress={handleSignOut} />
-        </View>
       </ScrollView>
+      <View style={styles.buttonContainerbot}>
+        <Button
+          mode="elevated"
+          style={styles.button2}
+          onPress={CleanMarks}
+          icon="trash-can"
+          color="#FFFFFF"
+        ></Button>
+        <Button
+          mode="elevated"
+          style={styles.button2}
+          onPress={handleNextPage}
+          icon="airplane-takeoff"
+          color="#FFFFFF"
+        ></Button>
+      </View>
     </PageFrame>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  itemContainer: {
+    backgroundColor: "#e0e0e0",
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 10,
   },
-  title: {
-    fontSize: 20,
+  itemText: {
+    fontSize: 18,
+    color: "#333",
+  },
+  headline: {
+    marginTop: 10,
+    marginBottom: 30,
+    fontSize: 25,
     fontWeight: "bold",
+    color: "#ffffff",
+    paddingVertical: 1,
+    paddingHorizontal: 2,
     textAlign: "center",
-    marginVertical: 20,
+    overflow: "hidden",
+    color: "#ffffff",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    fontFamily: "Roboto-BoldItalic",
   },
   map: {
     width: "100%",
-    height: 400,
+    height: 450,
+    borderRadius: 10,
+  },
+  button: {
+    marginTop: 10,
+    width: "30%",
+    alignSelf: "center",
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 20,
-    paddingHorizontal: 10,
   },
-  listContainer: {
-    padding: 20,
-  },
-  list: {
+  buttonContainerbot: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    marginHorizontal: 10,
+    paddingHorizontal: -30,
   },
-  item: {
-    marginRight: 10,
+  button2: {
+    width: "15%",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 10,
+    marginTop: 10,
+    marginHorizontal: 30,
   },
 });
 

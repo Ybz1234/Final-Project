@@ -6,9 +6,8 @@ import { registerRootComponent } from "expo";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
-import Toast from "react-native-toast-message";
 import * as Font from "expo-font";
-
+import Toast from "react-native-toast-message";
 import { createNavigationContainerRef } from "@react-navigation/native";
 const navigationRef = createNavigationContainerRef();
 
@@ -134,7 +133,7 @@ function App() {
   }, []);
 
   if (!fontsLoaded) {
-    return null; // Or use a loading component
+    return null;
   }
   return (
     <NavigationContainer ref={navigationRef}>
@@ -146,3 +145,18 @@ function App() {
 export default App;
 
 registerRootComponent(App);
+/**Teal shade for app!
+ * #248F8F (rgb(36,143,143))
+#29A3A3 (rgb(41,163,163))
+#2EB8B8 (rgb(46,184,184))
+#47D1D1 (rgb(71,209,209))
+#5CD6D6 (rgb(92,214,214))
+
+
+#70DBDB (rgb(112,219,219)) 
+
+
+#33CCA6 (rgb(51,204,166))
+#33CCB3 (rgb(51,204,179))
+#33CCBF (rgb(51,204,191))
+ */
