@@ -147,16 +147,17 @@ export default App;
 registerRootComponent(App);
 /**Teal shade for app!
  * #248F8F (rgb(36,143,143))
-#29A3A3 (rgb(41,163,163))
 #2EB8B8 (rgb(46,184,184))
 #47D1D1 (rgb(71,209,209))
 #5CD6D6 (rgb(92,214,214))
-
-
-#70DBDB (rgb(112,219,219)) 
-
-
 #33CCA6 (rgb(51,204,166))
 #33CCB3 (rgb(51,204,179))
 #33CCBF (rgb(51,204,191))
- */
+*/
+
+//?ACTIVE COLOR PALLATE
+/*
+shade of teals- #70DBDB ,#29A3A3
+deep blue - #1B3E90
+opacity white teal - rgba(255, 255, 255, 0.8)
+*/

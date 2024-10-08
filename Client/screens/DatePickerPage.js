@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Headline, Text, TextInput } from "react-native-paper";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
 import { Image } from "react-native-animatable";
+import PageFrame from "../components/PageFrame";
 const PageDatePicker = ({ route, navigation }) => {
   const { cityNameArr } = route?.params;
-
   const cityArr = cityNameArr.slice(1, cityNameArr.length);
-
   const [date, setDate] = useState(null);
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
+
   const flyMeATravel = async () => {
     if (cityNameArr === undefined) {
       return (
@@ -19,25 +19,24 @@ const PageDatePicker = ({ route, navigation }) => {
         </>
       );
     }
-
-    console.log(new Date());
-    console.log("flyMeATravel!!");
-    console.log(cityNameArr);
-    console.log(date);
-    console.log(daysArr);
+    console.log("date picker page request started");
+    console.log("new Date", new Date());
+    console.log("cityNameArr", cityNameArr);
+    console.log("date", date);
+    console.log("daysArr", daysArr);
 
     try {
       const response = await axios.post(
         "https://final-project-sqlv.onrender.com/api/FlightTicket/",
         {
-          userId: "667e745b85bee8cf5b8c3253",
+          userId: "670296627d17e676255dff0f",
           airportNameArr: cityNameArr,
           startDate: date,
           daysArr: daysArr.map(Number),
         }
       );
-
       const data = response.data;
+
       if (response.status === 200) {
         const flightTicektIds = response.data.flightTickets.map(
           (flightTicekt) => {
@@ -47,12 +46,13 @@ const PageDatePicker = ({ route, navigation }) => {
         console.log("flightTicektIds", flightTicektIds);
         navigation.navigate("FullTrip", {
           flightTickets: data.flightTickets,
-          userId: "667e745b85bee8cf5b8c3253",
+          userId: "670296627d17e676255dff0f",
           daysArray: daysArr,
         });
       }
     } catch (error) {
-      console.error(error);
+      console.log("error", error);
+      console.error(response);
     }
   };
   const handleDaysChange = (value, index) => {
@@ -62,32 +62,41 @@ const PageDatePicker = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Button
-        mode="elevated"
-        style={styles.backButton}
-        onPress={() => navigation.navigate("Home")}
+    <PageFrame>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.container}
       >
-        Back
-      </Button>
-      <DatePicker date={date} setDate={setDate} />
-      {date &&
-        cityArr.map((city, index) => (
-          <View key={index} style={styles.cityContainer}>
-            <Text style={styles.cityText}>{city}</Text>
-            <TextInput
-              style={styles.input}
-              label="Duration (days)"
-              keyboardType="numeric"
-              value={daysArr[index]}
-              onChangeText={(value) => handleDaysChange(value, index)}
-            />
-          </View>
-        ))}
-      <Button mode="elevated" onPress={flyMeATravel} style={styles.button}>
-        Fly Me A Travel
-      </Button>
-    </ScrollView>
+        <Button
+          labelStyle={styles.buttonLabel}
+          style={styles.backButton}
+          onPress={() => navigation.navigate("Home")}
+        >
+          Back
+        </Button>
+        <DatePicker date={date} setDate={setDate} />
+        {date &&
+          cityArr.map((city, index) => (
+            <View key={index} style={styles.cityContainer}>
+              <Headline style={styles.cityText}>{city}</Headline>
+              <TextInput
+                style={styles.input}
+                label="Duration (days)"
+                keyboardType="numeric"
+                value={daysArr[index]}
+                onChangeText={(value) => handleDaysChange(value, index)}
+              />
+            </View>
+          ))}
+        <Button
+          labelStyle={styles.buttonLabel}
+          onPress={flyMeATravel}
+          style={styles.button2}
+        >
+          Fly Me A Travel
+        </Button>
+      </ScrollView>
+    </PageFrame>
   );
 };
 
@@ -95,34 +104,78 @@ export default PageDatePicker;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    marginTop: 90,
+
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    alignItems: "center",
+  },
+  scrollView: {
+    width: "100%", // Make sure the ScrollView uses the full width
   },
   backButton: {
-    width: "25%",
-    color: "white",
+    width: "20%",
+    alignSelf: "flex-end",
+    paddingVertical: 1,
+    borderRadius: 15,
+    marginBottom: 1,
+    backgroundColor: "#1B3E90",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   cityContainer: {
     marginBottom: 20,
+    width: "90%", // Slightly reduce width to give a card feel
+    alignItems: "center",
+    padding: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+    alignSelf: "center", // Centers the card on the screen
   },
   cityText: {
-    marginBottom: 8,
-    color: "blue",
+    alignSelf: "left",
+    marginBottom: 12,
+    color: "#1B3E90", // Adjust to a nice blue tone
     fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20, // Increase font size for better visibility
   },
   input: {
     backgroundColor: "#fff",
+    width: "100%", // Ensure input takes the full width within the card
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  button2: {
+    width: "60%",
+    alignSelf: "center",
+    paddingVertical: 10,
+    borderRadius: 15,
+    marginTop: 20,
+    marginBottom: 150,
+    backgroundColor: "#1B3E90",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
     shadowRadius: 2,
   },
-  button: {
-    marginTop: 50,
-    marginBottom: 10,
-
-    width: "70%",
-    backgroundColor: "white",
-    marginHorizontal: "auto",
+  buttonLabel: {
+    color: "white",
+    fontSize: 17,
+    fontWeight: "bold",
+    fontFamily: "Roboto-Medium",
   },
 });

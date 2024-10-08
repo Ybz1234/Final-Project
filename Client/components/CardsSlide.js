@@ -88,10 +88,10 @@ export default CardsSlide;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#6200ea",
+    borderColor: "#1B3E90",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
@@ -100,18 +100,20 @@ const styles = StyleSheet.create({
     height: 490,
   },
   cardTitle: {
-    color: "#333",
+    color: "#1B3E90",
     fontSize: 24,
     fontWeight: "bold",
+    fontFamily: "Roboto-BoldItalic",
   },
   cardText: {
-    color: "#333",
+    color: "#1B3E90",
   },
   button: {
-    backgroundColor: "#6200ea",
+    backgroundColor: "#1B3E90",
   },
   buttonText: {
     color: "#fff", // White
+    fontFamily: "Roboto-MediumItalic",
   },
   cardContainer: {
     flexDirection: "row",
@@ -119,9 +121,10 @@ const styles = StyleSheet.create({
   },
   innerCard: {
     width: windowWidth * 0.6,
+    fontFamily: "Roboto-MediumItalic",
     height: 400,
     marginRight: 16,
-    backgroundColor: "#6200ea", // Purple
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Purple
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -138,22 +141,25 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   innerCardText: {
-    color: "#fff", // White
+    color: "#1B3E90", // White
     fontSize: 16,
+    fontFamily: "Roboto-BoldItalic",
     fontWeight: "bold",
     marginTop: 10,
   },
   innerCardSubText: {
-    color: "#fff", // White
+    color: "#1B3E90", // White
     fontSize: 14,
     marginBottom: 4,
+    fontFamily: "Roboto-Medium",
     marginTop: 10,
   },
   innerButton: {
-    backgroundColor: "lightblue", // Teal
+    backgroundColor: "#1B3E90", // Teal
   },
   innerButtonText: {
-    color: "#000", // Black
+    color: "1B3E90",
+    fontFamily: "Roboto-Medium",
   },
   image: {
     width: "100%",

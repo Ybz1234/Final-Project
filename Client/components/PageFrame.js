@@ -13,12 +13,11 @@ export default PageFrame;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
-    marginBottom: 80,
+    marginBottom: 5,
     borderRadius: 20,
     shadowColor: "#000",
     flex: 1,
-    backgroundColor: "#70DBDB",
+    backgroundColor: "#2EB8B8",
     alignItems: "center",
     width: "100%",
     height: "100%",

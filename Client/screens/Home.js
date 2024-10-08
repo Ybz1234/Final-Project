@@ -50,7 +50,7 @@ const Home = ({ navigation }) => {
   const calcDis = (pointA, pointB) => {
     return Math.sqrt(
       Math.pow(pointB.lat - pointA.lat, 2) +
-      Math.pow(pointB.lng - pointA.lng, 2)
+        Math.pow(pointB.lng - pointA.lng, 2)
     );
   };
 
@@ -76,7 +76,7 @@ const Home = ({ navigation }) => {
       Alert.alert("Cannot add same city twice in a row");
       return;
     }
-    navigation.navigate("DatePickerPage", { cityNameArr });
+    navigation.navigate("DatePicker", { cityNameArr });
   };
 
   const removeCity = (index) => {
@@ -146,6 +146,9 @@ const Home = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    marginTop: 100,
+  },
   itemContainer: {
     backgroundColor: "#e0e0e0",
     padding: 15,
@@ -209,8 +212,8 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     color: "white",
-    fontSize: 17,              // Font size
-    fontWeight: "bold",        // Bold text
+    fontSize: 17, // Font size
+    fontWeight: "bold", // Bold text
     fontFamily: "Roboto-Medium",
   },
 });
