@@ -147,7 +147,7 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    marginTop: 100,
+    // marginTop: 100,
   },
   itemContainer: {
     backgroundColor: "#e0e0e0",
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 20,
     marginTop: 10,
     marginHorizontal: 10,
     backgroundColor: "#1B3E90",

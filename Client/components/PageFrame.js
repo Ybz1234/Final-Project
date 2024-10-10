@@ -13,8 +13,6 @@ export default PageFrame;
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 5,
-    borderRadius: 20,
     shadowColor: "#000",
     flex: 1,
     backgroundColor: "#2EB8B8",

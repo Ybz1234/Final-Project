@@ -94,7 +94,7 @@ const OnboardingScreen = () => {
                 animation="bounceInDown"
                 delay={0}
                 style={styles.pinContainer}
-                duration={2200}
+                duration={500}
                 iterationCount="infinite"
                 easing={"ease-in-out"}
               >
@@ -104,7 +104,7 @@ const OnboardingScreen = () => {
                 animation="bounceInDown"
                 delay={700}
                 style={styles.pinContainer2}
-                duration={1500}
+                duration={1800}
                 iterationCount="infinite"
                 easing={"ease-in-out"}
               >

@@ -24,9 +24,13 @@ function MyDrawer() {
           component={Home}
           options={{
             headerTitle: "",
-            drawerActiveBackgroundColor: "#70DBDB",
-            drawerActiveTintColor: "#1B3E90",
-            headerTransparent: true,
+            headerStyle: {
+              backgroundColor: "#2EB8B8",
+            },
+            headerBackgroundColor: "#29A3A3",
+            // drawerActiveBackgroundColor: "#70DBDB",
+            // drawerActiveTintColor: "#1B3E90",
+            // headerTransparent: true,
             drawerLabeStyle: {
               marginLeft: -50,
             },
@@ -34,9 +38,8 @@ function MyDrawer() {
               <MaterialCommunityIcons name="home" size={22} color={color} />
             ),
             drawerContentOptions: {
-              activeTintColor: "#33CCBF",
-              inactiveTintColor: "#33CCBF",
-              labelStyle: {},
+              // activeTintColor: "#33CCBF",
+              // inactiveTintColor: "#33CCBF",
             },
 
             drawerStyle: {

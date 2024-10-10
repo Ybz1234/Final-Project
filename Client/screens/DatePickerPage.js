@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollView: {
-    width: "100%", // Make sure the ScrollView uses the full width
+    width: "100%",
   },
   backButton: {
     width: "20%",
