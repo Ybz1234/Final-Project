@@ -94,7 +94,7 @@ const OnboardingScreen = () => {
                 animation="bounceInDown"
                 delay={0}
                 style={styles.pinContainer}
-                duration={500}
+                duration={4500}
                 iterationCount="infinite"
                 easing={"ease-in-out"}
               >
@@ -102,9 +102,9 @@ const OnboardingScreen = () => {
               </Animatable.View>
               <Animatable.View
                 animation="bounceInDown"
-                delay={700}
+                delay={500}
                 style={styles.pinContainer2}
-                duration={1800}
+                duration={3800}
                 iterationCount="infinite"
                 easing={"ease-in-out"}
               >
@@ -172,11 +172,9 @@ const OnboardingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#70DBDB",
+    backgroundColor: "#2EB8B8",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
-    padding: 20,
   },
   card: {
     alignContent: "center",

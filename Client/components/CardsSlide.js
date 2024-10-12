@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, Image, Dimensions, View } from "react-native";
-import { Card, Text, Button, TextInput } from "react-native-paper";
+import { ScrollView, StyleSheet, Image, Dimensions } from "react-native";
+import { Card, Text, Button } from "react-native-paper";
 import axios from "axios";
 
 const windowWidth = Dimensions.get("window").width;
@@ -12,17 +12,17 @@ const getCityPicture = async (city) => {
   try {
     const response = await axios.get(url);
     if (response.data.results.length > 0) {
-      return response.data.results[0].urls.regular; // Return the URL of the first image
+      return response.data.results[0].urls.regular;
     } else {
       throw new Error("No images found");
     }
   } catch (error) {
     console.error("Error fetching image:", error);
-    return "https://via.placeholder.com/150"; // Fallback image URL
+    return "https://via.placeholder.com/150";
   }
 };
 
-const CardsSlide = ({ flightTickets, daysArray }) => {
+const CardsSlide = ({ flightTickets, daysArray, onFullDetails }) => {
   const [images, setImages] = useState({});
 
   useEffect(() => {
@@ -72,6 +72,7 @@ const CardsSlide = ({ flightTickets, daysArray }) => {
                   mode="contained"
                   style={styles.innerButton}
                   labelStyle={styles.innerButtonText}
+                  onPress={() => onFullDetails(flight, index)}
                 >
                   Full Details
                 </Button>
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-MediumItalic",
     height: 400,
     marginRight: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // Purple
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -133,7 +134,6 @@ const styles = StyleSheet.create({
   },
   innerCardContent: {
     radius: 20,
-    // padding: 5,
   },
   cardActions: {
     justifyContent: "flex-end",
@@ -141,24 +141,24 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   innerCardText: {
-    color: "#1B3E90", // White
+    color: "#1B3E90",
     fontSize: 16,
     fontFamily: "Roboto-BoldItalic",
     fontWeight: "bold",
     marginTop: 10,
   },
   innerCardSubText: {
-    color: "#1B3E90", // White
+    color: "#1B3E90",
     fontSize: 14,
     marginBottom: 4,
     fontFamily: "Roboto-Medium",
     marginTop: 10,
   },
   innerButton: {
-    backgroundColor: "#1B3E90", // Teal
+    backgroundColor: "#1B3E90",
   },
   innerButtonText: {
-    color: "1B3E90",
+    color: "rgba(255, 255, 255, 0.9)",
     fontFamily: "Roboto-Medium",
   },
   image: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   textInput: {
-    backgroundColor: "#fff", // White
+    backgroundColor: "#fff",
     borderRadius: 4,
     textAlign: "left",
     width: 55,

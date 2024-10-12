@@ -11,53 +11,53 @@ import PageDatePicker from "../screens/DatePickerPage";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-// import FullDestiantion from "../screens/FullDestiantion";
+import FullDestiantion from "../screens/FullDestiantion";
 
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
     <PaperProvider>
-      <Drawer.Navigator initialRouteName="SignUp">
+      <Drawer.Navigator
+        initialRouteName="SignUp"
+        minSwipeDistance={1250}
+        screenOptions={{
+          headerTintColor: "#1B3E90",
+          headerTitle: "",
+          swipeEnabled: true,
+          drawerType: "back",
+          headerStyle: {
+            backgroundColor: "#2EB8B8",
+          },
+          headerBackgroundColor: "#29A3A3",
+          overlayColor: "rgba(255, 255, 255, 0.6)",
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" size={22} color={color} />
+          ),
+          drawerStyle: {
+            width: 210,
+            backgroundColor: "#2EB8B8",
+          },
+          lazy: true,
+          drawerActiveTintColor: "#1B3E90", // Active color
+          drawerInactiveTintColor: "rgba(255, 255, 255, 0.8)", // Inactive color
+        }}
+      >
         <Drawer.Screen
           name="Home"
           component={Home}
           options={{
-            headerTitle: "",
-            headerStyle: {
-              backgroundColor: "#2EB8B8",
-            },
-            headerBackgroundColor: "#29A3A3",
-            // drawerActiveBackgroundColor: "#70DBDB",
-            // drawerActiveTintColor: "#1B3E90",
-            // headerTransparent: true,
-            drawerLabeStyle: {
-              marginLeft: -50,
-            },
             drawerIcon: ({ color }) => (
               <MaterialCommunityIcons name="home" size={22} color={color} />
             ),
-            drawerContentOptions: {
-              // activeTintColor: "#33CCBF",
-              // inactiveTintColor: "#33CCBF",
-            },
-
-            drawerStyle: {
-              width: 200, // Set drawer width
-            },
           }}
         />
         <Drawer.Screen
-          name="SignUp"
-          component={SignUp}
+          name="DatePicker"
+          component={PageDatePicker}
           options={{
-            headerShown: true,
             drawerIcon: ({ color }) => (
-              <MaterialCommunityIcons
-                name="account-plus"
-                size={22}
-                color={color}
-              />
+              <MaterialCommunityIcons name="calendar" size={22} color={color} />
             ),
           }}
         />
@@ -71,17 +71,32 @@ function MyDrawer() {
           }}
         />
         <Drawer.Screen
-          name="DatePicker"
-          component={PageDatePicker}
+          name="FullDestiantion"
+          component={FullDestiantion}
           options={{
-            headerTitle: "",
-
             drawerIcon: ({ color }) => (
-              <MaterialCommunityIcons name="calendar" size={22} color={color} />
+              <MaterialCommunityIcons
+                name="map-marker"
+                size={22}
+                color={color}
+              />
             ),
-            headerTransparent: true,
           }}
         />
+        <Drawer.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{
+            drawerIcon: ({ color }) => (
+              <MaterialCommunityIcons
+                name="account-plus"
+                size={22}
+                color={color}
+              />
+            ),
+          }}
+        />
+
         <Drawer.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
@@ -95,7 +110,6 @@ function MyDrawer() {
             ),
           }}
         />
-        {/* <Drawer.Screen name="FullDestiantion" component={FullDestiantion} /> */}
       </Drawer.Navigator>
     </PaperProvider>
   );

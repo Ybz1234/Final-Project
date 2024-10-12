@@ -1,23 +1,29 @@
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
-  Alert,
   Button as RNButton,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { cities2 } from "../LatLng/LatLng2";
+import { Button, Headline, IconButton } from "react-native-paper";
+import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
 import Tag from "../components/Tag";
-import { Button, Headline } from "react-native-paper";
+import Toast from "react-native-toast-message";
+import { cities2 } from "../LatLng/LatLng2";
 
 const Home = ({ navigation }) => {
   const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [cityName, setCityName] = useState("");
   const [cityNameArr, setCityNameArr] = useState([]);
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+
   const userIdd = "667e745b85bee8cf5b8c3253";
 
   const onRegionChange = (region) => {
@@ -73,14 +79,24 @@ const Home = ({ navigation }) => {
 
   const handleNextPage = () => {
     if (checkNameArr()) {
-      Alert.alert("Cannot add same city twice in a row");
+      Toast.show({ type: "error", text1: "Cannot add same city twice" });
       return;
     }
+    if (cityNameArr.length < 1) {
+      Toast.show({
+        type: "error",
+        text1: "Please choose at least 1 destination",
+      });
+      return;
+    }
+    console.log("cityNameArr from handleNextPage", cityNameArr);
     navigation.navigate("DatePicker", { cityNameArr });
   };
 
   const removeCity = (index) => {
     setCityNameArr((prevArr) => prevArr.filter((_, i) => i !== index));
+    setMarkers((prevMarkers) => prevMarkers.filter((_, i) => i !== index));
+    console.log("cityNameArr from remove city", cityNameArr);
   };
 
   const checkNameArr = () => {
@@ -91,11 +107,78 @@ const Home = ({ navigation }) => {
     }
     return false;
   };
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
 
+  const handleBlur = () => {
+    setIsFocused(false);
+    setSearchQuery("");
+    Keyboard.dismiss();
+  };
+
+  const onSearch = (query) => {
+    setSearchQuery(query);
+    if (query && query.trim() !== "") {
+      const searchInput = query.trim().toLowerCase();
+      const city = cities2.find((c) => {
+        const cityName = c.name.split(",")[0].trim().toLowerCase();
+        console.log("on search finding city name", cityName);
+        return cityName === searchInput;
+      });
+      if (city) {
+        const cityName = city.name.split(",")[0].trim();
+        if (!cityNameArr.includes(cityName)) {
+          setCityNameArr((prevArr) => [...prevArr, cityName]);
+          setMarkers((prevMarkers) => [
+            ...prevMarkers,
+            { latitude: city.lat, longitude: city.lng },
+          ]);
+        }
+        console.log("cityNameArr from onSearch", cityNameArr);
+      } else {
+        // setTimeout(() => {
+        //   Toast.show({
+        //     type: "info",
+        //     text1: "no city in the name of",
+        //     text2: query,
+        //     visibilityTime: 2000,
+        //     position: "top",
+        //     autoHide: true,
+        //     bottomOffset: 50,
+        //   });
+        // }, 3500);
+      }
+    }
+  };
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Headline style={styles.headline}>Choose your destinations</Headline>
+        <TouchableWithoutFeedback onPress={handleBlur}>
+          <Animatable.View
+            style={styles.animatedSearchBarContainer}
+            animation={isFocused ? "pulse" : "shake"}
+            duration={800}
+          >
+            <IconButton
+              icon={isFocused ? "close" : "magnify"}
+              name="magnify"
+              size={24}
+              color="#000"
+              style={{ marginLeft: 5 }}
+            />
+            <TextInput
+              style={styles.animatedSearchBar}
+              placeholder=" Type In Destination..."
+              placeholderTextColor="#888"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onChangeText={onSearch}
+              value={searchQuery}
+            />
+          </Animatable.View>
+        </TouchableWithoutFeedback>
         <MapView
           style={styles.map}
           showsUserLocation={true}
@@ -109,7 +192,7 @@ const Home = ({ navigation }) => {
             <Marker key={index} coordinate={marker} />
           ))}
         </MapView>
-        <View style={styles.listContainer}>
+        <View>
           <View style={styles.list}>
             {cityNameArr.map((item, index) => (
               <View key={index} style={styles.item}>
@@ -146,19 +229,6 @@ const Home = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    // marginTop: 100,
-  },
-  itemContainer: {
-    backgroundColor: "#e0e0e0",
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  itemText: {
-    fontSize: 18,
-    color: "#333",
-  },
   headline: {
     marginTop: 10,
     marginBottom: 30,
@@ -168,16 +238,22 @@ const styles = StyleSheet.create({
     paddingVertical: 1,
     paddingHorizontal: 2,
     textAlign: "center",
-    overflow: "hidden",
     color: "#ffffff",
+    textShadowColor: "rgba(0, 0, 0, 0.8)",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
     textTransform: "uppercase",
-    letterSpacing: 1,
     fontFamily: "Roboto-BoldItalic",
   },
   map: {
-    width: "100%",
-    height: 450,
+    alignSelf: "center",
+    width: "95%",
+    height: 390,
     borderRadius: 10,
+    textShadowColor: "rgba(0, 0, 0, 0.8)",
+    textShadowOffset: { width: 5, height: 5 },
+    textShadowRadius: 4,
+    marginVertical: 25,
   },
   button: {
     marginTop: 10,
@@ -215,6 +291,28 @@ const styles = StyleSheet.create({
     fontSize: 17, // Font size
     fontWeight: "bold", // Bold text
     fontFamily: "Roboto-Medium",
+  },
+  animatedSearchBarContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 35,
+    alignSelf: "center",
+    paddingHorizontal: 10,
+    width: "80%",
+    height: 60,
+    justifyContent: "center",
+  },
+  animatedSearchBar: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 30,
+    paddingHorizontal: 10,
+    height: 50,
+    fontSize: 16,
+    marginLeft: 10,
+    marginVertical: 20,
   },
 });
 
