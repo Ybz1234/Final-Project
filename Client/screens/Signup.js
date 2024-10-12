@@ -237,20 +237,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
-    backgroundColor: "#70DBDB",
   },
   headlineContainer: {
     marginBottom: 24,
   },
   headline: {
-    fontSize: 32,
+    fontSize: 38,
     fontWeight: "800",
     color: "#FFFFFF",
     textAlign: "center",
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
-    letterSpacing: 1,
+    letterSpacing: 2,
     fontFamily: "Roboto-BoldItalic",
   },
   card: {
@@ -271,7 +270,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-BoldItalic",
     color: "#29A3A3",
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: 5,
   },
   paragraph: {
     fontSize: 16,
@@ -283,7 +282,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   button: {
-    width: "100%",
+    alignSelf: "center",
+    width: "60%",
     marginTop: 16,
     marginBottom: 16,
     backgroundColor: "#29A3A3",
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   image: {
     backgroundColor: "white",
     width: "110%",
-    height: "50%",
+    height: "110%",
     resizeMode: "contain",
     alignSelf: "center",
     borderRadius: 1000,

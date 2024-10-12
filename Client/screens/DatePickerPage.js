@@ -1,24 +1,26 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+
 import { StyleSheet, View, ScrollView } from "react-native";
-import { Button, Headline, Text, TextInput } from "react-native-paper";
+import { Button, Headline, TextInput } from "react-native-paper";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
-import { Image } from "react-native-animatable";
+import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
 const PageDatePicker = ({ route, navigation }) => {
   const { cityNameArr } = route?.params;
   const cityArr = cityNameArr.slice(1, cityNameArr.length);
   const [date, setDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsLoading(false);
+    }, [])
+  );
 
   const flyMeATravel = async () => {
-    if (cityNameArr === undefined) {
-      return (
-        <>
-          <Image source={require("../assets/plane.gif")}></Image>
-        </>
-      );
-    }
+    setIsLoading(true);
     console.log("date picker page request started");
     console.log("new Date", new Date());
     console.log("cityNameArr", cityNameArr);
@@ -49,9 +51,13 @@ const PageDatePicker = ({ route, navigation }) => {
           userId: "670296627d17e676255dff0f",
           daysArray: daysArr,
         });
+      } else {
+        setIsLoading(false);
+        console.error("Unexpected response status:", response.data);
       }
     } catch (error) {
-      console.log("error", error);
+      setIsLoading(false);
+      console.log("Error during API request", error);
       console.error(response);
     }
   };
@@ -60,6 +66,19 @@ const PageDatePicker = ({ route, navigation }) => {
     updatedDaysArr[index] = value;
     setDaysArr(updatedDaysArr);
   };
+
+  if (isLoading) {
+    return (
+      <Animatable.View>
+        <Animatable.Image
+          animation="fadeIn"
+          duration={1500}
+          style={styles.image}
+          source={require("../assets/plane.gif")}
+        />
+      </Animatable.View>
+    );
+  }
 
   return (
     <PageFrame>
@@ -177,5 +196,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "bold",
     fontFamily: "Roboto-Medium",
+  },
+  image: {
+    backgroundColor: "white",
+    width: "110%",
+    height: "100%",
+    resizeMode: "contain",
+    alignSelf: "center",
   },
 });
