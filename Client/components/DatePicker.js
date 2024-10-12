@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Portal, Provider, DefaultTheme } from "react-native-paper";
-import { DatePickerModal } from "react-native-paper-dates";
+import {
+  DatePickerModal,
+  en,
+  registerTranslation,
+} from "react-native-paper-dates";
+registerTranslation("en", en);
 
 const DatePicker = ({ date, setDate }) => {
   const [visible, setVisible] = useState(false);
-
   const openDatePicker = () => setVisible(true);
   const closeDatePicker = () => setVisible(false);
 
@@ -46,9 +50,8 @@ const DatePicker = ({ date, setDate }) => {
           onDismiss={closeDatePicker}
           date={date}
           onConfirm={onConfirm}
-          locale={"en"}
-          theme={theme} // Apply custom theme
-          contentStyle={styles.modalContent} // Apply custom content style
+          theme={theme}
+          contentStyle={styles.modalContent}
         />
       </Portal>
     </Provider>
