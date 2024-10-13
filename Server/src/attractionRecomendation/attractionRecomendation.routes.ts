@@ -9,4 +9,4 @@ const attractionRecomendationRouter = Router();
 export default attractionRecomendationRouter
   .get("/findAllAttractionRecomendations", findAllAttractionRecomendations)
   .get("/findAttractionRecomendation", findAttractionRecomendation)
-  .get("/findAttractionsByCity", findAttractionsByCity);
+  .post("/findAttractionsByCity", findAttractionsByCity);
