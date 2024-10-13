@@ -11,6 +11,8 @@ const FullTrip = ({ route, navigation }) => {
   const [showVerticalCards, setShowVerticalCards] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [hotelData, setHotelData] = useState(null);
+  const [attractionData, setAttractionData] = useState(null);
 
   useEffect(() => {
     fetchFlightDetails();
@@ -66,9 +68,61 @@ const FullTrip = ({ route, navigation }) => {
       console.log("Error FullTrip", error.message);
     }
   };
-  const handleFullDetails = (flight, index) => {
+  const handleFullDetails = async (flight, index) => {
     setSelectedFlight(flight);
     setSelectedIndex(index);
+    const city = flight.arrivalCity;
+
+    try {
+      const hotelResponse = await fetch(
+        "https://final-project-sqlv.onrender.com/api/hotels/findHotelsByCity",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ city }),
+        }
+      );
+      if (!hotelResponse.ok) {
+        console.log("Error:", hotelResponse.data);
+
+        throw new Error(
+          `Hotel request failed with status: ${hotelResponse.status}`
+        );
+      }
+      const hotelData = await hotelResponse.json();
+
+      const attractionResponse = await fetch(
+        "https://final-project-sqlv.onrender.com/api/attractions/findAttractionsByCity",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ city }),
+        }
+      );
+
+      if (!attractionResponse.ok) {
+        throw new Error(
+          `Attraction request failed with status: ${attractionResponse.status}`
+        );
+      }
+
+      const attractionData = await attractionResponse.json();
+
+      // Store the first hotel and attraction
+      setHotelData(hotelData.hotel[0]);
+      setAttractionData(attractionData.attractions[0]);
+
+      // Show the vertical cards
+      setShowVerticalCards(true);
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
     setShowVerticalCards(true);
   };
 
@@ -78,9 +132,60 @@ const FullTrip = ({ route, navigation }) => {
     );
     navigation.navigate("");
   };
+
+  const testHotels = async () => {
+    console.log("testHotels");
+    try {
+      const response = await fetch(
+        "https://final-project-sqlv.onrender.com/api/hotels/findHotelsByCity",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ city: "London" }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Hotels", data);
+    } catch (error) {
+      console.error("Error fetching hotels:", error.message);
+    }
+  };
+
+  const testAttractions = async () => {
+    console.log("testAttractions");
+    try {
+      const response = await fetch(
+        "https://final-project-sqlv.onrender.com/api/attractions/findAttractionsByCity",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ city: "London" }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Attractions", data);
+    } catch (error) {
+      console.error("Error fetching attractions:", error.message);
+    }
+  };
+
   return (
     <PageFrame>
       <ScrollView>
+        {/* <Button onPress={testHotels}>Destination</Button>
+        <Button onPress={testAttractions}>Attraction</Button> */}
         {/* <Button title="Activate Card" onPress={fetchFlightDetails} /> */}
         <Button onPress={envDevDeleteUsersFlightTicket}>
           "Delete user's flight ticket
@@ -92,11 +197,10 @@ const FullTrip = ({ route, navigation }) => {
               daysArray={daysArray}
               onFullDetails={handleFullDetails}
             />
-
             {showVerticalCards && (
               <Card style={styles.card}>
                 <Card.Title
-                  title="Detailed Information"
+                  title={`${selectedFlight.arrivalCity}: Information`}
                   titleStyle={styles.cardTitle}
                 />
                 <Card.Content>
@@ -104,21 +208,44 @@ const FullTrip = ({ route, navigation }) => {
                     style={styles.scrollView}
                     contentContainerStyle={styles.cardContainer}
                   >
-                    {detailedFlightTickets.map((flight, index) => (
-                      <Card key={index} style={styles.innerCard}>
+                    {/* Hotel Card */}
+                    {hotelData && (
+                      <Card style={styles.innerCard}>
+                        <Card.Title
+                          title="Hotel Information"
+                          titleStyle={styles.cardTitle}
+                        />
                         <Card.Content>
-                          <Text>Index: {selectedIndex}</Text>
-                          <Text>City Name: {selectedFlight.arrivalCity}</Text>
-                          <Button
-                            onPress={() => hadnleFullDetailInformation()}
-                            style={styles.button2}
-                            labelStyle={styles.buttonLabel}
-                          >
-                            Alternative
-                          </Button>
+                          <Text style={styles.cardText}>
+                            Name: {hotelData.name}
+                          </Text>
+                          <Text style={styles.cardText}>
+                            Address: {hotelData.address.full_address}
+                          </Text>
                         </Card.Content>
+                        <Button>Alternative</Button>
                       </Card>
-                    ))}
+                    )}
+
+                    {/* Attraction Card */}
+                    {attractionData && (
+                      <Card style={styles.innerCard}>
+                        <Card.Title
+                          title="Attraction Information "
+                          titleStyle={styles.cardTitle}
+                        />
+                        <Card.Content>
+                          <Text style={styles.cardText}>
+                            Name: {attractionData.name}
+                          </Text>
+                          <Text style={styles.cardText}>
+                            Description: {attractionData.description}
+                          </Text>
+                        </Card.Content>
+
+                        <Button>Alternative</Button>
+                      </Card>
+                    )}
                   </ScrollView>
                 </Card.Content>
               </Card>
@@ -219,5 +346,27 @@ const styles = StyleSheet.create({
     fontSize: 16, // Font size
     fontWeight: "bold", // Bold text
     fontFamily: "Roboto-Medium",
+  },
+  verticalCardsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  verticalCard: {
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 15,
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#1B3E90",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  cardText: {
+    fontSize: 16,
+    color: "#1B3E90",
+    marginBottom: 5,
   },
 });
