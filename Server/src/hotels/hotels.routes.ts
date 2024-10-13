@@ -9,4 +9,4 @@ const hotelsRouter = Router();
 export default hotelsRouter
   .get("/findAllHotels", findAllHotels)
   .get("/findHotelByName", findHotelByName)
-  .get("/findHotelsByCity", findHotelsByCity);
+  .post("/findHotelsByCity", findHotelsByCity);
