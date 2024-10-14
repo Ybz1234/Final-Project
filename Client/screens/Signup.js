@@ -12,6 +12,7 @@ import PageFrame from "../components/PageFrame";
 import CryptoJS from "crypto-js";
 import * as Animatable from "react-native-animatable";
 import * as Notifications from "expo-notifications";
+import { useUser } from "../context/UserContext";
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
