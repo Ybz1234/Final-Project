@@ -9,6 +9,7 @@ import Constants from "expo-constants";
 import * as Font from "expo-font";
 import Toast from "react-native-toast-message";
 import { createNavigationContainerRef } from "@react-navigation/native";
+import { UserProvider } from "./context/UserContext";
 
 const navigationRef = createNavigationContainerRef();
 Notifications.setNotificationHandler({
@@ -135,11 +136,14 @@ function App() {
   if (!fontsLoaded) {
     return null;
   }
+  
   return (
-    <NavigationContainer ref={navigationRef}>
-      <MyDrawer />
-      <Toast />
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer ref={navigationRef}>
+        <MyDrawer />
+        <Toast />
+      </NavigationContainer>
+    </UserProvider>
   );
 }
 

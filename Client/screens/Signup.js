@@ -20,6 +20,7 @@ export default function SignUp({ navigation }) {
   const [lastName, setLastName] = useState("");
   const [user, setUser] = useState(null);
   const [isSignUp, setIsSignUp] = useState(false);
+  const { setUser: setGlobalUser } = useUser();
 
   const sendPushNotification = async () => {
     const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
@@ -77,6 +78,7 @@ export default function SignUp({ navigation }) {
       const data = await response.json();
       if (response.ok) {
         setUser(data);
+        setGlobalUser(data);
         setTimeout(() => {
           sendPushNotification();
           navigation.navigate("Home");
@@ -114,6 +116,7 @@ export default function SignUp({ navigation }) {
       console.log("Respone: ", response);
       if (response.ok) {
         setUser(data);
+        setGlobalUser(data);
         setTimeout(() => {
           sendSignUpPushNotification();
           navigation.navigate("OnboardingScreen");
