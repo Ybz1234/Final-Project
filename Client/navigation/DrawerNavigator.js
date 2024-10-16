@@ -9,8 +9,8 @@ import SignUp from "../screens/Signup";
 import FullTrip from "../screens/FullTrip";
 import PageDatePicker from "../screens/DatePickerPage";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import Profile from "../screens/Profile"; // Import Profile component
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 import FullDestiantion from "../screens/FullDestiantion";
 
 const Drawer = createDrawerNavigator();
@@ -96,7 +96,6 @@ function MyDrawer() {
             ),
           }}
         />
-
         <Drawer.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
@@ -104,6 +103,19 @@ function MyDrawer() {
             drawerIcon: ({ color }) => (
               <MaterialCommunityIcons
                 name="lightbulb-outline"
+                size={22}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Profile" // Add Profile Screen here
+          component={Profile}
+          options={{
+            drawerIcon: ({ color }) => (
+              <MaterialCommunityIcons
+                name="account"
                 size={22}
                 color={color}
               />
