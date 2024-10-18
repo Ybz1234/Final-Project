@@ -23,6 +23,25 @@ const FullTrip = ({ route, navigation }) => {
     fetchFlightDetails();
   }, []);
 
+  const envDevDeleteUsersFlightTicket = async () => {
+    try {
+      const response = await fetch(
+        `https://final-project-sqlv.onrender.com/api/devEnv/deleteUsersFlightsTickets`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: "670296627d17e676255dff0f" }),
+        }
+      );
+      const data = await response.json();
+      console.log("FullTripDATA!", data);
+    } catch (error) {
+      console.log("Error FullTrip", error.message);
+    }
+  };
   const fetchFlightDetails = async () => {
     try {
       const response = await fetch(
@@ -183,7 +202,6 @@ const FullTrip = ({ route, navigation }) => {
   };
 
   const handleDestination = async () => {
-    // Ensure all destinations have hotel and attraction data
     const updatedDestinations = await Promise.all(
       destinations.map(async (destination) => {
         if (!destination.hotel || !destination.attraction) {
@@ -243,8 +261,11 @@ const FullTrip = ({ route, navigation }) => {
     );
 
     // Navigate to FullDestination screen with updated destinations
-    navigation.navigate("FullDestination", {
-      destinations: updatedDestinations,
+    navigation.navigate("Main", {
+      screen: "FullDestination",
+      params: {
+        destinations: updatedDestinations,
+      },
     });
   };
 
@@ -303,6 +324,16 @@ const FullTrip = ({ route, navigation }) => {
           onPress={handleDestination}
         >
           Confirm Booking
+        </Button>
+        <Button
+          title="Dev DEl"
+          style={styles.button2}
+          icon="check-circle"
+          labelStyle={styles.buttonLabel}
+          iconColor="white"
+          onPress={envDevDeleteUsersFlightTicket}
+        >
+          Dev DEl
         </Button>
       </View>
     </PageFrame>
