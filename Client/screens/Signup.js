@@ -1,28 +1,29 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Alert,
-  TouchableOpacity,
-  Text,
-  Image,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import { Card, Title, Paragraph, Button, TextInput } from "react-native-paper";
 import PageFrame from "../components/PageFrame";
 import CryptoJS from "crypto-js";
 import * as Animatable from "react-native-animatable";
 import * as Notifications from "expo-notifications";
 import { useUser } from "../context/UserContext";
+import Toast from "react-native-toast-message";
 
-export default function SignUp({ navigation }) {
+export default function SignUp({ navigation, route }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [user, setUser] = useState(null);
   const [isSignUp, setIsSignUp] = useState(false);
-  const { setUser: setGlobalUser } = useUser();
+  const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
 
+  const { setUser: setGlobalUser } = useUser();
+  useEffect(() => {
+    // Check if the user recently logged out
+    if (route.params?.recentlyLoggedOut) {
+      setRecentlyLoggedOut(true);
+    }
+  }, [route.params]);
   const sendPushNotification = async () => {
     const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
     const message = {
@@ -82,13 +83,31 @@ export default function SignUp({ navigation }) {
         setGlobalUser(data);
         setTimeout(() => {
           sendPushNotification();
-          navigation.navigate("Home");
+          navigation.navigate("Main", { screen: "Home" });
         }, 3500);
       } else {
-        Alert.alert("Login Failed", "One or more details are wrong");
+        Toast.show({
+          type: "error",
+          text1: "Login Failed",
+          text2: "One or more details are wrong.",
+          visibilityTime: 3000,
+          position: "top",
+          autoHide: true,
+          topOffset: 150,
+          bottomOffset: 40,
+        });
       }
     } catch (error) {
-      Alert.alert("Login Failed", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: error.message,
+        visibilityTime: 3000,
+        position: "top",
+        autoHide: true,
+        topOffset: 150,
+        bottomOffset: 40,
+      });
     }
   };
 
@@ -123,15 +142,32 @@ export default function SignUp({ navigation }) {
           navigation.navigate("OnboardingScreen");
         }, 2500);
       } else {
-        Alert.alert("Sign Up Failed", "Unable to sign up, please try again.");
+        Toast.show({
+          type: "error",
+          text1: "Sign Up Failed",
+          text2: "Unable to sign up, please try again.",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 150,
+          bottomOffset: 40,
+        });
       }
     } catch (error) {
-      console.log(error.message);
-      Alert.alert("Sign Up Failed", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Sign Up Failed",
+        text2: error.message,
+        position: "top",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 150,
+        bottomOffset: 40,
+      });
     }
   };
 
-  if (user) {
+  if (user && !recentlyLoggedOut) {
     return (
       <Animatable.View
         duration={1000}

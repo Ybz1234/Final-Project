@@ -90,7 +90,11 @@ const Home = ({ navigation }) => {
       return;
     }
     console.log("cityNameArr from handleNextPage", cityNameArr);
-    navigation.navigate("DatePicker", { cityNameArr });
+
+    navigation.navigate("Main", {
+      screen: "DatePicker",
+      params: { cityNameArr },
+    });
   };
 
   const removeCity = (index) => {

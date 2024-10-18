@@ -46,10 +46,13 @@ const PageDatePicker = ({ route, navigation }) => {
           }
         );
         console.log("flightTicektIds", flightTicektIds);
-        navigation.navigate("FullTrip", {
-          flightTickets: data.flightTickets,
-          userId: "670296627d17e676255dff0f",
-          daysArray: daysArr,
+        navigation.navigate("Main", {
+          screen: "FullTrip",
+          params: {
+            flightTickets: data.flightTickets,
+            userId: "670296627d17e676255dff0f",
+            daysArray: daysArr,
+          },
         });
       } else {
         setIsLoading(false);
@@ -89,7 +92,11 @@ const PageDatePicker = ({ route, navigation }) => {
         <Button
           labelStyle={styles.buttonLabel}
           style={styles.backButton}
-          onPress={() => navigation.navigate("Home")}
+          onPress={() =>
+            navigation.navigate("Main", {
+              screen: "Home",
+            })
+          }
         >
           Back
         </Button>
