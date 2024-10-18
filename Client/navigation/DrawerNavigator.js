@@ -11,6 +11,7 @@ import PageDatePicker from "../screens/DatePickerPage";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import Profile from "../screens/Profile";
 import FullDestination from "../screens/FullDestiantion";
+import CustomDrawerContent from "../components/CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
@@ -20,6 +21,7 @@ function MainDrawer() {
     <Drawer.Navigator
       initialRouteName="Home"
       minSwipeDistance={1250}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerTintColor: "#1B3E90",
         headerTitle: "",

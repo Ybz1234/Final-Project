@@ -9,6 +9,8 @@ import {
 import { useUser } from "../context/UserContext";
 import CryptoJS from "crypto-js";
 import Toast from "react-native-toast-message";
+import * as ImagePicker from "expo-image-picker";
+import { Image } from "react-native";
 
 export default function Profile({ navigation }) {
   const { user, setUser: setGlobalUser } = useUser();
@@ -16,6 +18,7 @@ export default function Profile({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState(""); // Password for updates
+  const [profilePicture, setProfilePicture] = useState(null); // New state for profile picture
 
   useEffect(() => {
     // Update state with user data when component mounts
@@ -24,6 +27,7 @@ export default function Profile({ navigation }) {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setEmail(userInfo.email);
+      setProfilePicture(userInfo.profilePicture);
       console.log("User data loaded:", userInfo);
 
       // Log each field of the user
@@ -31,11 +35,40 @@ export default function Profile({ navigation }) {
       console.log("First Name:", userInfo.firstName);
       console.log("Last Name:", userInfo.lastName);
       console.log("Email:", userInfo.email);
+
       console.log("User ID:", userInfo._id); // Log user ID if needed
     } else {
       console.warn("User context is null or malformed:", user);
     }
   }, [user]);
+
+  const pickImage = async () => {
+    // Ask for permission to access the media library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Toast.show({
+        type: "error",
+        text1: "Permission Denied",
+        text2:
+          "Camera roll permissions are needed to select a profile picture.",
+        visibilityTime: 3000,
+        position: "top",
+      });
+      return;
+    }
+
+    // Open the image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1], // Square aspect ratio
+      quality: 0.5, // Adjust the quality as needed
+    });
+
+    if (!result.canceled) {
+      setProfilePicture(result.assets[0].uri);
+    }
+  };
 
   const handleUpdateProfile = async () => {
     if (!user || !user.user) {
@@ -300,6 +333,16 @@ export default function Profile({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
+      <TouchableOpacity onPress={pickImage}>
+        {profilePicture ? (
+          <Image source={{ uri: profilePicture }} style={styles.profileImage} />
+        ) : (
+          <View style={styles.profileImagePlaceholder}>
+            <Text style={styles.addPhotoText}>Add Photo</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+
       <TextInput
         style={styles.input}
         placeholder="First Name"
