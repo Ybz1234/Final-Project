@@ -5,6 +5,8 @@ import { Button } from "react-native-paper";
 import CardsSlide from "../components/CardsSlide";
 import VerticalSlide from "../components/VerticalSlide";
 import CustomModal from "../components/CustomModal";
+import * as Animatable from "react-native-animatable";
+import { useFocusEffect } from "@react-navigation/native";
 
 const FullTrip = ({ route, navigation }) => {
   const { daysArray } = route.params;
@@ -18,6 +20,15 @@ const FullTrip = ({ route, navigation }) => {
   const [attractionModalVisible, setAttractionModalVisible] = useState(false);
   const [alternativeHotels, setAlternativeHotels] = useState([]);
   const [alternativeAttractions, setAlternativeAttractions] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsLoading(false);
+      fetchFlightDetails();
+    }, [])
+  );
 
   useEffect(() => {
     fetchFlightDetails();
@@ -271,6 +282,24 @@ const FullTrip = ({ route, navigation }) => {
 
   // Retrieve current destination data
   const currentDestination = destinations[selectedIndex];
+  const toggleIsLoading = () => {
+    setTimeout(() => {
+      setIsLoading(true);
+    }, 1500);
+  };
+  if (!isLoading) {
+    toggleIsLoading();
+    return (
+      <Animatable.View>
+        <Animatable.Image
+          animation="fadeIn"
+          duration={1500}
+          style={styles.image}
+          source={require("../assets/plane.gif")}
+        />
+      </Animatable.View>
+    );
+  }
 
   return (
     <PageFrame>
@@ -378,5 +407,12 @@ const styles = StyleSheet.create({
     fontSize: 14, // Font size
     fontWeight: "bold", // Bold text
     fontFamily: "Roboto-Medium",
+  },
+  image: {
+    backgroundColor: "white",
+    width: "110%",
+    height: "100%",
+    resizeMode: "contain",
+    alignSelf: "center",
   },
 });

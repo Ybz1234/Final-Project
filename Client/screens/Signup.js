@@ -81,6 +81,8 @@ export default function SignUp({ navigation, route }) {
       if (response.ok) {
         setUser(data);
         setGlobalUser(data);
+        setRecentlyLoggedOut(false);
+
         setTimeout(() => {
           sendPushNotification();
           navigation.navigate("Main", { screen: "Home" });

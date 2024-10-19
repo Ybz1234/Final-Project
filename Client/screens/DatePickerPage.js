@@ -13,6 +13,9 @@ const PageDatePicker = ({ route, navigation }) => {
   const [date, setDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
+
+  const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
+
   useFocusEffect(
     React.useCallback(() => {
       setIsLoading(false);
@@ -46,6 +49,7 @@ const PageDatePicker = ({ route, navigation }) => {
           }
         );
         console.log("flightTicektIds", flightTicektIds);
+        setIsLoading(false);
         navigation.navigate("Main", {
           screen: "FullTrip",
           params: {
@@ -69,8 +73,13 @@ const PageDatePicker = ({ route, navigation }) => {
     updatedDaysArr[index] = value;
     setDaysArr(updatedDaysArr);
   };
-
-  if (isLoading) {
+  const toggleIsLoading = () => {
+    setTimeout(() => {
+      setIsLoading(true);
+    }, 1500);
+  };
+  if (!isLoading) {
+    toggleIsLoading();
     return (
       <Animatable.View>
         <Animatable.Image

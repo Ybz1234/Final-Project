@@ -7,7 +7,7 @@ import {
   Keyboard,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { Button, Headline, IconButton } from "react-native-paper";
 import * as Animatable from "react-native-animatable";
@@ -16,16 +16,22 @@ import Tag from "../components/Tag";
 import Toast from "react-native-toast-message";
 import { cities2 } from "../LatLng/LatLng2";
 
-const Home = ({ navigation }) => {
+const Home = ({ navigation, route }) => {
   const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [cityName, setCityName] = useState("");
   const [cityNameArr, setCityNameArr] = useState([]);
   const [isFocused, setIsFocused] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
 
   const userIdd = "667e745b85bee8cf5b8c3253";
-
+  useEffect(() => {
+    // Check if the user recently logged out
+    if (route.params?.recentlyLoggedOut) {
+      setRecentlyLoggedOut(true);
+    }
+  }, [route.params]);
   const onRegionChange = (region) => {
     const AutoCoords = autoLocation(region.latitude, region.longitude, cities2);
     setPosition({ latitude: AutoCoords.lat, longitude: AutoCoords.lng });
@@ -90,11 +96,14 @@ const Home = ({ navigation }) => {
       return;
     }
     console.log("cityNameArr from handleNextPage", cityNameArr);
-
-    navigation.navigate("Main", {
-      screen: "DatePicker",
-      params: { cityNameArr },
-    });
+    setRecentlyLoggedOut(false);
+    setTimeout(() => {
+      navigation.navigate("Main", {
+        screen: "DatePicker",
+        params: { cityNameArr },
+        setRecentlyLoggedOut: false,
+      });
+    }, 500);
   };
 
   const removeCity = (index) => {

@@ -6,21 +6,21 @@ import axios from "axios";
 const windowWidth = Dimensions.get("window").width;
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-const getCityPicture = async (city) => {
-  const url = `https://api.unsplash.com/search/photos?page=1&query=${city}&client_id=${UNSPLASH_ACCESS_KEY}`;
+// const getCityPicture = async (city) => {
+//   const url = `https://api.unsplash.com/search/photos?page=1&query=${city}&client_id=${UNSPLASH_ACCESS_KEY}`;
 
-  try {
-    const response = await axios.get(url);
-    if (response.data.results.length > 0) {
-      return response.data.results[0].urls.regular;
-    } else {
-      throw new Error("No images found");
-    }
-  } catch (error) {
-    console.error("Error fetching image:", error);
-    return "https://via.placeholder.com/150";
-  }
-};
+//   try {
+//     const response = await axios.get(url);
+//     if (response.data.results.length > 0) {
+//       return response.data.results[0].urls.regular;
+//     } else {
+//       throw new Error("No images found");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching image:", error);
+//     return "https://via.placeholder.com/150";
+//   }
+// };
 
 const CardsSlide = ({ flightTickets, daysArray, onFullDetails }) => {
   const [images, setImages] = useState({});
@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 15,
+    marginTop: 10,
     borderWidth: 1,
     borderColor: "#1B3E90",
     shadowColor: "#000",
@@ -98,7 +99,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+    alignSelf: "center",
+    width: "98%",
     height: 490,
+    alignItems: "center",
   },
   cardTitle: {
     color: "#1B3E90",
@@ -121,10 +125,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   innerCard: {
-    width: windowWidth * 0.6,
     fontFamily: "Roboto-MediumItalic",
-    height: 400,
-    marginRight: 16,
+    height: 410,
+    width: 250,
+    marginVertical: 1,
+    marginLeft: 15,
+    marginRight: 15,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
