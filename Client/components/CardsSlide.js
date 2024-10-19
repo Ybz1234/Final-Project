@@ -6,21 +6,21 @@ import axios from "axios";
 const windowWidth = Dimensions.get("window").width;
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-// const getCityPicture = async (city) => {
-//   const url = `https://api.unsplash.com/search/photos?page=1&query=${city}&client_id=${UNSPLASH_ACCESS_KEY}`;
+const getCityPicture = async (city) => {
+  const url = `https://api.unsplash.com/search/photos?page=1&query=${city}&client_id=${UNSPLASH_ACCESS_KEY}`;
 
-//   try {
-//     const response = await axios.get(url);
-//     if (response.data.results.length > 0) {
-//       return response.data.results[0].urls.regular;
-//     } else {
-//       throw new Error("No images found");
-//     }
-//   } catch (error) {
-//     console.error("Error fetching image:", error);
-//     return "https://via.placeholder.com/150";
-//   }
-// };
+  try {
+    const response = await axios.get(url);
+    if (response.data.results.length > 0) {
+      return response.data.results[0].urls.regular;
+    } else {
+      throw new Error("No images found");
+    }
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    return "https://via.placeholder.com/150";
+  }
+};
 
 const CardsSlide = ({ flightTickets, daysArray, onFullDetails }) => {
   const [images, setImages] = useState({});
