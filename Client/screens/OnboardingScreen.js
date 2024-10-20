@@ -44,7 +44,7 @@ const OnboardingScreen = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      navigation.navigate("Home");
+      navigation.navigate("Main", { screen: "Home" });
     }
   };
 
