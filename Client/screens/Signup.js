@@ -86,7 +86,7 @@ export default function SignUp({ navigation, route }) {
         setTimeout(() => {
           sendPushNotification();
           navigation.navigate("Main", { screen: "Home" });
-        }, 3500);
+        }, 1000);
       } else {
         Toast.show({
           type: "error",
@@ -141,7 +141,7 @@ export default function SignUp({ navigation, route }) {
         setGlobalUser(data);
         setTimeout(() => {
           sendSignUpPushNotification();
-          navigation.navigate("OnboardingScreen");
+          navigation.navigate("Main", { screen: "OnboardingScreen" });
         }, 2500);
       } else {
         Toast.show({
