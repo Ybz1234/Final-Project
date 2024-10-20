@@ -141,7 +141,9 @@ export default function SignUp({ navigation, route }) {
         setGlobalUser(data);
         setTimeout(() => {
           sendSignUpPushNotification();
-          navigation.navigate("Main", { screen: "OnboardingScreen" });
+          navigation.navigate("OnboardingScreen");
+
+          // navigation.navigate("Main", { screen: "OnboardingScreen" });
         }, 2500);
       } else {
         Toast.show({
