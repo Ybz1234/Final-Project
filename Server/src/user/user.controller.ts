@@ -149,7 +149,6 @@ export async function signUpUser(req: Request, res: Response) {
       role: "user",
     };
 
-    // Assume registerUserM is defined elsewhere
     const result = await registerUserM(newUser);
 
     await Promise.all([
@@ -170,7 +169,7 @@ export async function signUpUser(req: Request, res: Response) {
 
 async function sendEmail(email: string, firstName: string): Promise<void> {
   try {
-    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/send_email`, {
+    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/routes/send_welcome_email`, {
       to_email: email,
       user_name: firstName
     });
