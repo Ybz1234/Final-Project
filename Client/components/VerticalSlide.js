@@ -1,12 +1,73 @@
-import React from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, ScrollView, Image } from "react-native";
 import { Card, Button } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import axios from "axios";
+
+const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
 const VerticalSlide = ({
   currentDestination,
   handleAlternativeHotels,
   handleAlternativeAttractions,
+  arrivalDate,
+  duration,
 }) => {
+  const [hotelImageUrl, setHotelImageUrl] = useState(null);
+  const [attractionImageUrl, setAttractionImageUrl] = useState(null);
+  const [displayWeather, setDisplayWeather] = useState(false);
+
+  useEffect(() => {
+    if (currentDestination.hotel) {
+      fetchHotelImage(currentDestination.hotel.name);
+    }
+    if (currentDestination.attraction) {
+      fetchAttractionImage(currentDestination.attraction.name);
+    }
+  }, [currentDestination, arrivalDate, duration]);
+
+  const fetchHotelImage = async (query) => {
+    try {
+      const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(
+        query
+      )}&client_id=${UNSPLASH_ACCESS_KEY}`;
+      const response = await axios.get(url);
+      if (response.data.results.length > 0) {
+        setHotelImageUrl(response.data.results[0].urls.regular);
+      } else {
+        setHotelImageUrl("https://via.placeholder.com/150");
+      }
+    } catch (error) {
+      console.error("Error fetching hotel image:", error);
+      setHotelImageUrl("https://via.placeholder.com/150");
+    }
+  };
+
+  const fetchAttractionImage = async (query) => {
+    try {
+      const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(
+        query
+      )}&client_id=${UNSPLASH_ACCESS_KEY}`;
+      const response = await axios.get(url);
+      if (response.data.results.length > 0 || !response.data.results) {
+        setAttractionImageUrl(response.data.results[0].urls.regular);
+      } else {
+        setAttractionImageUrl("https://via.placeholder.com/150");
+      }
+    } catch (error) {
+      console.error("Error fetching attraction image:", error);
+      setAttractionImageUrl("https://via.placeholder.com/150");
+    }
+  };
+
+  const toggleWeather = () => {
+    if (displayWeather) {
+      setDisplayWeather(false);
+    } else {
+      setDisplayWeather(true);
+    }
+  };
   return (
     <Card style={styles.card}>
       <Card.Title
@@ -21,13 +82,19 @@ const VerticalSlide = ({
           {/* Hotel Card */}
           {currentDestination.hotel && (
             <Card style={styles.verticalCard}>
-              <Card.Title title="Hotel" titleStyle={styles.cardTitle} />
+              <Card.Title
+                titleStyle={styles.cardTitle}
+                title={currentDestination.hotel.name}
+                titleNumberOfLines={null}
+              />
               <Card.Content>
-                <Text style={styles.cardText}>Name:</Text>
-                <Text>{currentDestination.hotel.name}</Text>
-
-                <Text style={styles.cardText}>Address:</Text>
-                <Text>{currentDestination.hotel.address.full_address}</Text>
+                {hotelImageUrl && (
+                  <Image source={{ uri: hotelImageUrl }} style={styles.image} />
+                )}
+                <Text style={styles.cardTitle}>Hotel Address:</Text>
+                <Text style={styles.cardText}>
+                  {currentDestination.hotel.address.full_address}
+                </Text>
               </Card.Content>
               <Button
                 onPress={handleAlternativeHotels}
@@ -42,12 +109,22 @@ const VerticalSlide = ({
           {/* Attraction Card */}
           {currentDestination.attraction && (
             <Card style={styles.verticalCard}>
-              <Card.Title title="Attraction" titleStyle={styles.cardTitle} />
+              <Card.Title
+                title={currentDestination.attraction.name}
+                titleStyle={styles.cardTitle}
+                titleNumberOfLines={null}
+              />
               <Card.Content>
-                <Text style={styles.cardText}>Name:</Text>
-                <Text>{currentDestination.attraction.name}</Text>
-                <Text style={styles.cardText}>Description:</Text>
-                <Text>{currentDestination.attraction.description}</Text>
+                {attractionImageUrl && (
+                  <Image
+                    source={{ uri: attractionImageUrl }}
+                    style={styles.image}
+                  />
+                )}
+                <Text style={styles.cardTitle}>Activity Description:</Text>
+                <Text style={styles.cardText}>
+                  {currentDestination.attraction.description}
+                </Text>
               </Card.Content>
               <Button
                 onPress={handleAlternativeAttractions}
@@ -56,6 +133,46 @@ const VerticalSlide = ({
               >
                 Alternative
               </Button>
+            </Card>
+          )}
+          <Button
+            onPress={toggleWeather}
+            style={styles.button2}
+            labelStyle={styles.buttonLabel}
+            icon={({ size, color }) => (
+              <MaterialCommunityIcons
+                name={displayWeather ? "chevron-up" : "chevron-down"}
+                size={size}
+                color={color}
+              />
+            )}
+          >
+            Display Weather
+          </Button>
+          {currentDestination.weather && displayWeather && (
+            <Card style={styles.verticalCard}>
+              <Card.Title
+                title="Weather Forecast:"
+                titleStyle={styles.cardTitle}
+              />
+              <Card.Content>
+                <Text style={styles.cardTitle}>
+                  Weather is from current date to 5 days in the advance only!
+                </Text>
+              </Card.Content>
+              <Card.Content>
+                {currentDestination.weather.map((day, index) => (
+                  <View key={index} style={styles.weatherItem}>
+                    <Text style={styles.cardText}>Date: {day.date}</Text>
+                    <Text style={styles.cardText}>
+                      Temperature: {day.temperature}°C
+                    </Text>
+                    <Text style={styles.cardText}>
+                      Description: {day.description}
+                    </Text>
+                  </View>
+                ))}
+              </Card.Content>
             </Card>
           )}
         </ScrollView>
@@ -88,10 +205,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     fontFamily: "Roboto-BoldItalic",
-    textDecorationLine: "underline",
   },
   scrollView: {
-    height: 400, // Set a fixed height less than the parent card
+    height: 400,
   },
   cardContainer: {
     flexDirection: "column",
@@ -101,17 +217,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#1B3E90",
-    alignItems: "center",
+    width: "100%", // Ensure the card uses available space
+    padding: 0,
+    // alignItems: "center",
   },
   cardText: {
     fontSize: 16,
     color: "#1B3E90",
-    marginVertical: 15,
-    marginBottom: 5,
     fontFamily: "Roboto-MediumItalic",
+    marginVertical: 10,
   },
   button2: {
     width: "50%",
@@ -130,8 +244,14 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     color: "white",
-    fontSize: 14, // Font size
-    fontWeight: "bold", // Bold text
+    fontSize: 14,
+    fontWeight: "bold",
     fontFamily: "Roboto-Medium",
+  },
+  image: {
+    width: "100%",
+    height: 150,
+    borderRadius: 10,
+    marginVertical: 5,
   },
 });
