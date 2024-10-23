@@ -3,12 +3,10 @@ import { ScrollView, StyleSheet, Image, Dimensions } from "react-native";
 import { Card, Text, Button } from "react-native-paper";
 import axios from "axios";
 
-const windowWidth = Dimensions.get("window").width;
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
 const getCityPicture = async (city) => {
   const url = `https://api.unsplash.com/search/photos?page=1&query=${city}&client_id=${UNSPLASH_ACCESS_KEY}`;
-
   try {
     const response = await axios.get(url);
     if (response.data.results.length > 0) {
@@ -21,10 +19,8 @@ const getCityPicture = async (city) => {
     return "https://via.placeholder.com/150";
   }
 };
-
 const CardsSlide = ({ flightTickets, daysArray, onFullDetails }) => {
   const [images, setImages] = useState({});
-
   useEffect(() => {
     const fetchImages = async () => {
       const newImages = {};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View, ActivityIndicator } from "react-native";
 import PageFrame from "../components/PageFrame";
 import { Button } from "react-native-paper";
 import CardsSlide from "../components/CardsSlide";
@@ -7,6 +7,8 @@ import VerticalSlide from "../components/VerticalSlide";
 import CustomModal from "../components/CustomModal";
 import * as Animatable from "react-native-animatable";
 import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+const WEATHERBIT_API_KEY = "aa05a952953b4714bf00a93b013cb6fb";
 
 const FullTrip = ({ route, navigation }) => {
   const { daysArray } = route.params;
@@ -20,9 +22,10 @@ const FullTrip = ({ route, navigation }) => {
   const [attractionModalVisible, setAttractionModalVisible] = useState(false);
   const [alternativeHotels, setAlternativeHotels] = useState([]);
   const [alternativeAttractions, setAlternativeAttractions] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-sa7p.onrender.com";
   useFocusEffect(
     React.useCallback(() => {
       setIsLoading(false);
@@ -92,7 +95,7 @@ const FullTrip = ({ route, navigation }) => {
     setSelectedFlight(flight);
     setSelectedIndex(index);
     const city = flight.arrivalCity;
-
+    setLoading(true);
     try {
       const hotelResponse = await fetch(
         "https://final-project-sqlv.onrender.com/api/hotels/findHotelsByCity",
@@ -122,6 +125,26 @@ const FullTrip = ({ route, navigation }) => {
 
       const attractionDataJson = await attractionResponse.json();
 
+      // Fetch weather data
+      const weatherResponse = await axios.get(
+        `https://api.weatherbit.io/v2.0/forecast/daily`,
+        {
+          params: {
+            city: city,
+            key: WEATHERBIT_API_KEY, // Make sure to define this API key
+            units: "M",
+          },
+        }
+      );
+
+      const temperatures = weatherResponse.data.data.map((day) => ({
+        date: day.valid_date,
+        temperature: day.temp, // Average temperature
+        maxTemp: day.max_temp, // Maximum temperature
+        minTemp: day.min_temp, // Minimum temperature
+        description: day.weather.description, // Weather description
+      }));
+
       // Update destinations array
       setDestinations((prevDestinations) => {
         const updatedDestinations = [...prevDestinations];
@@ -129,14 +152,19 @@ const FullTrip = ({ route, navigation }) => {
           ...updatedDestinations[index],
           hotel: hotelDataJson.hotel[0],
           attraction: attractionDataJson.attractions[0],
+          weather: temperatures,
         };
         return updatedDestinations;
       });
 
       // Show the vertical cards
+
       setShowVerticalCards(true);
     } catch (error) {
       console.error("Error fetching data:", error.message);
+    } finally {
+      setLoading(false);
+      // End loading
     }
   };
 
@@ -271,16 +299,15 @@ const FullTrip = ({ route, navigation }) => {
       })
     );
 
-    // Navigate to FullDestination screen with updated destinations
     navigation.navigate("Main", {
       screen: "FullDestination",
       params: {
         destinations: updatedDestinations,
+        flightsDetails: detailedFlightTickets,
       },
     });
   };
 
-  // Retrieve current destination data
   const currentDestination = destinations[selectedIndex];
   const toggleIsLoading = () => {
     setTimeout(() => {
@@ -301,6 +328,35 @@ const FullTrip = ({ route, navigation }) => {
     );
   }
 
+  const testEmailInformation = async () => {
+    console.log("testEmailInformation");
+    console.log(destinations);
+    console.log(detailedFlightTickets);
+    try {
+      const response = await axios.post(
+        `${PYTHON_UTILITY_SERVER_URL}/send_booking_email`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to_email: "jonathanbz49@gmail.com",
+            booking_details: { destinations, detailedFlightTickets },
+          }),
+        }
+      );
+      if (response.status === 200) {
+        console.log("TEST,Email sent successfully");
+      } else {
+        console.log("TEST,Failed to send email");
+      }
+    } catch (error) {
+      console.log("TEST", error.message);
+      console.log("TEST", error.data);
+    }
+  };
   return (
     <PageFrame>
       <ScrollView>
@@ -312,13 +368,19 @@ const FullTrip = ({ route, navigation }) => {
               onFullDetails={handleFullDetails}
             />
 
-            {showVerticalCards && currentDestination && (
-              <VerticalSlide
-                currentDestination={currentDestination}
-                handleAlternativeHotels={handleAlternativeHotels}
-                handleAlternativeAttractions={handleAlternativeAttractions}
-              />
-            )}
+            {showVerticalCards &&
+              currentDestination &&
+              (loading ? (
+                <View style={styles.loaderContainer}>
+                  <ActivityIndicator size="large" color="#1B3E90" />
+                </View>
+              ) : (
+                <VerticalSlide
+                  currentDestination={currentDestination}
+                  handleAlternativeHotels={handleAlternativeHotels}
+                  handleAlternativeAttractions={handleAlternativeAttractions}
+                />
+              ))}
           </>
         ) : (
           <></>
@@ -414,5 +476,11 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "contain",
     alignSelf: "center",
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 200, // Adjust as needed
   },
 });
