@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
@@ -9,6 +9,40 @@ import { Button, Text } from "react-native-paper";
 const FullDestination = ({ route }) => {
   const { destinations = [], flightsDetails = [] } = route.params || {};
   const confettiRef = useRef(null);
+  useEffect(() => {
+    if (processedDestinations) {
+      sendToMail();
+      // activateTimers();
+    }
+  }, []);
+
+  const sendToMail = async () => {
+    console.log(processedDestinations);
+    try {
+      const response = await fetch(
+        "https://utilityserver-sa7p.onrender.com/routes/send_booking_email",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to_email: "jonathanbz49@gmail.com",
+            booking_details: processedDestinations,
+          }),
+        }
+      );
+      if (response.status === 200) {
+        console.log("Email sent successfully");
+      } else {
+        console.error("Error sending email");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const processDestinations = (destinations) => {
     return destinations.map((destination, index) => {
       const isFinalDestination = index === destinations.length - 1;
@@ -43,7 +77,6 @@ const FullDestination = ({ route }) => {
       }
     });
   };
-
   const processedDestinations = processDestinations(destinations);
   return (
     <PageFrame>
@@ -62,12 +95,10 @@ const FullDestination = ({ route }) => {
             style={styles.icon}
           />
         </Animatable.View>
-
         {/* Animated Text */}
         <Animatable.Text animation="fadeInUp" delay={500} style={styles.text}>
           Booking Confirmed!
         </Animatable.Text>
-
         {/* Confetti Effect */}
         <ConfettiCannon
           ref={confettiRef}
@@ -78,6 +109,9 @@ const FullDestination = ({ route }) => {
         />
       </View>
       <Text>detail of the trip in simple list here </Text>
+      <Button onPress={() => console.log(processedDestinations)}>
+        LALALLA
+      </Button>
       <ScrollView contentContainerStyle={styles.container}>
         {processedDestinations.map((dest, index) => (
           <View key={index} style={styles.destination}>
