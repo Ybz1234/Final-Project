@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { StyleSheet, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
 import { Button, Headline, TextInput } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
 import * as Animatable from "react-native-animatable";
@@ -11,10 +18,9 @@ const PageDatePicker = ({ route, navigation }) => {
   const { cityNameArr } = route?.params;
   const cityArr = cityNameArr.slice(1, cityNameArr.length);
   const [date, setDate] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
-
-  const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -97,18 +103,19 @@ const PageDatePicker = ({ route, navigation }) => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
       >
         <Button
-          labelStyle={styles.buttonLabel}
+          labelStyle={styles.backbuttonLabel}
           style={styles.backButton}
+          icon="arrow-left-circle"
           onPress={() =>
             navigation.navigate("Main", {
               screen: "Home",
             })
           }
-        >
-          Back
-        </Button>
+        ></Button>
+
         <DatePicker date={date} setDate={setDate} />
         {date &&
           cityArr.map((city, index) => (
@@ -120,6 +127,8 @@ const PageDatePicker = ({ route, navigation }) => {
                 keyboardType="numeric"
                 value={daysArr[index]}
                 onChangeText={(value) => handleDaysChange(value, index)}
+                onFocus={() => setKeyboardVisible(true)}
+                onBlur={() => setKeyboardVisible(false)}
               />
             </View>
           ))}
@@ -131,6 +140,16 @@ const PageDatePicker = ({ route, navigation }) => {
           Fly Me A Travel
         </Button>
       </ScrollView>
+      {isKeyboardVisible && (
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <MaterialCommunityIcons name="close" size={24} color="#1B3E90" />
+        </TouchableOpacity>
+      )}
     </PageFrame>
   );
 };
@@ -139,53 +158,44 @@ export default PageDatePicker;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 90,
-
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    justifyContent: "center",
     alignItems: "center",
   },
   scrollView: {
     width: "100%",
   },
   backButton: {
-    width: "20%",
-    alignSelf: "flex-end",
-    paddingVertical: 1,
+    width: "10%",
     borderRadius: 15,
-    marginBottom: 1,
-    backgroundColor: "#1B3E90",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    top: 10,
+    left: -175,
+    // backgroundColor: "#1B3E90",
   },
   cityContainer: {
     marginBottom: 20,
-    width: "90%", // Slightly reduce width to give a card feel
+    width: "90%",
     alignItems: "center",
     padding: 15,
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
-    alignSelf: "center", // Centers the card on the screen
+    alignSelf: "center",
   },
   cityText: {
     alignSelf: "left",
     marginBottom: 12,
-    color: "#1B3E90", // Adjust to a nice blue tone
+    color: "#1B3E90",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 20, // Increase font size for better visibility
+    fontSize: 20,
   },
   input: {
     backgroundColor: "#fff",
-    width: "100%", // Ensure input takes the full width within the card
+    width: "100%",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -208,10 +218,14 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   buttonLabel: {
-    color: "white",
-    fontSize: 17,
     fontWeight: "bold",
+    fontSize: 17,
+    color: "white",
     fontFamily: "Roboto-Medium",
+  },
+  backbuttonLabel: {
+    color: "rgba(255, 255, 255, 0.8)",
+    fontSize: 23,
   },
   image: {
     backgroundColor: "white",
@@ -219,5 +233,18 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "contain",
     alignSelf: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    top: -320,
+    zIndex: 99,
+    borderRadius: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    position: "relative",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });
