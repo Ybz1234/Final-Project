@@ -7,6 +7,8 @@ import {
   ScrollView,
   Keyboard,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Button, Headline, TextInput } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -14,13 +16,33 @@ import DatePicker from "../components/DatePicker";
 import axios from "axios";
 import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
+import Toast from "react-native-toast-message";
 const PageDatePicker = ({ route, navigation }) => {
-  const { cityNameArr } = route?.params;
-  const cityArr = cityNameArr.slice(1, cityNameArr.length);
+  const cityNameArr = route?.params?.cityNameArr || [];
+  const cityArr = cityNameArr.length > 0 ? cityNameArr.slice(1) : [];
   const [date, setDate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [dateConfirmed, setDateConfirmed] = useState(false);
+
+  useEffect(() => {
+    if (!route?.params?.cityNameArr) {
+      Toast.show({
+        type: "info",
+        text1: "You Have to choose cities in order to continue",
+        text2: "Please return to home page and select cities",
+        position: "top",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 280,
+        bottomOffset: 40,
+      });
+      navigation.replace("Main", {
+        screen: "Home",
+      });
+    }
+  }, [route?.params]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -100,46 +122,57 @@ const PageDatePicker = ({ route, navigation }) => {
 
   return (
     <PageFrame>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        style={{ width: "100%" }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={100}
       >
-        <Button
-          labelStyle={styles.backbuttonLabel}
-          style={styles.backButton}
-          icon="arrow-left-circle"
-          onPress={() =>
-            navigation.navigate("Main", {
-              screen: "Home",
-            })
-          }
-        ></Button>
-
-        <DatePicker date={date} setDate={setDate} />
-        {date &&
-          cityArr.map((city, index) => (
-            <View key={index} style={styles.cityContainer}>
-              <Headline style={styles.cityText}>{city}</Headline>
-              <TextInput
-                style={styles.input}
-                label="Duration (days)"
-                keyboardType="numeric"
-                value={daysArr[index]}
-                onChangeText={(value) => handleDaysChange(value, index)}
-                onFocus={() => setKeyboardVisible(true)}
-                onBlur={() => setKeyboardVisible(false)}
-              />
-            </View>
-          ))}
-        <Button
-          labelStyle={styles.buttonLabel}
-          onPress={flyMeATravel}
-          style={styles.button2}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
         >
-          Fly Me A Travel
-        </Button>
-      </ScrollView>
+          <Button
+            labelStyle={styles.backbuttonLabel}
+            style={styles.backButton}
+            icon="arrow-left-circle"
+            onPress={() =>
+              navigation.navigate("Main", {
+                screen: "Home",
+              })
+            }
+          ></Button>
+
+          <DatePicker
+            date={date}
+            setDate={setDate}
+            dateConfirmed={dateConfirmed}
+            setDateConfirmed={setDateConfirmed}
+          />
+          {date &&
+            cityArr.map((city, index) => (
+              <View key={index} style={styles.cityContainer}>
+                <Headline style={styles.cityText}>{city}</Headline>
+                <TextInput
+                  style={styles.input}
+                  label="Duration (days)"
+                  keyboardType="numeric"
+                  value={daysArr[index]}
+                  onChangeText={(value) => handleDaysChange(value, index)}
+                  onFocus={() => setKeyboardVisible(true)}
+                  onBlur={() => setKeyboardVisible(false)}
+                />
+              </View>
+            ))}
+          <Button
+            labelStyle={styles.buttonLabel}
+            onPress={flyMeATravel}
+            style={styles.button2}
+          >
+            Fly Me A Travel
+          </Button>
+        </ScrollView>
+      </KeyboardAvoidingView>
       {isKeyboardVisible && (
         <TouchableOpacity
           style={styles.closeButton}
@@ -236,6 +269,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
+    color: "pink",
     top: -320,
     zIndex: 99,
     borderRadius: 15,
