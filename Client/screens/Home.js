@@ -188,7 +188,7 @@ const Home = ({ navigation, route }) => {
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Headline style={styles.headline}>Choose your destinations</Headline>
-        <Button onPress={envDevDeleteUsersFlightTicket}>LALALALAL</Button>
+        {/* <Button onPress={envDevDeleteUsersFlightTicket}>LALALALAL</Button> */}
         <TouchableWithoutFeedback onPress={handleBlur}>
           <Animatable.View
             style={styles.animatedSearchBarContainer}
