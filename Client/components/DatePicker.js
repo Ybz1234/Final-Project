@@ -1,20 +1,33 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Portal, Provider, DefaultTheme } from "react-native-paper";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import { StyleSheet, View } from "react-native"; // Corrected import
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  Button,
+  Portal,
+  Provider,
+  DefaultTheme,
+  IconButton,
+} from "react-native-paper";
 import {
   DatePickerModal,
   en,
   registerTranslation,
 } from "react-native-paper-dates";
+
 registerTranslation("en", en);
 
-const DatePicker = ({ date, setDate }) => {
+const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
   const [visible, setVisible] = useState(false);
+  // const [dateConfirmed, setDateConfirmed] = useState(false);
+
   const openDatePicker = () => setVisible(true);
   const closeDatePicker = () => setVisible(false);
 
   const onConfirm = (params) => {
     setDate(params.date);
+    setDateConfirmed(true);
     closeDatePicker();
   };
 
@@ -23,26 +36,41 @@ const DatePicker = ({ date, setDate }) => {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: "#1B3E90", // Changes text color
+      primary: "#1B3E90",
       accent: "#1B3E90",
-      surface: "white", // Changes background color of the modal
-      background: "white", // Changes background color of modal content
-      onSurface: "#1B3E90", // Changes color of text on the surface
-      text: "#1B3E90", // General text color
-      placeholder: "#1B3E90", // Placeholder text color
+      surface: "white",
+      background: "white",
+      onSurface: "#1B3E90",
+      text: "#1B3E90",
+      placeholder: "#1B3E90",
     },
   };
 
   return (
     <Provider theme={theme}>
-      <Button
-        mode="elevated"
-        style={styles.button}
-        labelStyle={styles.buttonLabel}
-        onPress={openDatePicker}
-      >
-        Pick a date
-      </Button>
+      {!dateConfirmed ? (
+        <Button
+          mode="elevated"
+          style={styles.button}
+          labelStyle={styles.buttonLabel}
+          onPress={openDatePicker}
+        >
+          Pick a date
+        </Button>
+      ) : (
+        <View style={styles.undoContainer}>
+          <MaterialCommunityIcons
+            name="calendar-refresh"
+            size={26}
+            style={styles.undoButton}
+            color="#2EB8B8"
+            onPress={() => {
+              setDate(null);
+              setDateConfirmed(false);
+            }}
+          />
+        </View>
+      )}
       <Portal>
         <DatePickerModal
           mode="single"
@@ -85,6 +113,26 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Medium",
   },
   modalContent: {
-    backgroundColor: "white", // Sets the background color of the modal content
+    backgroundColor: "white",
+  },
+  undoContainer: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 15,
+    fontFamily: "Roboto-Medium",
+    padding: 5,
+    right: 167,
+    marginVertical: 15,
+  },
+  undoButton: {
+    alignSelf: "left",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    color: "lightblue",
+    shadowColor: "#000",
+  },
+  undoButtonLabel: {
+    fontSize: 23,
   },
 });

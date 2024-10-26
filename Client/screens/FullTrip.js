@@ -8,10 +8,12 @@ import CustomModal from "../components/CustomModal";
 import * as Animatable from "react-native-animatable";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 const WEATHERBIT_API_KEY = "aa05a952953b4714bf00a93b013cb6fb";
 
 const FullTrip = ({ route, navigation }) => {
-  const { daysArray } = route.params;
+  // const { daysArray } = route?.params?.daysArray || [];
+  const { daysArray } = route.params || [];
   const [detailedFlightTickets, setDetailedFlightTickets] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showVerticalCards, setShowVerticalCards] = useState(false);
@@ -25,14 +27,30 @@ const FullTrip = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-sa7p.onrender.com";
+
   useFocusEffect(
     React.useCallback(() => {
       setIsLoading(false);
       fetchFlightDetails();
     }, [])
   );
+
   useEffect(() => {
-    fetchFlightDetails();
+    if (route?.params?.daysArray == undefined) {
+      Toast.show({
+        type: "info",
+        text1: "You Have to follow the instructions",
+        text2: "Please return to Pick a date or go to select cities",
+        position: "top",
+        visibilityTime: 5000,
+        autoHide: true,
+        topOffset: 280,
+        bottomOffset: 40,
+      });
+      navigation.replace("Main", {
+        screen: "Home",
+      });
+    }
   }, []);
 
   const envDevDeleteUsersFlightTicket = async () => {

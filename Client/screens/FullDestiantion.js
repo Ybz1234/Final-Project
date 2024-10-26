@@ -7,12 +7,27 @@ import ConfettiCannon from "react-native-confetti-cannon";
 import { Button, Text } from "react-native-paper";
 
 const FullDestination = ({ route }) => {
-  const { destinations = [], flightsDetails = [] } = route.params || {};
+  const { destinations = [] } = route.params || {};
   const confettiRef = useRef(null);
   useEffect(() => {
     if (processedDestinations) {
       sendToMail();
       // activateTimers();
+    }
+    if (!destinations || !processedDestinations) {
+      Toast.show({
+        type: "info",
+        text1: "You Have to choose cities in order to continue",
+        text2: "Please return to home page and select cities",
+        position: "top",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 280,
+        bottomOffset: 40,
+      });
+      navigation.replace("Main", {
+        screen: "Home",
+      });
     }
   }, []);
 
@@ -108,10 +123,9 @@ const FullDestination = ({ route }) => {
           fallSpeed={3000}
         />
       </View>
-      <Text>detail of the trip in simple list here </Text>
-      <Button onPress={() => console.log(processedDestinations)}>
+      {/* <Button onPress={() => console.log(processedDestinations)}>
         LALALLA
-      </Button>
+      </Button> */}
       <ScrollView contentContainerStyle={styles.container}>
         {processedDestinations.map((dest, index) => (
           <View key={index} style={styles.destination}>
