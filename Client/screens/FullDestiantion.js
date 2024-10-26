@@ -123,10 +123,9 @@ const FullDestination = ({ route }) => {
           fallSpeed={3000}
         />
       </View>
-      <Text>detail of the trip in simple list here </Text>
-      <Button onPress={() => console.log(processedDestinations)}>
+      {/* <Button onPress={() => console.log(processedDestinations)}>
         LALALLA
-      </Button>
+      </Button> */}
       <ScrollView contentContainerStyle={styles.container}>
         {processedDestinations.map((dest, index) => (
           <View key={index} style={styles.destination}>
