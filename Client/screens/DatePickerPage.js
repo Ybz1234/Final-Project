@@ -52,11 +52,11 @@ const PageDatePicker = ({ route, navigation }) => {
 
   const flyMeATravel = async () => {
     setIsLoading(true);
-    console.log("date picker page request started");
-    console.log("new Date", new Date());
-    console.log("cityNameArr", cityNameArr);
-    console.log("date", date);
-    console.log("daysArr", daysArr);
+    // console.log("date picker page request started");
+    // console.log("new Date", new Date());
+    // console.log("cityNameArr", cityNameArr);
+    // console.log("date", date);
+    // console.log("daysArr", daysArr);
 
     try {
       const response = await axios.post(
@@ -76,9 +76,9 @@ const PageDatePicker = ({ route, navigation }) => {
             return flightTicekt.insertedId;
           }
         );
-        console.log("flightTicektIds", flightTicektIds);
+        // console.log("flightTicektIds", flightTicektIds);
         setIsLoading(false);
-        navigation.navigate("Main", {
+        navigation.replace("Main", {
           screen: "FullTrip",
           params: {
             flightTickets: data.flightTickets,
@@ -127,22 +127,22 @@ const PageDatePicker = ({ route, navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={100}
       >
+        {/* !!!!!!!!!!!!!!!!!!!! */}
+        <Button
+          labelStyle={styles.backbuttonLabel}
+          style={styles.backButton}
+          icon="arrow-left-circle"
+          onPress={() =>
+            navigation.navigate("Main", {
+              screen: "Home",
+            })
+          }
+        ></Button>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <Button
-            labelStyle={styles.backbuttonLabel}
-            style={styles.backButton}
-            icon="arrow-left-circle"
-            onPress={() =>
-              navigation.navigate("Main", {
-                screen: "Home",
-              })
-            }
-          ></Button>
-
           <DatePicker
             date={date}
             setDate={setDate}
@@ -196,12 +196,17 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: "100%",
+    height: "100%",
+    marginTop: -40,
   },
   backButton: {
     width: "10%",
+    marginVertical: 40,
     borderRadius: 15,
-    top: 10,
-    left: -175,
+    // alignItems: "left",
+    // justifyContent: "top",
+    // top: -155,
+    // left: -175,
     // backgroundColor: "#1B3E90",
   },
   cityContainer: {
