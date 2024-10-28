@@ -12,7 +12,7 @@ const FullDestination = ({ route }) => {
   useEffect(() => {
     if (processedDestinations) {
       sendToMail();
-      activateTimers();
+      //activateTimers();
     }
     if (!destinations || !processedDestinations) {
       Toast.show({
