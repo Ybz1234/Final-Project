@@ -164,10 +164,31 @@ const Home = ({ navigation, route }) => {
       }
     }
   };
+
+  const envDevDeleteUsersFlightTicket = async () => {
+    try {
+      const response = await fetch(
+        `https://final-project-sqlv.onrender.com/api/devEnv/deleteUsersFlightsTickets`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: "670296627d17e676255dff0f" }),
+        }
+      );
+      const data = await response.json();
+      console.log("FullTripDATA!", data);
+    } catch (error) {
+      console.log("Error FullTrip", error.message);
+    }
+  };
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Headline style={styles.headline}>Choose your destinations</Headline>
+        {/* <Button onPress={envDevDeleteUsersFlightTicket}>LALALALAL</Button> */}
         <TouchableWithoutFeedback onPress={handleBlur}>
           <Animatable.View
             style={styles.animatedSearchBarContainer}
