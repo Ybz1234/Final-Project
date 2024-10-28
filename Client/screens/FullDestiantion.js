@@ -72,7 +72,7 @@ const FullDestination = ({ route }) => {
       console.log("pushToken: ", pushToken);
 
       const response = await fetch(
-        "https://final-project-sqlv.onrender.com/api/timer",
+        "https://final-project-sqlv.onrender.com/api/timer/sendScheduledNotification",
         {
           method: "POST",
           headers: {
