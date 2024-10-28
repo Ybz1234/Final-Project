@@ -12,7 +12,7 @@ const FullDestination = ({ route }) => {
   useEffect(() => {
     if (processedDestinations) {
       sendToMail();
-      // activateTimers();
+      activateTimers();
     }
     if (!destinations || !processedDestinations) {
       Toast.show({
@@ -54,6 +54,41 @@ const FullDestination = ({ route }) => {
         console.error("Error sending email");
       }
     } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const activateTimers = async () => {
+    console.log("formattedDate: ", formattedDate);
+    console.log("flightDate: ", flightDate);
+
+    try{
+      const pushToken = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data;
+
+      console.log("pushToken: ", pushToken);
+
+      const response = await fetch(
+        "https://final-project-sqlv.onrender.com/api/timer",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: "Your vacation is about to start!",
+            body: "check your Email",
+            expoPushToken: pushToken,
+            date: flightDate
+          }),
+        }
+      );
+    }
+    catch(error){
       console.error(error);
     }
   };
