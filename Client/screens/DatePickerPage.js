@@ -124,6 +124,7 @@ const PageDatePicker = ({ route, navigation }) => {
             flightTickets: data.flightTickets,
             userId: "670296627d17e676255dff0f",
             daysArray: daysArr,
+            date: date,
           },
         });
       } else {

@@ -136,19 +136,14 @@ export async function userUpToDateFlightTicketsDB(userId: ObjectId) {
     throw error;
   }
 }
-export async function userFlightTicketsFromDateDB(
-  userId: ObjectId,
-  startDate: Date
-) {
+export async function userFlightTicketsFromDateDB(userId: ObjectId) {
   let mongo = await DBConnection.getInstance();
   try {
     return await mongo
       .db(DB_INFO.db)
       .collection("flight_ticket")
       .aggregate([
-        // Match flight tickets for the user
         { $match: { userId: userId } },
-        // Lookup flight details
         {
           $lookup: {
             from: "flights",
@@ -158,13 +153,6 @@ export async function userFlightTicketsFromDateDB(
           },
         },
         { $unwind: "$flightDetails" },
-        // Filter flights where flightDate >= startDate
-        {
-          $match: {
-            "flightDetails.From_Time": { $gte: startDate },
-          },
-        },
-        // Lookup departure airport details
         {
           $lookup: {
             from: "airports",
@@ -174,7 +162,6 @@ export async function userFlightTicketsFromDateDB(
           },
         },
         { $unwind: "$departureDetails" },
-        // Lookup arrival airport details
         {
           $lookup: {
             from: "airports",
@@ -184,7 +171,6 @@ export async function userFlightTicketsFromDateDB(
           },
         },
         { $unwind: "$arrivalDetails" },
-        // Project the desired fields
         {
           $project: {
             _id: 1,
@@ -197,12 +183,11 @@ export async function userFlightTicketsFromDateDB(
             flightMinute: { $minute: "$flightDetails.From_Time" },
           },
         },
-        // Sort by flightDate ascending (optional)
+        // Sort the results by flightDate ascending
         { $sort: { flightDate: 1 } },
       ])
       .toArray();
   } catch (error) {
-    console.error("Error in userFlightTicketsFromDateDB:", error);
     throw error;
   }
 }

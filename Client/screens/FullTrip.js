@@ -13,7 +13,8 @@ const WEATHERBIT_API_KEY = "aa05a952953b4714bf00a93b013cb6fb";
 
 const FullTrip = ({ route, navigation }) => {
   // const { daysArray } = route?.params?.daysArray || [];
-  const { daysArray } = route.params || [];
+  const { daysArray, date } = route.params || [];
+
   const [detailedFlightTickets, setDetailedFlightTickets] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showVerticalCards, setShowVerticalCards] = useState(false);
@@ -72,22 +73,58 @@ const FullTrip = ({ route, navigation }) => {
       console.log("Error FullTrip", error.message);
     }
   };
+  // const fetchFlightDetails = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://final-project-sqlv.onrender.com/api/FlightTicket/userUpToDateFlightTickets",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ userId: "670296627d17e676255dff0f" }),
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       console.log("Error:", response.data);
+  //       return;
+  //     }
+
+  //     const data = await response.json();
+  //     setDetailedFlightTickets(data.flightTickets);
+  //     setIsDataFetched(true);
+
+  //     const initialDestinations = data.flightTickets.map((flight) => ({
+  //       city: flight.arrivalCity,
+  //       flight: flight,
+  //       hotel: null,
+  //       attraction: null,
+  //     }));
+  //     setDestinations(initialDestinations);
+  //   } catch (error) {
+  //     console.log("Error FullTrip", error.message);
+  //   }
+  // };
   const fetchFlightDetails = async () => {
     try {
       const response = await fetch(
-        "https://final-project-sqlv.onrender.com/api/FlightTicket/userUpToDateFlightTickets",
+        "https://final-project-sqlv.onrender.com/api/FlightTicket/userFlightTicketsFromDate",
         {
           method: "POST",
           headers: {
-            Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userId: "670296627d17e676255dff0f" }),
+          body: JSON.stringify({
+            userId: "670296627d17e676255dff0f",
+            startDate: date.toISOString(),
+          }),
         }
       );
 
       if (!response.ok) {
-        console.log("Error:", response.data);
+        console.error("Error:", response.statusText);
         return;
       }
 
@@ -103,7 +140,7 @@ const FullTrip = ({ route, navigation }) => {
       }));
       setDestinations(initialDestinations);
     } catch (error) {
-      console.log("Error FullTrip", error.message);
+      console.error("Error fetching flight details:", error);
     }
   };
 

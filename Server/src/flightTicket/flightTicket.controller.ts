@@ -119,6 +119,24 @@ export async function userUpToDateFlightTickets(req: Request, res: Response) {
   }
 }
 
+// export async function userFlightTicketsFromDate(req: Request, res: Response) {
+//   let { userId, startDate } = req.body;
+//   if (!userId || !startDate) {
+//     return res.status(400).json({ error: "userId and startDate are required" });
+//   }
+//   try {
+//     const userObjectId = new ObjectId(userId);
+//     const startDateObj = new Date(startDate);
+//     let flightTickets = await userFlightTicketsFromDateM(
+//       userObjectId,
+//       startDateObj
+//     );
+//     return res.status(200).json({ flightTickets });
+//   } catch (error) {
+//     console.error("Error in userFlightTicketsFromDate:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// }
 export async function userFlightTicketsFromDate(req: Request, res: Response) {
   let { userId, startDate } = req.body;
   if (!userId || !startDate) {
@@ -127,11 +145,44 @@ export async function userFlightTicketsFromDate(req: Request, res: Response) {
   try {
     const userObjectId = new ObjectId(userId);
     const startDateObj = new Date(startDate);
-    let flightTickets = await userFlightTicketsFromDateM(
-      userObjectId,
-      startDateObj
-    );
-    return res.status(200).json({ flightTickets });
+
+    // Fetch all flight tickets for the user, sorted by flightDate ascending
+    let flightTickets = await userFlightTicketsFromDateM(userObjectId);
+
+    // Initialize the array to hold the filtered flight tickets
+    const filteredFlightTickets = [];
+
+    // Flag to indicate whether we've found the flights from startDate onwards
+    let flightsFromStartDateFound = false;
+
+    for (let i = 0; i < flightTickets.length; i++) {
+      const flight = flightTickets[i];
+      const flightDate = new Date(flight.flightDate);
+
+      if (flightDate >= startDateObj) {
+        // If we're at the first flight from startDate onwards and it's not the first flight overall
+        if (!flightsFromStartDateFound && i > 0) {
+          // Include the previous flight (immediately before startDate)
+          filteredFlightTickets.push(flightTickets[i - 1]);
+        }
+        flightsFromStartDateFound = true;
+        filteredFlightTickets.push(flight);
+      }
+    }
+
+    // If no flights from startDate onwards are found, include the last flight before startDate
+    if (!flightsFromStartDateFound && flightTickets.length > 0) {
+      for (let i = flightTickets.length - 1; i >= 0; i--) {
+        const flight = flightTickets[i];
+        const flightDate = new Date(flight.flightDate);
+        if (flightDate < startDateObj) {
+          filteredFlightTickets.push(flight);
+          break;
+        }
+      }
+    }
+
+    return res.status(200).json({ flightTickets: filteredFlightTickets });
   } catch (error) {
     console.error("Error in userFlightTicketsFromDate:", error);
     res.status(500).json({ error: "Internal server error" });

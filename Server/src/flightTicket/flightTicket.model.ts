@@ -59,9 +59,6 @@ export async function getFlightTicketInfoM(flightId: ObjectId) {
 export async function userUpToDateFlightTicketsM(userId: ObjectId) {
   return await userUpToDateFlightTicketsDB(userId);
 }
-export async function userFlightTicketsFromDateM(
-  userId: ObjectId,
-  startDate: Date
-) {
-  return await userFlightTicketsFromDateDB(userId, startDate);
+export async function userFlightTicketsFromDateM(userId: ObjectId) {
+  return await userFlightTicketsFromDateDB(userId);
 }
