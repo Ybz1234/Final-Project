@@ -10,7 +10,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { Button, Headline, TextInput } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Headline,
+  TextInput,
+} from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
@@ -25,6 +30,7 @@ const PageDatePicker = ({ route, navigation }) => {
   const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [dateConfirmed, setDateConfirmed] = useState(false);
+  const [buttonPressed, setButtonPressed] = useState(false);
 
   useEffect(() => {
     if (!route?.params?.cityNameArr) {
@@ -46,17 +52,51 @@ const PageDatePicker = ({ route, navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setIsLoading(false);
+      // setIsLoading(false);
     }, [])
   );
-
+  const checkInputs = () => {
+    if (!date) {
+      Toast.show({
+        type: "error",
+        text1: "Date Not Selected",
+        text2: "Please pick a date before proceeding.",
+        position: "top",
+        visibilityTime: 3000,
+      });
+      return false;
+    }
+    const emptyDurationIndex = daysArr.findIndex(
+      (value) => value.trim() === ""
+    );
+    if (emptyDurationIndex !== -1) {
+      Toast.show({
+        type: "error",
+        text1: "Duration Missing",
+        text2: `Please enter the duration for ${
+          cityNameArr[emptyDurationIndex + 1]
+        }.`,
+        position: "top",
+        visibilityTime: 3000,
+      });
+      return false;
+    }
+    return true;
+  };
   const flyMeATravel = async () => {
+    const inputsAreValid = checkInputs();
+    if (!inputsAreValid) {
+      setIsSubmitting(false);
+      return;
+    }
     setIsLoading(true);
     // console.log("date picker page request started");
     // console.log("new Date", new Date());
     // console.log("cityNameArr", cityNameArr);
     // console.log("date", date);
     // console.log("daysArr", daysArr);
+
+    hadleButtonIsPressed();
 
     try {
       const response = await axios.post(
@@ -106,6 +146,14 @@ const PageDatePicker = ({ route, navigation }) => {
       setIsLoading(true);
     }, 1500);
   };
+
+  const hadleButtonIsPressed = () => {
+    setButtonPressed(true);
+    setTimeout(() => {
+      setButtonPressed(false);
+    }, 4000);
+  };
+
   if (!isLoading) {
     toggleIsLoading();
     return (
@@ -169,7 +217,11 @@ const PageDatePicker = ({ route, navigation }) => {
             onPress={flyMeATravel}
             style={styles.button2}
           >
-            Fly Me A Travel
+            {buttonPressed ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              "Fly Me A Travel"
+            )}
           </Button>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -274,16 +326,15 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    color: "pink",
-    top: -320,
-    zIndex: 99,
+    top: -420,
     borderRadius: 15,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     position: "relative",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    padding: 5,
+    alignSelf: "center",
+    shadowColor: "#1B3E90",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
 });
