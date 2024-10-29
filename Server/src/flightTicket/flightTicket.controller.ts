@@ -3,6 +3,7 @@ import {
   createFlightTicket,
   getAllFlightTickets,
   getFlightTicketInfoM,
+  userFlightTicketsFromDateM,
   userUpToDateFlightTicketsM,
 } from "./flightTicket.model";
 import { ObjectId } from "mongodb";
@@ -118,6 +119,21 @@ export async function userUpToDateFlightTickets(req: Request, res: Response) {
   }
 }
 
-export async function loginFlightTicket(req: Request, res: Request) {}
-export async function updateFlightTicket(req: Request, res: Request) {}
-export async function deleteFlightTicket(req: Request, res: Request) {}
+export async function userFlightTicketsFromDate(req: Request, res: Response) {
+  let { userId, startDate } = req.body;
+  if (!userId || !startDate) {
+    return res.status(400).json({ error: "userId and startDate are required" });
+  }
+  try {
+    const userObjectId = new ObjectId(userId);
+    const startDateObj = new Date(startDate);
+    let flightTickets = await userFlightTicketsFromDateM(
+      userObjectId,
+      startDateObj
+    );
+    return res.status(200).json({ flightTickets });
+  } catch (error) {
+    console.error("Error in userFlightTicketsFromDate:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}

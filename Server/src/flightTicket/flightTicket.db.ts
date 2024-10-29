@@ -136,3 +136,73 @@ export async function userUpToDateFlightTicketsDB(userId: ObjectId) {
     throw error;
   }
 }
+export async function userFlightTicketsFromDateDB(
+  userId: ObjectId,
+  startDate: Date
+) {
+  let mongo = await DBConnection.getInstance();
+  try {
+    return await mongo
+      .db(DB_INFO.db)
+      .collection("flight_ticket")
+      .aggregate([
+        // Match flight tickets for the user
+        { $match: { userId: userId } },
+        // Lookup flight details
+        {
+          $lookup: {
+            from: "flights",
+            localField: "flightId",
+            foreignField: "_id",
+            as: "flightDetails",
+          },
+        },
+        { $unwind: "$flightDetails" },
+        // Filter flights where flightDate >= startDate
+        {
+          $match: {
+            "flightDetails.From_Time": { $gte: startDate },
+          },
+        },
+        // Lookup departure airport details
+        {
+          $lookup: {
+            from: "airports",
+            localField: "flightDetails.Departure_Id",
+            foreignField: "_id",
+            as: "departureDetails",
+          },
+        },
+        { $unwind: "$departureDetails" },
+        // Lookup arrival airport details
+        {
+          $lookup: {
+            from: "airports",
+            localField: "flightDetails.Arrival_Id",
+            foreignField: "_id",
+            as: "arrivalDetails",
+          },
+        },
+        { $unwind: "$arrivalDetails" },
+        // Project the desired fields
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            flightId: 1,
+            departureCity: "$departureDetails.city",
+            arrivalCity: "$arrivalDetails.city",
+            flightDate: "$flightDetails.From_Time",
+            flightHour: { $hour: "$flightDetails.From_Time" },
+            flightMinute: { $minute: "$flightDetails.From_Time" },
+          },
+        },
+        // Sort by flightDate ascending (optional)
+        { $sort: { flightDate: 1 } },
+      ])
+      .toArray();
+  } catch (error) {
+    console.error("Error in userFlightTicketsFromDateDB:", error);
+    throw error;
+  }
+}

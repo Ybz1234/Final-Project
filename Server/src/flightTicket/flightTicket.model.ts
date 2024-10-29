@@ -5,6 +5,7 @@ import {
   addFlightTicketDB,
   getAllFlightTicketsDB,
   getFlightTicketInfoDB,
+  userFlightTicketsFromDateDB,
   userUpToDateFlightTicketsDB,
 } from "./flightTicket.db";
 import { IFlightTicket } from "./flightTicket.type";
@@ -57,4 +58,10 @@ export async function getFlightTicketInfoM(flightId: ObjectId) {
 
 export async function userUpToDateFlightTicketsM(userId: ObjectId) {
   return await userUpToDateFlightTicketsDB(userId);
+}
+export async function userFlightTicketsFromDateM(
+  userId: ObjectId,
+  startDate: Date
+) {
+  return await userFlightTicketsFromDateDB(userId, startDate);
 }
