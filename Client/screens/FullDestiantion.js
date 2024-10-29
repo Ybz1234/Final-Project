@@ -4,15 +4,15 @@ import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ConfettiCannon from "react-native-confetti-cannon";
-import { Button, Text } from "react-native-paper";
+import { Text, Card } from "react-native-paper";
 
 const FullDestination = ({ route }) => {
   const { destinations = [] } = route.params || {};
   const confettiRef = useRef(null);
+
   useEffect(() => {
     if (processedDestinations) {
       sendToMail();
-      //activateTimers();
     }
     if (!destinations || !processedDestinations) {
       Toast.show({
@@ -25,14 +25,11 @@ const FullDestination = ({ route }) => {
         topOffset: 280,
         bottomOffset: 40,
       });
-      navigation.replace("Main", {
-        screen: "Home",
-      });
+      navigation.replace("Main", { screen: "Home" });
     }
   }, []);
 
   const sendToMail = async () => {
-    console.log(processedDestinations);
     try {
       const response = await fetch(
         "https://utilityserver-sa7p.onrender.com/routes/send_booking_email",
@@ -58,52 +55,13 @@ const FullDestination = ({ route }) => {
     }
   };
 
-  const activateTimers = async () => {
-    console.log("formattedDate: ", formattedDate);
-    console.log("flightDate: ", flightDate);
-
-    try{
-      const pushToken = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId,
-        })
-      ).data;
-
-      console.log("pushToken: ", pushToken);
-
-      const response = await fetch(
-        "https://final-project-sqlv.onrender.com/api/timer/sendScheduledNotification",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: "Your vacation is about to start!",
-            body: "check your Email",
-            expoPushToken: pushToken,
-            date: flightDate
-          }),
-        }
-      );
-    }
-    catch(error){
-      console.error(error);
-    }
-  };
-
   const processDestinations = (destinations) => {
     return destinations.map((destination, index) => {
       const isFinalDestination = index === destinations.length - 1;
       const cityName = destination.city || "N/A";
-      const flightDate = destination.flight
-        ? destination.flight.flightDate
-        : "N/A";
+      const flightDate = destination.flight ? destination.flight.flightDate : "N/A";
       const formattedDate =
-        flightDate !== "N/A"
-          ? new Date(flightDate).toLocaleDateString()
-          : "N/A";
+        flightDate !== "N/A" ? new Date(flightDate).toLocaleDateString() : "N/A";
 
       if (isFinalDestination) {
         return {
@@ -113,9 +71,7 @@ const FullDestination = ({ route }) => {
         };
       } else {
         const hotelName = destination.hotel ? destination.hotel.name : "N/A";
-        const attractionName = destination.attraction
-          ? destination.attraction.name
-          : "N/A";
+        const attractionName = destination.attraction ? destination.attraction.name : "N/A";
 
         return {
           destinationTitle: `Destination ${index + 1}`,
@@ -127,11 +83,12 @@ const FullDestination = ({ route }) => {
       }
     });
   };
+
   const processedDestinations = processDestinations(destinations);
+
   return (
     <PageFrame>
       <View style={styles.container}>
-        {/* Glowing and Animated Checkmark Icon */}
         <Animatable.View
           animation="zoomIn"
           duration={1000}
@@ -145,11 +102,9 @@ const FullDestination = ({ route }) => {
             style={styles.icon}
           />
         </Animatable.View>
-        {/* Animated Text */}
         <Animatable.Text animation="fadeInUp" delay={500} style={styles.text}>
           Booking Confirmed!
         </Animatable.Text>
-        {/* Confetti Effect */}
         <ConfettiCannon
           ref={confettiRef}
           count={200}
@@ -158,25 +113,29 @@ const FullDestination = ({ route }) => {
           fallSpeed={3000}
         />
       </View>
-      {/* <Button onPress={() => console.log(processedDestinations)}>
-        LALALLA
-      </Button> */}
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {processedDestinations.map((dest, index) => (
-          <View key={index} style={styles.destination}>
-            <Text style={styles.title}>{dest.destinationTitle}</Text>
-            <Text style={styles.text}>City Name: {dest.cityName}</Text>
-            <Text style={styles.text}>Flight Date: {dest.flightDate}</Text>
-            {!dest.destinationTitle.includes("Final") && (
-              <>
-                <Text style={styles.text}>Hotel Name: {dest.hotelName}</Text>
-                <Text style={styles.text}>
-                  Attraction: {dest.attractionName}
-                </Text>
-              </>
-            )}
-            <View style={styles.separator} />
-          </View>
+          <Card key={index} style={styles.card} elevation={5}>
+            <Card.Title title={dest.destinationTitle} titleStyle={styles.cardTitle} />
+            <Card.Content>
+              <Text style={styles.cardText}>
+                <Text style={styles.boldText}>City Name: </Text>{dest.cityName}
+              </Text>
+              <Text style={styles.cardText}>
+                <Text style={styles.boldText}>Flight Date: </Text>{dest.flightDate}
+              </Text>
+              {!dest.destinationTitle.includes("Final") && (
+                <>
+                  <Text style={styles.cardText}>
+                    <Text style={styles.boldText}>Hotel Name: </Text>{dest.hotelName}
+                  </Text>
+                  <Text style={styles.cardText}>
+                    <Text style={styles.boldText}>Attraction: </Text>{dest.attractionName}
+                  </Text>
+                </>
+              )}
+            </Card.Content>
+          </Card>
         ))}
       </ScrollView>
     </PageFrame>
@@ -208,21 +167,28 @@ const styles = StyleSheet.create({
     color: "#1B3E90",
     fontWeight: "bold",
   },
-  container: {
+  scrollContainer: {
     padding: 20,
   },
-  destination: {
+  card: {
     marginBottom: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    shadowColor: "#1B3E90",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
-  title: {
-    fontWeight: "bold",
-    fontSize: 20,
+  cardTitle: {
     color: "#1B3E90",
+    fontWeight: "bold",
   },
-
-  separator: {
-    height: 1,
-    backgroundColor: "#CCCCCC",
-    marginTop: 10,
+  cardText: {
+    fontSize: 16,
+    color: "#1B3E90",
+    marginVertical: 5,
+  },
+  boldText: {
+    fontWeight: "bold",
+    color: "#1B3E90",
   },
 });
