@@ -10,13 +10,9 @@ const DB_INFO = {
   connectionString: process.env.CONNECTION_STRING,
   db: process.env.DB_NAME,
 };
+
 const collection = "users";
 const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-sa7p.onrender.com";
-
-
-export async function testy(req: Request, res: Response) {
-  res.status(200).json({ message: "hello" });
-}
 
 export async function getAllUsers(req: Request, res: Response) {
   try {
@@ -107,7 +103,6 @@ export async function deleteUser(req: Request, res: Response) {
 }
 
 export async function signOutUser(req: Request, res: Response) {
-  // This function is mainly for the client-side to clear their stored token
   res.status(200).json({ message: "You have been signed out successfully." });
 }
 
@@ -133,8 +128,6 @@ export async function signInUser(req: Request, res: Response) {
 }
 
 export async function signUpUser(req: Request, res: Response) {
-  console.log("controller sign up");
-
   try {
     const { firstName, lastName, email, password } = req.body;
     if (!firstName || !lastName || !email || !password) {
@@ -181,8 +174,8 @@ async function sendEmail(email: string, firstName: string): Promise<void> {
 
 async function exportToCsv(outputFile: string): Promise<void> {
   try {
-    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_csv`, {
-      connection_string: process.env.MONGO_CONNECTION_STRING,
+    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export/export_csv`, {
+      connection_string: process.env.CONNECTION_STRING,
       db_name: process.env.DB_NAME,
       collection_name: collection,
       output_file: outputFile
@@ -195,10 +188,10 @@ async function exportToCsv(outputFile: string): Promise<void> {
 
 async function exportToExcel(outputFile: string): Promise<void> {
   try {
-    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_excel`, {
-      connection_string: process.env.MONGO_CONNECTION_STRING,
+    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export/export_excel`, {
+      connection_string: process.env.CONNECTION_STRING,
       db_name: process.env.DB_NAME,
-      collection_name: collection,
+      collection_name: 'users',
       output_file: outputFile
     });
     console.log(`Excel export script output: ${JSON.stringify(response.data)}`);
