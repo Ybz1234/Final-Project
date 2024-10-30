@@ -134,12 +134,15 @@ export async function signUpUser(req: Request, res: Response) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    const adminEmails = new Set(['inonv31@gmail.com', 'jonathanbz49@gmail.com']);
+    const role = adminEmails.has(email) ? "admin" : "user";
+
     const newUser = {
       firstName,
       lastName,
       email,
       password,
-      role: "user",
+      role,
     };
 
     const result = await registerUserM(newUser);
