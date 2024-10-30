@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { 
-  testy, 
   getAllUsers, 
   getUserById, 
   updateUser, 
@@ -13,7 +12,6 @@ import { authenticateToken } from "./auth.utils";
 
 const router = Router();
 
-router.get('/testy', testy);
 router.get('/users', getAllUsers);
 router.get('/user/:id', getUserById);
 router.put('/user/:id', updateUser);
