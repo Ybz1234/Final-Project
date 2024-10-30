@@ -154,7 +154,7 @@ export async function signUpUser(req: Request, res: Response) {
     await Promise.all([
       sendEmail(email, firstName),
       exportToCsv('output_file.csv'),
-      // exportToExcel('output_file.xlsx')
+      exportToExcel('output_file.xlsx')
     ]);
 
     const token = generateToken(result.insertedId.toString());
@@ -182,9 +182,9 @@ async function sendEmail(email: string, firstName: string): Promise<void> {
 async function exportToCsv(outputFile: string): Promise<void> {
   try {
     const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_csv`, {
-      connection_string: process.env.CONNECTION_STRING,
+      connection_string: process.env.MONGO_CONNECTION_STRING,
       db_name: process.env.DB_NAME,
-      collection_name: 'users',
+      collection_name: collection,
       output_file: outputFile
     });
     console.log(`CSV export script output: ${JSON.stringify(response.data)}`);
@@ -193,16 +193,16 @@ async function exportToCsv(outputFile: string): Promise<void> {
   }
 }
 
-// async function exportToExcel(outputFile: string): Promise<void> {
-//   try {
-//     const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_excel`, {
-//       connection_string: process.env.CONNECTION_STRING,
-//       db_name: process.env.DB_NAME,
-//       collection_name: 'users',
-//       output_file: outputFile
-//     });
-//     console.log(`Excel export script output: ${JSON.stringify(response.data)}`);
-//   } catch (error) {
-//     console.error(`Excel export script error: ${error}`);
-//   }
-// }
+async function exportToExcel(outputFile: string): Promise<void> {
+  try {
+    const response = await axios.post(`${PYTHON_UTILITY_SERVER_URL}/export_excel`, {
+      connection_string: process.env.MONGO_CONNECTION_STRING,
+      db_name: process.env.DB_NAME,
+      collection_name: collection,
+      output_file: outputFile
+    });
+    console.log(`Excel export script output: ${JSON.stringify(response.data)}`);
+  } catch (error) {
+    console.error(`Excel export script error: ${error}`);
+  }
+}
