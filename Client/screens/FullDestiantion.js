@@ -32,7 +32,7 @@ const FullDestination = ({ route }) => {
   const sendToMail = async () => {
     try {
       const response = await fetch(
-        "https://utilityserver-sa7p.onrender.com/routes/send_booking_email",
+        "https://utilityserver-kka0.onrender.com/routes/send_booking_email",
         {
           method: "POST",
           headers: {

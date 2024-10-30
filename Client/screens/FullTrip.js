@@ -27,7 +27,7 @@ const FullTrip = ({ route, navigation }) => {
   const [alternativeAttractions, setAlternativeAttractions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-sa7p.onrender.com";
+  const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-kka0.onrender.com";
 
   useFocusEffect(
     React.useCallback(() => {

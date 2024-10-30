@@ -12,7 +12,7 @@ const DB_INFO = {
 };
 
 const collection = "users";
-const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-sa7p.onrender.com";
+const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-kka0.onrender.com";
 
 export async function getAllUsers(req: Request, res: Response) {
   try {
