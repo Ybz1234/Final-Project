@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Card, Title, Paragraph, Button, TextInput } from "react-native-paper";
 import PageFrame from "../components/PageFrame";
 import CryptoJS from "crypto-js";
@@ -19,7 +19,6 @@ export default function SignUp({ navigation, route }) {
 
   const { setUser: setGlobalUser } = useUser();
   useEffect(() => {
-    // Check if the user recently logged out
     if (route.params?.recentlyLoggedOut) {
       setRecentlyLoggedOut(true);
     }
@@ -31,7 +30,6 @@ export default function SignUp({ navigation, route }) {
       sound: "default",
       title: "Logged In Successfully!",
       body: "check your Email",
-      // data: { navigate: "AboutScreen" },
     };
     await fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
@@ -50,7 +48,6 @@ export default function SignUp({ navigation, route }) {
       sound: "default",
       title: "Sign Up Successfully!",
       body: "Read the introduction to get started on your travel!",
-      // data: { navigate: "AboutScreen" },
     };
     await fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
@@ -63,6 +60,8 @@ export default function SignUp({ navigation, route }) {
     });
   };
   const handleSignIn = async () => {
+    setPassword("");
+    setEmail("");
     try {
       const hashedPassword = CryptoJS.SHA256(password).toString();
       const response = await fetch(
@@ -114,6 +113,8 @@ export default function SignUp({ navigation, route }) {
   };
 
   const handleSignUp = async () => {
+    setPassword("");
+    setEmail("");
     console.log("Start Front-End: ", email, password, firstName, lastName);
     try {
       const hashedPassword = CryptoJS.SHA256(password).toString();
@@ -142,8 +143,6 @@ export default function SignUp({ navigation, route }) {
         setTimeout(() => {
           sendSignUpPushNotification();
           navigation.navigate("OnboardingScreen");
-
-          // navigation.navigate("Main", { screen: "OnboardingScreen" });
         }, 2500);
       } else {
         Toast.show({

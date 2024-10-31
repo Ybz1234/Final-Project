@@ -9,87 +9,27 @@ import {
 import { useUser } from "../context/UserContext";
 import CryptoJS from "crypto-js";
 import Toast from "react-native-toast-message";
-import * as ImagePicker from "expo-image-picker";
-import { Image } from "react-native";
 
 export default function Profile({ navigation }) {
   const { user, setUser: setGlobalUser } = useUser();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState(""); // Password for updates
-  const [profilePicture, setProfilePicture] = useState(null); // New state for profile picture
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Update state with user data when component mounts
     if (user && user.user) {
-      const userInfo = user.user; // Access the nested user object
+      const userInfo = user.user;
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setEmail(userInfo.email);
-      setProfilePicture(userInfo.profilePicture);
       console.log("User data loaded:", userInfo);
-
-      // Log each field of the user
-      console.log("Current User Details:");
-      console.log("First Name:", userInfo.firstName);
-      console.log("Last Name:", userInfo.lastName);
-      console.log("Email:", userInfo.email);
-
-      console.log("User ID:", userInfo._id); // Log user ID if needed
     } else {
       console.warn("User context is null or malformed:", user);
     }
   }, [user]);
 
-  const pickImage = async () => {
-    // Ask for permission to access the media library
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Toast.show({
-        type: "error",
-        text1: "Permission Denied",
-        text2:
-          "Camera roll permissions are needed to select a profile picture.",
-        visibilityTime: 3000,
-        position: "top",
-      });
-      return;
-    }
-
-    // Open the image picker
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1], // Square aspect ratio
-      quality: 0.5, // Adjust the quality as needed
-    });
-
-    if (!result.canceled) {
-      setProfilePicture(result.assets[0].uri);
-    }
-  };
-
   const handleUpdateProfile = async () => {
-    if (!user || !user.user) {
-      console.error(
-        "User context is null when trying to update profile:",
-        user
-      );
-      Toast.show({
-        type: "error",
-        text1: "Update Failed",
-        text2: "User information is not available.",
-        visibilityTime: 3000,
-        position: "top",
-        autoHide: true,
-        topOffset: 150,
-        bottomOffset: 40,
-      });
-
-      return;
-    }
-
     try {
       const payload = {
         firstName,
@@ -119,8 +59,7 @@ export default function Profile({ navigation }) {
           response.status,
           response.statusText
         );
-        const errorData = await response.json();
-        console.error("Error data:", errorData);
+        console.error("Error data:", response);
         Toast.show({
           type: "error",
           text1: "Update Failed",
@@ -135,9 +74,12 @@ export default function Profile({ navigation }) {
       }
 
       const data = await response.json();
+
       console.log("Profile updated successfully:", data);
       console.log("Updated User Details:", { firstName, lastName, email });
+
       setGlobalUser(data);
+
       Toast.show({
         type: "success",
         text1: "Profile Updated",
@@ -150,6 +92,7 @@ export default function Profile({ navigation }) {
       });
 
       setPassword("");
+      
     } catch (error) {
       console.error("Error in updating profile:", error);
       Toast.show({
@@ -166,25 +109,6 @@ export default function Profile({ navigation }) {
   };
 
   const handleDeleteProfile = async () => {
-    if (!user || !user.user) {
-      console.error(
-        "User context is null when trying to delete profile:",
-        user
-      );
-      Toast.show({
-        type: "error",
-        text1: "Deletion Failed",
-        text2: "User information is not available.",
-        visibilityTime: 3000,
-        position: "top",
-        autoHide: true,
-        topOffset: 150,
-        bottomOffset: 40,
-      });
-
-      return;
-    }
-
     try {
       const response = await fetch(
         `https://final-project-sqlv.onrender.com/api/users/user`,
@@ -204,8 +128,7 @@ export default function Profile({ navigation }) {
           response.status,
           response.statusText
         );
-        const errorData = await response.json();
-        console.error("Error data:", errorData);
+        console.error("Error data:", response);
         Toast.show({
           type: "error",
           text1: "Deletion Failed",
@@ -220,6 +143,7 @@ export default function Profile({ navigation }) {
       }
 
       const data = await response.json();
+
       console.log("Profile deleted successfully:", data);
       Toast.show({
         type: "success",
@@ -231,8 +155,10 @@ export default function Profile({ navigation }) {
         topOffset: 150,
         bottomOffset: 40,
       });
+
       setGlobalUser(null);
       navigation.navigate("Signup");
+
     } catch (error) {
       console.error("Error in deleting profile:", error);
       Toast.show({
@@ -249,24 +175,8 @@ export default function Profile({ navigation }) {
   };
 
   const handleSignOut = async () => {
-    if (!user || !user.user) {
-      console.error("User context is null when trying to sign out:", user);
-      Toast.show({
-        type: "error",
-        text1: "Sign Out Failed",
-        text2: "User information is not available.",
-        visibilityTime: 3000,
-        position: "top",
-        autoHide: true,
-        topOffset: 150,
-        bottomOffset: 40,
-      });
-
-      return;
-    }
-
     try {
-      const token = user.token; // Ensure you're retrieving the token from the user context or storage
+      const token = user.token;
 
       const response = await fetch(
         "https://final-project-sqlv.onrender.com/api/users/signout",
@@ -275,7 +185,7 @@ export default function Profile({ navigation }) {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -286,23 +196,15 @@ export default function Profile({ navigation }) {
           response.status,
           response.statusText
         );
-        const errorData = await response.json();
-        console.error("Error data:", errorData);
-        Toast.show({
-          type: "error",
-          text1: "Sign Out Failed",
-          text2: errorData.message,
-          visibilityTime: 3000,
-          position: "top",
-          autoHide: true,
-          topOffset: 150,
-          bottomOffset: 40,
-        });
+        console.error("Error data:", response);
         return;
       }
 
       const data = await response.json();
       console.log("Signed out successfully:", data);
+
+      navigation.navigate("SignUp", { screen: "SignUp", setGlobalUser: null, recentlyLoggedOut: true });
+
       Toast.show({
         type: "success",
         text1: "Signed Out",
@@ -313,8 +215,7 @@ export default function Profile({ navigation }) {
         topOffset: 150,
         bottomOffset: 40,
       });
-      setGlobalUser(null);
-      navigation.navigate("SignUp", { recentlyLoggedOut: true });
+
     } catch (error) {
       console.error("Error in signing out:", error);
       Toast.show({
@@ -333,16 +234,6 @@ export default function Profile({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile</Text>
-      <TouchableOpacity onPress={pickImage}>
-        {profilePicture ? (
-          <Image source={{ uri: profilePicture }} style={styles.profileImage} />
-        ) : (
-          <View style={styles.profileImagePlaceholder}>
-            <Text style={styles.addPhotoText}>Add Photo</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
       <TextInput
         style={styles.input}
         placeholder="First Name"
