@@ -10,14 +10,17 @@ import FullTrip from "../screens/FullTrip";
 import PageDatePicker from "../screens/DatePickerPage";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import Profile from "../screens/Profile";
-import FullDestination from "../screens/FullDestiantion";
+import FullDestination from "../screens/FullDestination";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import Admin from "../screens/Admin";
+import { useUser } from "../context/UserContext";
 
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
 
 function MainDrawer() {
+  const { user } = useUser();
+
   return (
     <Drawer.Navigator
       initialRouteName="Home"
@@ -87,16 +90,17 @@ function MainDrawer() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Admin"
-        component={Admin}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="shield-account" size={22} color={color} />
-          ),
-        }}
-      />
-
+      {user.user?.role === "admin" && (
+        <Drawer.Screen
+          name="Admin"
+          component={Admin}
+          options={{
+            drawerIcon: ({ color }) => (
+              <MaterialCommunityIcons name="shield-account" size={22} color={color} />
+            ),
+          }}
+        />
+      )}
     </Drawer.Navigator>
   );
 }
