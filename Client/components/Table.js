@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Alert, FlatList } from "react-native";
+import { StyleSheet, View, Text, FlatList } from "react-native";
 
 const TableExample = () => {
     const tableHead = ["Mail", "Role", "Edit", "Delete"];
