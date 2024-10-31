@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ScrollView, View, ActivityIndicator } from "react-native";
 import PageFrame from "../components/PageFrame";
-import { Button } from "react-native-paper";
 import CardsSlide from "../components/CardsSlide";
 import VerticalSlide from "../components/VerticalSlide";
 import CustomModal from "../components/CustomModal";
@@ -9,12 +8,11 @@ import * as Animatable from "react-native-animatable";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import PrimaryButton from "../components/PrimaryButton";
 const WEATHERBIT_API_KEY = "aa05a952953b4714bf00a93b013cb6fb";
 
 const FullTrip = ({ route, navigation }) => {
-  // const { daysArray } = route?.params?.daysArray || [];
   const { daysArray, date } = route.params || [];
-
   const [detailedFlightTickets, setDetailedFlightTickets] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showVerticalCards, setShowVerticalCards] = useState(false);
@@ -73,40 +71,7 @@ const FullTrip = ({ route, navigation }) => {
       console.log("Error FullTrip", error.message);
     }
   };
-  // const fetchFlightDetails = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "https://final-project-sqlv.onrender.com/api/FlightTicket/userUpToDateFlightTickets",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ userId: "670296627d17e676255dff0f" }),
-  //       }
-  //     );
 
-  //     if (!response.ok) {
-  //       console.log("Error:", response.data);
-  //       return;
-  //     }
-
-  //     const data = await response.json();
-  //     setDetailedFlightTickets(data.flightTickets);
-  //     setIsDataFetched(true);
-
-  //     const initialDestinations = data.flightTickets.map((flight) => ({
-  //       city: flight.arrivalCity,
-  //       flight: flight,
-  //       hotel: null,
-  //       attraction: null,
-  //     }));
-  //     setDestinations(initialDestinations);
-  //   } catch (error) {
-  //     console.log("Error FullTrip", error.message);
-  //   }
-  // };
   const fetchFlightDetails = async () => {
     try {
       const response = await fetch(
@@ -380,36 +345,6 @@ const FullTrip = ({ route, navigation }) => {
       </Animatable.View>
     );
   }
-
-  const testEmailInformation = async () => {
-    console.log("testEmailInformation");
-    console.log(destinations);
-    console.log(detailedFlightTickets);
-    try {
-      const response = await axios.post(
-        `${PYTHON_UTILITY_SERVER_URL}/send_booking_email`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            to_email: "jonathanbz49@gmail.com",
-            booking_details: { destinations, detailedFlightTickets },
-          }),
-        }
-      );
-      if (response.status === 200) {
-        console.log("TEST,Email sent successfully");
-      } else {
-        console.log("TEST,Failed to send email");
-      }
-    } catch (error) {
-      console.log("TEST", error.message);
-      console.log("TEST", error.data);
-    }
-  };
   return (
     <PageFrame>
       <ScrollView>
@@ -459,26 +394,20 @@ const FullTrip = ({ route, navigation }) => {
       />
 
       <View style={styles.buttonContainerbot}>
-        <Button
-          title="Confirm Booking"
+        <PrimaryButton
           style={styles.button2}
           icon="check-circle"
-          labelStyle={styles.buttonLabel}
-          iconColor="white"
           onPress={handleDestination}
         >
           Confirm Booking
-        </Button>
-        <Button
-          title="Dev DEl"
+        </PrimaryButton>
+        <PrimaryButton
           style={styles.button2}
-          icon="check-circle"
-          labelStyle={styles.buttonLabel}
-          iconColor="white"
+          icon="delete"
           onPress={envDevDeleteUsersFlightTicket}
         >
-          Dev DEl
-        </Button>
+          Dev Del
+        </PrimaryButton>
       </View>
     </PageFrame>
   );
@@ -490,38 +419,10 @@ const styles = StyleSheet.create({
   buttonContainerbot: {
     flexDirection: "row",
     justifyContent: "center",
-    width: "100%",
-  },
-  buttonContainerbot: {
-    flexDirection: "row",
-    justifyContent: "center",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 15,
     width: "100%",
-    // marginBottom: 10,
-    // marginTop: 10,
     marginHorizontal: 10,
-  },
-  button2: {
-    width: "50%",
-    paddingVertical: 2,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    marginTop: 10,
-    marginHorizontal: 10,
-    backgroundColor: "#1B3E90",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  buttonLabel: {
-    color: "white",
-    fontSize: 14, // Font size
-    fontWeight: "bold", // Bold text
-    fontFamily: "Roboto-Medium",
   },
   image: {
     backgroundColor: "white",
@@ -534,6 +435,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    height: 200, // Adjust as needed
+    height: 200,
   },
 });

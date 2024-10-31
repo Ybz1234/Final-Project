@@ -6,22 +6,18 @@ import {
   View,
   ScrollView,
   Keyboard,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  Headline,
-  TextInput,
-} from "react-native-paper";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { ActivityIndicator, Headline, TextInput } from "react-native-paper";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
 import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
 import Toast from "react-native-toast-message";
+import BackButton from "../components/BackButton";
+import PrimaryButton from "../components/PrimaryButton";
+import CloseButton from "../components/CloseButton";
 const PageDatePicker = ({ route, navigation }) => {
   const cityNameArr = route?.params?.cityNameArr || [];
   const cityArr = cityNameArr.length > 0 ? cityNameArr.slice(1) : [];
@@ -52,7 +48,7 @@ const PageDatePicker = ({ route, navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // setIsLoading(false);
+      setIsLoading(false);
     }, [])
   );
   const checkInputs = () => {
@@ -90,12 +86,6 @@ const PageDatePicker = ({ route, navigation }) => {
       return;
     }
     setIsLoading(true);
-    // console.log("date picker page request started");
-    // console.log("new Date", new Date());
-    // console.log("cityNameArr", cityNameArr);
-    // console.log("date", date);
-    // console.log("daysArr", daysArr);
-
     hadleButtonIsPressed();
 
     try {
@@ -116,7 +106,6 @@ const PageDatePicker = ({ route, navigation }) => {
             return flightTicekt.insertedId;
           }
         );
-        // console.log("flightTicektIds", flightTicektIds);
         setIsLoading(false);
         navigation.replace("Main", {
           screen: "FullTrip",
@@ -176,17 +165,7 @@ const PageDatePicker = ({ route, navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={100}
       >
-        {/* !!!!!!!!!!!!!!!!!!!! */}
-        <Button
-          labelStyle={styles.backbuttonLabel}
-          style={styles.backButton}
-          icon="arrow-left-circle"
-          onPress={() =>
-            navigation.navigate("Main", {
-              screen: "Home",
-            })
-          }
-        ></Button>
+        <BackButton></BackButton>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.container}
@@ -213,28 +192,21 @@ const PageDatePicker = ({ route, navigation }) => {
                 />
               </View>
             ))}
-          <Button
-            labelStyle={styles.buttonLabel}
-            onPress={flyMeATravel}
-            style={styles.button2}
-          >
+          <PrimaryButton onPress={flyMeATravel}>
             {buttonPressed ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
               "Fly Me A Travel"
             )}
-          </Button>
+          </PrimaryButton>
         </ScrollView>
       </KeyboardAvoidingView>
       {isKeyboardVisible && (
-        <TouchableOpacity
-          style={styles.closeButton}
+        <CloseButton
           onPress={() => {
             Keyboard.dismiss();
           }}
-        >
-          <MaterialCommunityIcons name="close" size={24} color="#1B3E90" />
-        </TouchableOpacity>
+        />
       )}
     </PageFrame>
   );
@@ -252,16 +224,7 @@ const styles = StyleSheet.create({
     height: "100%",
     marginTop: -40,
   },
-  backButton: {
-    width: "10%",
-    marginVertical: 40,
-    borderRadius: 15,
-    // alignItems: "left",
-    // justifyContent: "top",
-    // top: -155,
-    // left: -175,
-    // backgroundColor: "#1B3E90",
-  },
+
   cityContainer: {
     marginBottom: 20,
     width: "90%",
@@ -294,48 +257,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
   },
-  button2: {
-    width: "60%",
-    alignSelf: "center",
-    paddingVertical: 10,
-    borderRadius: 15,
-    marginTop: 20,
-    marginBottom: 150,
-    backgroundColor: "#1B3E90",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  buttonLabel: {
-    fontWeight: "bold",
-    fontSize: 17,
-    color: "white",
-    fontFamily: "Roboto-Medium",
-  },
-  backbuttonLabel: {
-    color: "rgba(255, 255, 255, 0.8)",
-    fontSize: 23,
-  },
+
   image: {
     backgroundColor: "white",
     width: "110%",
     height: "100%",
     resizeMode: "contain",
     alignSelf: "center",
-  },
-  closeButton: {
-    position: "absolute",
-    top: -420,
-    borderRadius: 15,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    position: "relative",
-    padding: 5,
-    alignSelf: "center",
-    shadowColor: "#1B3E90",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
   },
 });
