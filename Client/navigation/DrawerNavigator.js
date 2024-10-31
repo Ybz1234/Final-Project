@@ -12,6 +12,7 @@ import OnboardingScreen from "../screens/OnboardingScreen";
 import Profile from "../screens/Profile";
 import FullDestination from "../screens/FullDestiantion";
 import CustomDrawerContent from "../components/CustomDrawerContent";
+import Admin from "../screens/Admin";
 
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
@@ -86,6 +87,16 @@ function MainDrawer() {
           ),
         }}
       />
+      <Drawer.Screen
+        name="Admin"
+        component={Admin}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="shield-account" size={22} color={color} />
+          ),
+        }}
+      />
+
     </Drawer.Navigator>
   );
 }
