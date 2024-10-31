@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 
 const TableExample = () => {
-    const [users, setUsers] = useState([]); // State to hold user data
+    const [users, setUsers] = useState([]);
+    const [emailCellWidth, setEmailCellWidth] = useState(100);
 
-    // Fetch all users from API
     const GetAllUsers = async () => {
         try {
             const response = await fetch(
@@ -19,7 +19,11 @@ const TableExample = () => {
             );
             const data = await response.json();
             if (response.ok) {
-                setUsers(data); // Set users data if the response is OK
+                setUsers(data.users);
+
+                const longestEmail = data.users.reduce((max, user) =>
+                    Math.max(max, user.email.length), 0);
+                setEmailCellWidth(longestEmail * 10);
             } else {
                 console.log("Error fetching users:", data);
             }
@@ -28,26 +32,19 @@ const TableExample = () => {
         }
     };
 
-    // Fetch users on component mount
     useEffect(() => {
         GetAllUsers();
     }, []);
 
     const handleEdit = (email) => {
         Alert.alert(`Edit user: ${email}`);
-        // Add your edit logic here
     };
 
-    const handleDelete = (email) => {
-        Alert.alert(`Delete user: ${email}`);
-        // Add your delete logic here
-    };
-
-    const tableHead = ["Mail", "Role", "Edit", "Delete"];
+    const tableHead = ["Mail", "Role", "Edit"];
 
     const renderRow = ({ item }) => (
         <View style={styles.row}>
-            <View style={styles.cell}>
+            <View style={[styles.cell, { width: emailCellWidth }]}>
                 <Text style={styles.cellText}>{item.email}</Text>
             </View>
             <View style={styles.cell}>
@@ -60,13 +57,6 @@ const TableExample = () => {
                     </View>
                 </TouchableOpacity>
             </View>
-            <View style={styles.cell}>
-                <TouchableOpacity onPress={() => handleDelete(item.email)}>
-                    <View style={styles.btn}>
-                        <Text style={styles.btnText}>Delete</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 
@@ -74,13 +64,15 @@ const TableExample = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 {tableHead.map((head, index) => (
-                    <Text key={index} style={styles.headText}>{head}</Text>
+                    <View key={index} style={[styles.headerCell, { width: index === 0 ? emailCellWidth : undefined }]}>
+                        <Text style={styles.headText}>{head}</Text>
+                    </View>
                 ))}
             </View>
             <FlatList
                 data={users}
                 renderItem={renderRow}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item) => item._id}
             />
         </View>
     );
@@ -90,9 +82,16 @@ const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
     header: {
         flexDirection: "row",
-        backgroundColor: "#808B97",
-        paddingVertical: 15,
+        backgroundColor: "#1B3E90",
         justifyContent: "space-around",
+    },
+    headerCell: {
+        height: 60,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRightWidth: 1,
+        borderColor: "#ddd",
+        width: '33%',
     },
     headText: {
         color: "#fff",
@@ -101,12 +100,11 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
-        backgroundColor: "#FFF1C1",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
         marginVertical: 2,
         height: 60,
     },
     cell: {
-        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         padding: 15,
@@ -114,9 +112,9 @@ const styles = StyleSheet.create({
         borderColor: "#ddd",
     },
     btn: {
-        width: 80,
+        width: 60,
         height: 40,
-        backgroundColor: "red",
+        backgroundColor: "orange",
         borderRadius: 2,
         justifyContent: "center",
     },
