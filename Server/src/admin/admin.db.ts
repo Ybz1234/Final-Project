@@ -6,7 +6,6 @@ const collection = "users";
 
 export async function getUsers(query = {}, projection = {}) {
     let mongo = await DBConnection.getInstance();
-
     try {
         return await mongo
             .db(DB_INFO.db)
@@ -33,7 +32,6 @@ export async function getUserByIdDB(id: ObjectId) {
 
 export async function EditUser(id: string, user: IUser) {
     let mongo = await DBConnection.getInstance();
-
     try {
         const result = await mongo
             .db(DB_INFO.db)

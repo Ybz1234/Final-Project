@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import UserRouter from "./user/user.routes";
+import AdminRouter from "./admin/admin.routes";
 import tripRouter from "./testapi/tripRoute";
 import FlightTicketRouter from "./flightTicket/flightTicket.routes";
 import AirportRouter from "./airport/airport.routes";
@@ -22,6 +23,7 @@ app.use("/api/Airports", AirportRouter);
 app.use("/api/Hotels", hotelsRoutes);
 app.use("/api/Attractions", attractionRecomendationRoutes);
 app.use("/api/devEnv", devEnvRouter);
+app.use("/api/admin", AdminRouter);
 
 //listen to the defined port
 app.listen(PORT, () => {

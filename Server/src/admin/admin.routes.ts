@@ -7,8 +7,8 @@ import {
 
 const router = Router();
 
-router.get('/users', getAllUsers); // add get by mail
-router.put('/user/:id', updateUser);
-router.delete('/user', deleteUser);
+router.get('/getAllUsers', getAllUsers); // add get by mail
+router.put('/admin/:id', updateUser);
+router.delete('/admin', deleteUser);
 
 export default router;
