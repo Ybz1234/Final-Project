@@ -55,7 +55,7 @@ function MainDrawer() {
         }}
       />
       <Drawer.Screen
-        name="DatePicker"
+        name="Date Picker"
         component={PageDatePicker}
         options={{
           drawerIcon: ({ color }) => (
@@ -64,7 +64,7 @@ function MainDrawer() {
         }}
       />
       <Drawer.Screen
-        name="FullTrip"
+        name="Route Info"
         component={FullTrip}
         options={{
           drawerIcon: ({ color }) => (
@@ -73,11 +73,11 @@ function MainDrawer() {
         }}
       />
       <Drawer.Screen
-        name="FullDestination"
+        name="Booking"
         component={FullDestination}
         options={{
           drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="map-marker" size={22} color={color} />
+            <MaterialCommunityIcons name="book-open" size={22} color={color} />
           ),
         }}
       />
@@ -96,7 +96,11 @@ function MainDrawer() {
           component={Admin}
           options={{
             drawerIcon: ({ color }) => (
-              <MaterialCommunityIcons name="shield-account" size={22} color={color} />
+              <MaterialCommunityIcons
+                name="shield-account"
+                size={22}
+                color={color}
+              />
             ),
           }}
         />

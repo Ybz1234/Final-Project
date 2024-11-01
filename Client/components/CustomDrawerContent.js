@@ -68,9 +68,12 @@ const styles = StyleSheet.create({
   profileContainer: {
     padding: 20,
     backgroundColor: "#2EB8B8",
-    borderRadius: 50,
-    borderColor: "pink",
-    borderWidth: 1,
+    borderRadius: 60,
+    borderColor: "rgba(255, 255, 255, 0.8)",
+    width: "60%",
+    height: "15%",
+    alignSelf: "center",
+    borderWidth: 5,
     alignItems: "center",
   },
   profileImage: {

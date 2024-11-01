@@ -4,11 +4,12 @@ import {
   View,
   TouchableOpacity,
   Text,
-  TextInput,
+  ScrollView,
 } from "react-native";
 import { useUser } from "../context/UserContext";
 import CryptoJS from "crypto-js";
 import Toast from "react-native-toast-message";
+import CustomTextInput from "../components/CustomTextInput";
 
 export default function Profile({ navigation }) {
   const { user, setUser: setGlobalUser } = useUser();
@@ -92,7 +93,6 @@ export default function Profile({ navigation }) {
       });
 
       setPassword("");
-      
     } catch (error) {
       console.error("Error in updating profile:", error);
       Toast.show({
@@ -158,7 +158,6 @@ export default function Profile({ navigation }) {
 
       setGlobalUser(null);
       navigation.navigate("Signup");
-
     } catch (error) {
       console.error("Error in deleting profile:", error);
       Toast.show({
@@ -203,7 +202,11 @@ export default function Profile({ navigation }) {
       const data = await response.json();
       console.log("Signed out successfully:", data);
 
-      navigation.navigate("SignUp", { screen: "SignUp", setGlobalUser: null, recentlyLoggedOut: true });
+      navigation.navigate("SignUp", {
+        screen: "SignUp",
+        setGlobalUser: null,
+        recentlyLoggedOut: true,
+      });
 
       Toast.show({
         type: "success",
@@ -215,7 +218,6 @@ export default function Profile({ navigation }) {
         topOffset: 150,
         bottomOffset: 40,
       });
-
     } catch (error) {
       console.error("Error in signing out:", error);
       Toast.show({
@@ -233,43 +235,43 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
-        <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleDeleteProfile}>
-        <Text style={styles.buttonText}>Delete Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-        <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Profile Information</Text>
+        <CustomTextInput
+          label="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <CustomTextInput
+          label="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <CustomTextInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <CustomTextInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+            <Text style={styles.buttonText}>Update </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleDeleteProfile}>
+            <Text style={styles.buttonText}>Delete </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+            <Text style={styles.buttonText}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -277,9 +279,6 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
     backgroundColor: "#70DBDB",
   },
   title: {
@@ -288,37 +287,36 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     textAlign: "center",
     marginBottom: 24,
+    marginTop: 24,
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
     letterSpacing: 2,
     fontFamily: "Roboto-BoldItalic",
   },
-  input: {
-    height: 50,
-    width: "90%",
-    borderColor: "#29A3A3",
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 16,
-    paddingHorizontal: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-  },
+
   button: {
     backgroundColor: "#1B3E90",
-    padding: 15,
+    padding: 10,
     borderRadius: 8,
-    marginVertical: 10,
-    width: "60%",
+    marginVertical: 1,
+    width: "30%",
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    alignItems: "center",
+    alignSelf: "center",
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
+    alignSelf: "center",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
 });

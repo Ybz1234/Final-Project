@@ -40,7 +40,7 @@ const FullDestination = ({ route }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            to_email: "jonathanbz49@gmail.com",
+            to_email: "Inonv19@outlook.co.il",
             booking_details: processedDestinations,
           }),
         }
@@ -59,9 +59,13 @@ const FullDestination = ({ route }) => {
     return destinations.map((destination, index) => {
       const isFinalDestination = index === destinations.length - 1;
       const cityName = destination.city || "N/A";
-      const flightDate = destination.flight ? destination.flight.flightDate : "N/A";
+      const flightDate = destination.flight
+        ? destination.flight.flightDate
+        : "N/A";
       const formattedDate =
-        flightDate !== "N/A" ? new Date(flightDate).toLocaleDateString() : "N/A";
+        flightDate !== "N/A"
+          ? new Date(flightDate).toLocaleDateString()
+          : "N/A";
 
       if (isFinalDestination) {
         return {
@@ -71,7 +75,9 @@ const FullDestination = ({ route }) => {
         };
       } else {
         const hotelName = destination.hotel ? destination.hotel.name : "N/A";
-        const attractionName = destination.attraction ? destination.attraction.name : "N/A";
+        const attractionName = destination.attraction
+          ? destination.attraction.name
+          : "N/A";
 
         return {
           destinationTitle: `Destination ${index + 1}`,
@@ -116,21 +122,28 @@ const FullDestination = ({ route }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {processedDestinations.map((dest, index) => (
           <Card key={index} style={styles.card} elevation={5}>
-            <Card.Title title={dest.destinationTitle} titleStyle={styles.cardTitle} />
+            <Card.Title
+              title={dest.destinationTitle}
+              titleStyle={styles.cardTitle}
+            />
             <Card.Content>
               <Text style={styles.cardText}>
-                <Text style={styles.boldText}>City Name: </Text>{dest.cityName}
+                <Text style={styles.boldText}>City Name: </Text>
+                {dest.cityName}
               </Text>
               <Text style={styles.cardText}>
-                <Text style={styles.boldText}>Flight Date: </Text>{dest.flightDate}
+                <Text style={styles.boldText}>Flight Date: </Text>
+                {dest.flightDate}
               </Text>
               {!dest.destinationTitle.includes("Final") && (
                 <>
                   <Text style={styles.cardText}>
-                    <Text style={styles.boldText}>Hotel Name: </Text>{dest.hotelName}
+                    <Text style={styles.boldText}>Hotel Name: </Text>
+                    {dest.hotelName}
                   </Text>
                   <Text style={styles.cardText}>
-                    <Text style={styles.boldText}>Attraction: </Text>{dest.attractionName}
+                    <Text style={styles.boldText}>Attraction: </Text>
+                    {dest.attractionName}
                   </Text>
                 </>
               )}

@@ -3,13 +3,12 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import {
   StyleSheet,
-  View,
   ScrollView,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { ActivityIndicator, Headline, TextInput } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
 import * as Animatable from "react-native-animatable";
@@ -18,6 +17,7 @@ import Toast from "react-native-toast-message";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 import CloseButton from "../components/CloseButton";
+import CityDurationInput from "../components/CityDurationInput";
 const PageDatePicker = ({ route, navigation }) => {
   const cityNameArr = route?.params?.cityNameArr || [];
   const cityArr = cityNameArr.length > 0 ? cityNameArr.slice(1) : [];
@@ -68,7 +68,7 @@ const PageDatePicker = ({ route, navigation }) => {
     if (emptyDurationIndex !== -1) {
       Toast.show({
         type: "error",
-        text1: "Duration Missing",
+        text1: "One or More Duration Inputs is Missing",
         text2: `Please enter the duration for ${
           cityNameArr[emptyDurationIndex + 1]
         }.`,
@@ -82,7 +82,6 @@ const PageDatePicker = ({ route, navigation }) => {
   const flyMeATravel = async () => {
     const inputsAreValid = checkInputs();
     if (!inputsAreValid) {
-      setIsSubmitting(false);
       return;
     }
     setIsLoading(true);
@@ -179,18 +178,13 @@ const PageDatePicker = ({ route, navigation }) => {
           />
           {date &&
             cityArr.map((city, index) => (
-              <View key={index} style={styles.cityContainer}>
-                <Headline style={styles.cityText}>{city}</Headline>
-                <TextInput
-                  style={styles.input}
-                  label="Duration (days)"
-                  keyboardType="numeric"
-                  value={daysArr[index]}
-                  onChangeText={(value) => handleDaysChange(value, index)}
-                  onFocus={() => setKeyboardVisible(true)}
-                  onBlur={() => setKeyboardVisible(false)}
-                />
-              </View>
+              <CityDurationInput
+                key={index}
+                city={city}
+                value={daysArr[index]}
+                onChangeText={(value) => handleDaysChange(value, index)}
+                setKeyboardVisible={setKeyboardVisible}
+              />
             ))}
           <PrimaryButton onPress={flyMeATravel}>
             {buttonPressed ? (
@@ -224,40 +218,6 @@ const styles = StyleSheet.create({
     height: "100%",
     marginTop: -40,
   },
-
-  cityContainer: {
-    marginBottom: 20,
-    width: "90%",
-    alignItems: "center",
-    padding: 15,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
-    alignSelf: "center",
-  },
-  cityText: {
-    alignSelf: "left",
-    marginBottom: 12,
-    color: "#1B3E90",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  input: {
-    backgroundColor: "#fff",
-    width: "100%",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-
   image: {
     backgroundColor: "white",
     width: "110%",
