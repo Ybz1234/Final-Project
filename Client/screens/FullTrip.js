@@ -318,7 +318,7 @@ const FullTrip = ({ route, navigation }) => {
     );
 
     navigation.navigate("Main", {
-      screen: "FullDestination",
+      screen: "Booking",
       params: {
         destinations: updatedDestinations,
         flightsDetails: detailedFlightTickets,

@@ -58,7 +58,7 @@ const Home = ({ navigation, route }) => {
     setRecentlyLoggedOut(false);
     setTimeout(() => {
       navigation.navigate("Main", {
-        screen: "DatePicker",
+        screen: "Date Picker",
         params: { cityNameArr },
         setRecentlyLoggedOut: false,
       });

@@ -107,7 +107,7 @@ const PageDatePicker = ({ route, navigation }) => {
         );
         setIsLoading(false);
         navigation.replace("Main", {
-          screen: "FullTrip",
+          screen: "Route Info",
           params: {
             flightTickets: data.flightTickets,
             userId: "670296627d17e676255dff0f",
