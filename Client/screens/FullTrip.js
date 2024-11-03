@@ -9,6 +9,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import PrimaryButton from "../components/PrimaryButton";
+import { useUser } from "../context/UserContext";
+
 const WEATHERBIT_API_KEY = "aa05a952953b4714bf00a93b013cb6fb";
 
 const FullTrip = ({ route, navigation }) => {
@@ -25,6 +27,8 @@ const FullTrip = ({ route, navigation }) => {
   const [alternativeAttractions, setAlternativeAttractions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user, setUser: setGlobalUser } = useUser();
+
   const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-kka0.onrender.com";
 
   useFocusEffect(
@@ -51,7 +55,6 @@ const FullTrip = ({ route, navigation }) => {
       });
     }
   }, []);
-
   const envDevDeleteUsersFlightTicket = async () => {
     try {
       const response = await fetch(
@@ -62,7 +65,7 @@ const FullTrip = ({ route, navigation }) => {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userId: "670296627d17e676255dff0f" }),
+          body: JSON.stringify({ userId: user.user._id }),
         }
       );
       const data = await response.json();
@@ -82,7 +85,7 @@ const FullTrip = ({ route, navigation }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: "670296627d17e676255dff0f",
+            userId: user.user._id,
             startDate: date.toISOString(),
           }),
         }
@@ -374,7 +377,6 @@ const FullTrip = ({ route, navigation }) => {
           <></>
         )}
       </ScrollView>
-
       {/* Hotel Alternatives Modal */}
       <CustomModal
         visible={hotelModalVisible}
@@ -383,7 +385,6 @@ const FullTrip = ({ route, navigation }) => {
         onSelect={selectHotelAlternative}
         labelExtractor={(item) => item.name}
       />
-
       {/* Attraction Alternatives Modal */}
       <CustomModal
         visible={attractionModalVisible}
@@ -392,7 +393,6 @@ const FullTrip = ({ route, navigation }) => {
         onSelect={selectAttractionAlternative}
         labelExtractor={(item) => item.name}
       />
-
       <View style={styles.buttonContainerbot}>
         <PrimaryButton
           style={styles.button2}

@@ -5,14 +5,15 @@ import PageFrame from "../components/PageFrame";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import ConfettiCannon from "react-native-confetti-cannon";
 import { Text, Card } from "react-native-paper";
-
+import { useUser } from "../context/UserContext";
 const FullDestination = ({ route }) => {
   const { destinations = [] } = route.params || {};
   const confettiRef = useRef(null);
+  const { user, setUser: setGlobalUser } = useUser();
 
   useEffect(() => {
     if (processedDestinations) {
-      sendToMail();
+      // sendToMail();
     }
     if (!destinations || !processedDestinations) {
       Toast.show({
@@ -28,7 +29,6 @@ const FullDestination = ({ route }) => {
       navigation.replace("Main", { screen: "Home" });
     }
   }, []);
-
   const sendToMail = async () => {
     try {
       const response = await fetch(
@@ -40,7 +40,7 @@ const FullDestination = ({ route }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            to_email: "Inonv19@outlook.co.il",
+            to_email: user.user._id,
             booking_details: processedDestinations,
           }),
         }
@@ -54,7 +54,6 @@ const FullDestination = ({ route }) => {
       console.error(error);
     }
   };
-
   const processDestinations = (destinations) => {
     return destinations.map((destination, index) => {
       const isFinalDestination = index === destinations.length - 1;
@@ -89,9 +88,7 @@ const FullDestination = ({ route }) => {
       }
     });
   };
-
   const processedDestinations = processDestinations(destinations);
-
   return (
     <PageFrame>
       <View style={styles.container}>
@@ -154,9 +151,7 @@ const FullDestination = ({ route }) => {
     </PageFrame>
   );
 };
-
 export default FullDestination;
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -164,6 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 20,
     padding: 20,
+    marginVertical: 20,
   },
   iconContainer: {
     justifyContent: "center",

@@ -1,37 +1,23 @@
 import React, { useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
-import { StyleSheet, View } from "react-native"; // Corrected import
-import { TouchableOpacity } from "react-native-gesture-handler";
-import {
-  Button,
-  Portal,
-  Provider,
-  DefaultTheme,
-  IconButton,
-} from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Button, Portal, Provider, DefaultTheme } from "react-native-paper";
 import {
   DatePickerModal,
   en,
   registerTranslation,
 } from "react-native-paper-dates";
-
 registerTranslation("en", en);
-
 const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
   const [visible, setVisible] = useState(false);
   // const [dateConfirmed, setDateConfirmed] = useState(false);
-
   const openDatePicker = () => setVisible(true);
   const closeDatePicker = () => setVisible(false);
-
   const onConfirm = (params) => {
     setDate(params.date);
     setDateConfirmed(true);
     closeDatePicker();
   };
-
-  // Custom theme
   const theme = {
     ...DefaultTheme,
     colors: {
@@ -45,7 +31,6 @@ const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
       placeholder: "#1B3E90",
     },
   };
-
   return (
     <Provider theme={theme}>
       {!dateConfirmed ? (
@@ -85,9 +70,7 @@ const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
     </Provider>
   );
 };
-
 export default DatePicker;
-
 const styles = StyleSheet.create({
   button: {
     alignSelf: "center",

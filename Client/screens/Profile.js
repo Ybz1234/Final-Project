@@ -10,26 +10,23 @@ import { useUser } from "../context/UserContext";
 import CryptoJS from "crypto-js";
 import Toast from "react-native-toast-message";
 import CustomTextInput from "../components/CustomTextInput";
-
 export default function Profile({ navigation }) {
   const { user, setUser: setGlobalUser } = useUser();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-
   useEffect(() => {
     if (user && user.user) {
       const userInfo = user.user;
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setEmail(userInfo.email);
-      console.log("User data loaded:", userInfo);
+      console.log("User data loaded:", user.user._id);
     } else {
       console.warn("User context is null or malformed:", user);
     }
   }, [user]);
-
   const handleUpdateProfile = async () => {
     try {
       const payload = {
@@ -107,7 +104,6 @@ export default function Profile({ navigation }) {
       });
     }
   };
-
   const handleDeleteProfile = async () => {
     try {
       const response = await fetch(
@@ -172,11 +168,9 @@ export default function Profile({ navigation }) {
       });
     }
   };
-
   const handleSignOut = async () => {
     try {
       const token = user.token;
-
       const response = await fetch(
         "https://final-project-sqlv.onrender.com/api/users/signout",
         {
@@ -188,7 +182,6 @@ export default function Profile({ navigation }) {
           },
         }
       );
-
       if (!response.ok) {
         console.error(
           "Failed to sign out:",
@@ -232,7 +225,6 @@ export default function Profile({ navigation }) {
       });
     }
   };
-
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -275,7 +267,6 @@ export default function Profile({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

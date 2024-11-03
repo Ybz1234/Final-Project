@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-
 import {
   StyleSheet,
   ScrollView,
@@ -18,6 +17,8 @@ import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 import CloseButton from "../components/CloseButton";
 import CityDurationInput from "../components/CityDurationInput";
+import { useUser } from "../context/UserContext";
+
 const PageDatePicker = ({ route, navigation }) => {
   const cityNameArr = route?.params?.cityNameArr || [];
   const cityArr = cityNameArr.length > 0 ? cityNameArr.slice(1) : [];
@@ -27,6 +28,7 @@ const PageDatePicker = ({ route, navigation }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [dateConfirmed, setDateConfirmed] = useState(false);
   const [buttonPressed, setButtonPressed] = useState(false);
+  const { user, setUser: setGlobalUser } = useUser();
 
   useEffect(() => {
     if (!route?.params?.cityNameArr) {
@@ -91,7 +93,7 @@ const PageDatePicker = ({ route, navigation }) => {
       const response = await axios.post(
         "https://final-project-sqlv.onrender.com/api/FlightTicket/",
         {
-          userId: "670296627d17e676255dff0f",
+          userId: user.user._id,
           airportNameArr: cityNameArr,
           startDate: date,
           daysArr: daysArr.map(Number),
@@ -110,7 +112,7 @@ const PageDatePicker = ({ route, navigation }) => {
           screen: "Route Info",
           params: {
             flightTickets: data.flightTickets,
-            userId: "670296627d17e676255dff0f",
+            userId: user.user._id,
             daysArray: daysArr,
             date: date,
           },
