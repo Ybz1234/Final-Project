@@ -20,17 +20,14 @@ import AnimatedSearchBar from "../components/AnimatedSearchBar";
 import CustomMap from "../components/CustomMap";
 
 const Home = ({ navigation, route }) => {
-  const [position, setPosition] = useState(null);
+  // const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [cityName, setCityName] = useState("");
   const [cityNameArr, setCityNameArr] = useState([]);
-  const [isFocused, setIsFocused] = React.useState(false);
+  // const [isFocused, setIsFocused] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
-
-  const userIdd = "667e745b85bee8cf5b8c3253";
   useEffect(() => {
-    // Check if the user recently logged out
     if (route.params?.recentlyLoggedOut) {
       setRecentlyLoggedOut(true);
     }
@@ -41,7 +38,6 @@ const Home = ({ navigation, route }) => {
     setCityNameArr([]);
     setCityName("");
   };
-
   const handleNextPage = () => {
     if (checkNameArr()) {
       Toast.show({ type: "error", text1: "Cannot add same city twice" });
@@ -70,7 +66,6 @@ const Home = ({ navigation, route }) => {
     setMarkers((prevMarkers) => prevMarkers.filter((_, i) => i !== index));
     console.log("cityNameArr from remove city", cityNameArr);
   };
-
   const checkNameArr = () => {
     for (let index = 0; index < cityNameArr.length - 1; index++) {
       if (cityNameArr[index] === cityNameArr[index + 1]) {
@@ -113,7 +108,6 @@ const Home = ({ navigation, route }) => {
       }
     }
   };
-
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -146,7 +140,6 @@ const Home = ({ navigation, route }) => {
     </PageFrame>
   );
 };
-
 const styles = StyleSheet.create({
   headline: {
     marginTop: 10,
@@ -171,5 +164,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
-
 export default Home;

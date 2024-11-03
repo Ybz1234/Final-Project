@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Card, Title, Paragraph, Button, TextInput } from "react-native-paper";
 import PageFrame from "../components/PageFrame";
 import CryptoJS from "crypto-js";
@@ -75,17 +82,15 @@ export default function SignUp({ navigation, route }) {
           body: JSON.stringify({ email, password: hashedPassword }),
         }
       );
-
       const data = await response.json();
       if (response.ok) {
         setUser(data);
         setGlobalUser(data);
         setRecentlyLoggedOut(false);
-
         setTimeout(() => {
           sendPushNotification();
           navigation.navigate("Main", { screen: "Home" });
-        }, 1000);
+        }, 500);
       } else {
         Toast.show({
           type: "error",
@@ -109,12 +114,15 @@ export default function SignUp({ navigation, route }) {
         topOffset: 150,
         bottomOffset: 40,
       });
+    } finally {
+      setPassword("");
+      setEmail("");
+      setFirstName("");
+      setLastName("");
     }
   };
 
   const handleSignUp = async () => {
-    setPassword("");
-    setEmail("");
     console.log("Start Front-End: ", email, password, firstName, lastName);
     try {
       const hashedPassword = CryptoJS.SHA256(password).toString();
@@ -136,10 +144,21 @@ export default function SignUp({ navigation, route }) {
 
       const data = await response.json();
       console.log("Data: ", data);
-      console.log("Respone: ", response);
       if (response.ok) {
-        setUser(data);
-        setGlobalUser(data);
+        const { result, token } = data;
+        const { insertedId } = result;
+        const userObject = {
+          _id: insertedId,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+        };
+        const fullUserData = {
+          user: userObject,
+          token: token,
+        };
+        setUser(fullUserData);
+        setGlobalUser(fullUserData);
         setTimeout(() => {
           sendSignUpPushNotification();
           navigation.navigate("OnboardingScreen");
@@ -167,6 +186,11 @@ export default function SignUp({ navigation, route }) {
         topOffset: 150,
         bottomOffset: 40,
       });
+    } finally {
+      setPassword("");
+      setEmail("");
+      setFirstName("");
+      setLastName("");
     }
   };
 
@@ -229,6 +253,7 @@ export default function SignUp({ navigation, route }) {
                 />
               </>
             )}
+
             <TextInput
               label="Email"
               value={email}
@@ -260,6 +285,7 @@ export default function SignUp({ navigation, route }) {
             >
               {isSignUp ? "Sign Up" : "Login"}
             </Button>
+
             <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
               <Text style={styles.switchText}>
                 {isSignUp
