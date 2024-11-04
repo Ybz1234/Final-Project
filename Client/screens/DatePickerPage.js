@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -18,6 +18,7 @@ import PrimaryButton from "../components/PrimaryButton";
 import CloseButton from "../components/CloseButton";
 import CityDurationInput from "../components/CityDurationInput";
 import { useUser } from "../context/UserContext";
+import { TripContext } from "../context/TripContext";
 
 const PageDatePicker = ({ route, navigation }) => {
   const cityNameArr = route?.params?.cityNameArr || [];
@@ -29,9 +30,14 @@ const PageDatePicker = ({ route, navigation }) => {
   const [dateConfirmed, setDateConfirmed] = useState(false);
   const [buttonPressed, setButtonPressed] = useState(false);
   const { user, setUser: setGlobalUser } = useUser();
+  const { tripData, setTripData } = useContext(TripContext);
 
+  //? !route?.params?.cityNameArr
   useEffect(() => {
-    if (!route?.params?.cityNameArr) {
+    console.log(tripData);
+
+    const globalData = tripData.cityNameArr;
+    if (!tripData.cityNameArr || tripData.cityNameArr.length === 0) {
       Toast.show({
         type: "info",
         text1: "You Have to choose cities in order to continue",
@@ -45,6 +51,11 @@ const PageDatePicker = ({ route, navigation }) => {
       navigation.replace("Main", {
         screen: "Home",
       });
+    } else {
+      setTripData((prevData) => ({
+        ...prevData,
+        cityNameArr: cityNameArr,
+      }));
     }
   }, [route?.params]);
 
@@ -108,6 +119,11 @@ const PageDatePicker = ({ route, navigation }) => {
           }
         );
         setIsLoading(false);
+        setTripData((prevData) => ({
+          ...prevData,
+          date: date,
+          daysArr: daysArr,
+        }));
         navigation.replace("Main", {
           screen: "Route Info",
           params: {

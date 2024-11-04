@@ -1,16 +1,6 @@
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Button as RNButton,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TextInput,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import MapView, { Marker } from "react-native-maps";
-import { Button, Headline, IconButton } from "react-native-paper";
-import * as Animatable from "react-native-animatable";
+import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { Headline } from "react-native-paper";
 import PageFrame from "../components/PageFrame";
 import Tag from "../components/Tag";
 import Toast from "react-native-toast-message";
@@ -18,15 +8,17 @@ import { cities2 } from "../LatLng/LatLng2";
 import PrimaryButton from "../components/PrimaryButton";
 import AnimatedSearchBar from "../components/AnimatedSearchBar";
 import CustomMap from "../components/CustomMap";
+import { TripContext } from "../context/TripContext";
 
 const Home = ({ navigation, route }) => {
-  // const [position, setPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [cityName, setCityName] = useState("");
   const [cityNameArr, setCityNameArr] = useState([]);
-  // const [isFocused, setIsFocused] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
+  const { resetTripData } = useContext(TripContext);
+  const { tripData, setTripData } = useContext(TripContext);
+
   useEffect(() => {
     if (route.params?.recentlyLoggedOut) {
       setRecentlyLoggedOut(true);
@@ -37,6 +29,7 @@ const Home = ({ navigation, route }) => {
     setMarkers([]);
     setCityNameArr([]);
     setCityName("");
+    resetTripData();
   };
   const handleNextPage = () => {
     if (checkNameArr()) {
@@ -52,6 +45,10 @@ const Home = ({ navigation, route }) => {
     }
     console.log("cityNameArr from handleNextPage", cityNameArr);
     setRecentlyLoggedOut(false);
+    setTripData((prevData) => ({
+      ...prevData,
+      cityNameArr: cityNameArr,
+    }));
     setTimeout(() => {
       navigation.navigate("Main", {
         screen: "Date Picker",

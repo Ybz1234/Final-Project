@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, ScrollView, View, ActivityIndicator } from "react-native";
 import PageFrame from "../components/PageFrame";
 import CardsSlide from "../components/CardsSlide";
@@ -10,11 +10,14 @@ import axios from "axios";
 import Toast from "react-native-toast-message";
 import PrimaryButton from "../components/PrimaryButton";
 import { useUser } from "../context/UserContext";
+import { TripContext } from "../context/TripContext";
 
 const WEATHERBIT_API_KEY = "aa05a952953b4714bf00a93b013cb6fb";
 
 const FullTrip = ({ route, navigation }) => {
   const { daysArray, date } = route.params || [];
+  const { tripData, setTripData } = useContext(TripContext);
+
   const [detailedFlightTickets, setDetailedFlightTickets] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showVerticalCards, setShowVerticalCards] = useState(false);
@@ -394,20 +397,16 @@ const FullTrip = ({ route, navigation }) => {
         labelExtractor={(item) => item.name}
       />
       <View style={styles.buttonContainerbot}>
-        <PrimaryButton
-          style={styles.button2}
-          icon="check-circle"
-          onPress={handleDestination}
-        >
+        <PrimaryButton icon="check-circle" onPress={handleDestination}>
           Confirm Booking
         </PrimaryButton>
-        <PrimaryButton
+        {/* <PrimaryButton
           style={styles.button2}
           icon="delete"
           onPress={envDevDeleteUsersFlightTicket}
         >
           Dev Del
-        </PrimaryButton>
+        </PrimaryButton> */}
       </View>
     </PageFrame>
   );

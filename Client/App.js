@@ -10,6 +10,7 @@ import * as Font from "expo-font";
 import Toast from "react-native-toast-message";
 import { createNavigationContainerRef } from "@react-navigation/native";
 import { UserProvider } from "./context/UserContext";
+import { TripProvider } from "./context/TripContext";
 
 const navigationRef = createNavigationContainerRef();
 Notifications.setNotificationHandler({
@@ -136,13 +137,15 @@ function App() {
   if (!fontsLoaded) {
     return null;
   }
-  
+
   return (
     <UserProvider>
-      <NavigationContainer ref={navigationRef}>
-        <MyDrawer />
-        <Toast />
-      </NavigationContainer>
+      <TripProvider>
+        <NavigationContainer ref={navigationRef}>
+          <MyDrawer />
+          <Toast />
+        </NavigationContainer>
+      </TripProvider>
     </UserProvider>
   );
 }

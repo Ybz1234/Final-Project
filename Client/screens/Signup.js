@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Card, Title, Paragraph, Button, TextInput } from "react-native-paper";
 import PageFrame from "../components/PageFrame";
 import CryptoJS from "crypto-js";
@@ -88,9 +81,13 @@ export default function SignUp({ navigation, route }) {
         setGlobalUser(data);
         setRecentlyLoggedOut(false);
         setTimeout(() => {
-          sendPushNotification();
+          setPassword("");
+          setEmail("");
+          setFirstName("");
+          setLastName("");
           navigation.navigate("Main", { screen: "Home" });
-        }, 500);
+          sendPushNotification();
+        }, 1500);
       } else {
         Toast.show({
           type: "error",
@@ -114,11 +111,6 @@ export default function SignUp({ navigation, route }) {
         topOffset: 150,
         bottomOffset: 40,
       });
-    } finally {
-      setPassword("");
-      setEmail("");
-      setFirstName("");
-      setLastName("");
     }
   };
 
