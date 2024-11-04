@@ -65,6 +65,15 @@ const PageDatePicker = ({ route, navigation }) => {
     }, [])
   );
   const checkInputs = () => {
+    if (daysArr.map(Number) === undefined || daysArr.map(Number) == 0) {
+      Toast.show({
+        type: "error",
+        text1: "Go BacK and SELECT CITIES!",
+        position: "top",
+        visibilityTime: 3000,
+      });
+      return false;
+    }
     if (!date) {
       Toast.show({
         type: "error",
