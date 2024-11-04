@@ -1,57 +1,38 @@
-// CustomDrawerContent.js
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useUser } from "../context/UserContext"; // Import your user context
+import { useUser } from "../context/UserContext";
+import { Avatar } from "react-native-paper";
 
 const CustomDrawerContent = (props) => {
   const { user, setUser: setGlobalUser } = useUser();
 
-  // You can replace these with actual user data from your app's state or context
-
   const handleLogout = () => {
-    // Implement your logout logic here
-    // For example, clear user data and navigate to the login screen
-    // navigation.navigate('SignUp');
-    // Since we have navigation in props, we can use it directly
     props.navigation.navigate("SignUp", { recentlyLoggedOut: true });
   };
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
-      {/* Profile Section */}
       <View style={styles.profileContainer}>
-        {user && user.user && user.user.profilePicture ? (
-          <Image
-            source={{ uri: user.user.profilePicture }}
-            style={styles.profileImage}
-          />
-        ) : (
-          <View style={styles.profileImagePlaceholder}>
-            <Text style={styles.profileInitials}>
-              {user && user.user
-                ? `${user.user.firstName[0]}${user.user.lastName[0]}`
-                : ""}
-            </Text>
-          </View>
-        )}
-        <Text style={styles.profileName}>
-          {useUser && user.user
-            ? `${user.user.firstName} ${user.user.lastName}`
-            : "Guest"}
-        </Text>
+        <Avatar.Text
+          size={80}
+          label={
+            user && user.user
+              ? `${user.user.firstName[0]}${user.user.lastName[0]}`
+              : "G"
+          }
+          style={{ backgroundColor: "#1B3E90" }}
+        />
       </View>
 
-      {/* Drawer Items */}
       <View style={{ flex: 1 }}>
         <DrawerItemList {...props} />
       </View>
 
-      {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <View style={styles.logoutContainer}>
           <MaterialCommunityIcons name="logout" size={22} color="#1B3E90" />
@@ -75,20 +56,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderWidth: 5,
     alignItems: "center",
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderWidth: 5,
-    borderRadius: 40,
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: "#fff",
-  },
-  profileName: {
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold",
   },
   logoutButton: {
     paddingVertical: 15,
