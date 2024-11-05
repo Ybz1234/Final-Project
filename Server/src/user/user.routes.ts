@@ -6,7 +6,8 @@ import {
   deleteUser, 
   signInUser, 
   signUpUser, 
-  signOutUser 
+  signOutUser, 
+  getIdByEmail
 } from "./user.controller";
 import { authenticateToken } from "./auth.utils";
 
@@ -14,6 +15,7 @@ const router = Router();
 
 router.get('/users', getAllUsers);
 router.get('/user/:id', getUserById);
+router.get('getIdByEmail', getIdByEmail)
 router.put('/user/:id', updateUser);
 router.delete('/user', deleteUser);
 router.post('/signin', signInUser);

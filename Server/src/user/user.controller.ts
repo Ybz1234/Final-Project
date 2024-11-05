@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM } from "./user.model";
+import { getAll, getById, createUser, update, deleteByIdM, findUserByEmailAndPasswordM, registerUserM, getIdByEmailM } from "./user.model";
 import { generateToken, authenticateToken } from "./auth.utils";
 dotenv.config();
 
@@ -43,6 +43,27 @@ export async function getUserById(req: Request, res: Response) {
     }
   } catch (error) {
     res.status(500).json(error);
+  }
+}
+
+export async function getIdByEmail(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await getIdByEmailM(email);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ id: user._id });
+  } catch (error) {
+    console.error("Error in getIdByEmail:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -155,7 +176,7 @@ export async function signUpUser(req: Request, res: Response) {
 
     const token = generateToken(result.insertedId.toString());
     console.log("token", token);
-    
+
     res.status(201).json({ result, token });
   } catch (error) {
     console.error('Error in sign up:', error);

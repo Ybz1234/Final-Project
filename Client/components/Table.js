@@ -32,15 +32,38 @@ const TableExample = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(
+                "https://final-project-sqlv.onrender.com/api/users/deleteUser",
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify({ id: user.user._id }),
+                }
+            );
+            if (response.ok) {
+                Alert.alert("User deleted successfully");
+                setUsers(users.filter(user => user._id !== id));
+            } else {
+                const data = await response.json();
+                console.log("Error deleting user:", data);
+                Alert.alert("Failed to delete user");
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert("An error occurred while deleting the user");
+        }
+    };
+
     useEffect(() => {
         GetAllUsers();
     }, []);
 
-    const handleEdit = (email) => {
-        Alert.alert(`Edit user: ${email}`);
-    };
-
-    const tableHead = ["Mail", "Role", "Edit"];
+    const tableHead = ["Mail", "Role", "Delete"];
 
     const renderRow = ({ item }) => (
         <View style={styles.row}>
@@ -51,9 +74,9 @@ const TableExample = () => {
                 <Text style={styles.cellText}>{item.role || "N/A"}</Text>
             </View>
             <View style={styles.cell}>
-                <TouchableOpacity onPress={() => handleEdit(item.email)}>
+                <TouchableOpacity onPress={() => handleDelete(item._id)}>
                     <View style={styles.btn}>
-                        <Text style={styles.btnText}>Edit</Text>
+                        <Text style={styles.btnText}>Delete</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -114,7 +137,7 @@ const styles = StyleSheet.create({
     btn: {
         width: 60,
         height: 40,
-        backgroundColor: "orange",
+        backgroundColor: "red",
         borderRadius: 2,
         justifyContent: "center",
     },

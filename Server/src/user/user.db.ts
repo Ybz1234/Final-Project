@@ -34,6 +34,27 @@ export async function getUserByIdDB(id: ObjectId) {
   }
 }
 
+export async function getIdByEmailDB(email: string) {
+  let mongo = await DBConnection.getInstance();
+  let query = { email };
+  try {
+    const user = await mongo
+      .db(DB_INFO.db)
+      .collection(collection)
+      .findOne(query, { projection: { _id: 1 } });
+
+    if (!user) {
+      return null;
+    }
+
+    return user._id;
+  } catch (error) {
+    console.error("Error fetching user ID by email:", error);
+    throw new Error("Database error occurred while fetching user ID");
+  }
+}
+
+
 export async function addUser(user: IUser) {
   let mongo = await DBConnection.getInstance();
   try {

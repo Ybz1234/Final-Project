@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { useUser } from "../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
@@ -35,18 +35,6 @@ export default function Admin() {
     <PageFrame style={styles.container}>
       <Text style={styles.title}>Admin Dashboard</Text>
       <Text style={styles.message}>Welcome, {user.user?.firstName}!</Text>
-      <Button
-        title="Manage Users"
-        onPress={() => navigation.navigate("UserManagement")}
-      />
-      <Button
-        title="View Reports"
-        onPress={() => navigation.navigate("Reports")}
-      />
-      <Button
-        title="stam"
-        onPress={() => navigation.navigate("stam")}
-      />
       <TableExample/>
     </PageFrame>
   );

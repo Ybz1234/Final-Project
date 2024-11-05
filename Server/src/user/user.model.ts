@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { DeleteUserDB, EditUser, addUser, getUserByIdDB, getUsers, findUserByEmailAndPasswordDB, registerUserDB } from "./user.db";
+import { DeleteUserDB, EditUser, addUser, getUserByIdDB, getUsers, findUserByEmailAndPasswordDB, registerUserDB, getIdByEmailDB } from "./user.db";
 import { IUser } from "./user.type";
 
 export async function getAll() {
@@ -10,6 +10,11 @@ export async function getAll() {
 export async function getById(id: ObjectId) {
   return await getUserByIdDB(id);
   // return users.find((user) => user._id?.toString() === id);
+}
+
+export async function getIdByEmailM(email: string) {
+  const userId = await getIdByEmailDB(email);
+  return userId ? { _id: userId } : null;
 }
 
 export async function createUser(
