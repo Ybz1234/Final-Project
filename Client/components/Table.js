@@ -32,8 +32,41 @@ const TableExample = () => {
         }
     };
 
-    const handleDelete = async (id) => {
+    const getUserIdByEmail = async (email) => {
         try {
+            const response = await fetch(
+                "https://final-project-sqlv.onrender.com/api/users/getIdByEmail",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify({ email }),
+                }
+            );
+            const data = await response.json();
+            if (response.ok) {
+                return data._id;
+            } else {
+                console.log("Error fetching user ID:", data);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching user ID:", error);
+            return null;
+        }
+    };
+
+    const handleDelete = async (email) => {
+        try {
+            const id = await getUserIdByEmail(email);
+            console.log(id);
+            if (!id) {
+                Alert.alert("Failed to fetch user ID");
+                return;
+            }
+
             const response = await fetch(
                 "https://final-project-sqlv.onrender.com/api/users/deleteUser",
                 {
@@ -42,19 +75,19 @@ const TableExample = () => {
                         "Content-Type": "application/json",
                         Accept: "application/json",
                     },
-                    body: JSON.stringify({ id: user.user._id }),
+                    body: JSON.stringify({ id }),
                 }
             );
             if (response.ok) {
                 Alert.alert("User deleted successfully");
-                setUsers(users.filter(user => user._id !== id));
+                setUsers(users.filter((user) => user._id !== id));
             } else {
                 const data = await response.json();
                 console.log("Error deleting user:", data);
                 Alert.alert("Failed to delete user");
             }
         } catch (error) {
-            console.error(error);
+            console.error("Error deleting user:", error);
             Alert.alert("An error occurred while deleting the user");
         }
     };
