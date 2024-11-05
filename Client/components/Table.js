@@ -45,13 +45,12 @@ const TableExample = () => {
                     body: JSON.stringify({ email }),
                 }
             );
-    
-            const responseData = await response.text();
+
+            const responseData = await response.json();
+
             if (response.ok) {
-                const data = JSON.parse(responseData);
-                return data._id;
+                return responseData.id;
             } else {
-                console.log("Error fetching user ID:", responseData);
                 return null;
             }
         } catch (error) {
@@ -63,14 +62,13 @@ const TableExample = () => {
     const handleDelete = async (email) => {
         try {
             const id = await getUserIdByEmail(email);
-            console.log(id);
             if (!id) {
                 Alert.alert("Failed to fetch user ID");
                 return;
             }
 
             const response = await fetch(
-                "https://final-project-sqlv.onrender.com/api/users/deleteUser",
+                "https://final-project-sqlv.onrender.com/api/users/user",
                 {
                     method: "DELETE",
                     headers: {
@@ -80,16 +78,17 @@ const TableExample = () => {
                     body: JSON.stringify({ id }),
                 }
             );
+
             if (response.ok) {
                 Alert.alert("User deleted successfully");
                 setUsers(users.filter((user) => user._id !== id));
             } else {
-                const data = await response.json();
-                console.log("Error deleting user:", data);
+                const errorData = await response.json();
+                console.log("-handleDelete- Error deleting user:", errorData);
                 Alert.alert("Failed to delete user");
             }
         } catch (error) {
-            console.error("Error deleting user:", error);
+            console.error("-handleDelete- Error deleting user:", error);
             Alert.alert("An error occurred while deleting the user");
         }
     };
@@ -100,8 +99,8 @@ const TableExample = () => {
 
     const tableHead = ["Mail", "Role", "Delete"];
 
-    const renderRow = ({ item }) => (
-        <View style={styles.row}>
+    const renderRow = ({ item, index }) => (
+        <View style={[styles.row, { backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#fff' }]}>
             <View style={[styles.cell, { width: emailCellWidth }]}>
                 <Text style={styles.cellText}>{item.email}</Text>
             </View>
@@ -142,38 +141,45 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#1B3E90",
         justifyContent: "space-around",
+        paddingVertical: 10,
+        borderRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        elevation: 2,
     },
     headerCell: {
-        height: 60,
         justifyContent: "center",
         alignItems: "center",
         borderRightWidth: 1,
         borderColor: "#ddd",
-        width: '33%',
     },
     headText: {
         color: "#fff",
         textAlign: "center",
         fontSize: 18,
+        fontWeight: "bold",
     },
     row: {
         flexDirection: "row",
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
         marginVertical: 2,
         height: 60,
+        alignItems: "center",
     },
     cell: {
         justifyContent: "center",
         alignItems: "center",
-        padding: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         borderRightWidth: 1,
         borderColor: "#ddd",
     },
     btn: {
-        width: 60,
+        width: 80,
         height: 40,
         backgroundColor: "red",
-        borderRadius: 2,
+        borderRadius: 5,
         justifyContent: "center",
     },
     btnText: { textAlign: "center", color: "#fff", fontSize: 16 },
