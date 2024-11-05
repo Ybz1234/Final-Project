@@ -45,11 +45,13 @@ const TableExample = () => {
                     body: JSON.stringify({ email }),
                 }
             );
-            const data = await response.json();
+    
+            const responseData = await response.text();
             if (response.ok) {
+                const data = JSON.parse(responseData);
                 return data._id;
             } else {
-                console.log("Error fetching user ID:", data);
+                console.log("Error fetching user ID:", responseData);
                 return null;
             }
         } catch (error) {
@@ -107,7 +109,7 @@ const TableExample = () => {
                 <Text style={styles.cellText}>{item.role || "N/A"}</Text>
             </View>
             <View style={styles.cell}>
-                <TouchableOpacity onPress={() => handleDelete(item._id)}>
+                <TouchableOpacity onPress={() => handleDelete(item.email)}>
                     <View style={styles.btn}>
                         <Text style={styles.btnText}>Delete</Text>
                     </View>
