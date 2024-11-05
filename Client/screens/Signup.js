@@ -28,8 +28,8 @@ export default function SignUp({ navigation, route }) {
     const message = {
       to: expoPushToken,
       sound: "default",
-      title: "Logged In Successfully!",
-      body: "check your Email",
+      title: "Welcome, " + user.user?.firstName + "!",
+      body: "We are glad to have you back!",
     };
     await fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
