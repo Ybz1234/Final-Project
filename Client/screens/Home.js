@@ -12,18 +12,22 @@ import { TripContext } from "../context/TripContext";
 
 const Home = ({ navigation, route }) => {
   const [markers, setMarkers] = useState([]);
+  const { tripData, setTripData } = useContext(TripContext);
   const [cityName, setCityName] = useState("");
-  const [cityNameArr, setCityNameArr] = useState([]);
+  const [cityNameArr, setCityNameArr] = useState(
+    tripData.cityNameArr.length > 0 ? tripData.cityNameArr : []
+  );
   const [searchQuery, setSearchQuery] = React.useState("");
   const [recentlyLoggedOut, setRecentlyLoggedOut] = useState(false);
   const { resetTripData } = useContext(TripContext);
-  const { tripData, setTripData } = useContext(TripContext);
 
   useEffect(() => {
-    if (route.params?.recentlyLoggedOut) {
+    if (tripData.cityNameArr && tripData.cityNameArr.length > 0) {
       setRecentlyLoggedOut(true);
+      setCityNameArr(tripData.cityNameArr);
+      updateMarkersFromCityNames(tripData.cityNameArr);
     }
-  }, [route.params]);
+  }, [tripData.cityNameArr]);
 
   const CleanMarks = () => {
     setMarkers([]);
@@ -31,6 +35,24 @@ const Home = ({ navigation, route }) => {
     setCityName("");
     resetTripData();
   };
+
+  const updateMarkersFromCityNames = (cityNames) => {
+    const newMarkers = cityNames
+      .map((cityName) => {
+        const city = cities2.find((c) => {
+          const name = c.name.split(",")[0].trim();
+          return name === cityName;
+        });
+        if (city) {
+          return { latitude: city.lat, longitude: city.lng };
+        } else {
+          return null;
+        }
+      })
+      .filter((marker) => marker !== null);
+    setMarkers(newMarkers);
+  };
+
   const handleNextPage = () => {
     if (checkNameArr()) {
       Toast.show({ type: "error", text1: "Cannot add same city twice" });

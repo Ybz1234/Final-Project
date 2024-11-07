@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -33,42 +33,77 @@ const PageDatePicker = ({ route, navigation }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [buttonPressed, setButtonPressed] = useState(false);
   const { user, setUser: setGlobalUser } = useUser();
+  const [currentlyIn, setCurrentlyIn] = useState(false);
+  // useEffect(() => {
+  //   setCurrentlyIn(true);
+  //   const globalCityNameArr = tripData.cityNameArr;
+  //   const paramCityNameArr = route?.params?.cityNameArr;
 
-  useEffect(() => {
-    const globalCityNameArr = tripData.cityNameArr;
-    const paramCityNameArr = route?.params?.cityNameArr;
+  //   if (
+  //     (!globalCityNameArr || globalCityNameArr.length === 0) &&
+  //     (!paramCityNameArr || (paramCityNameArr.length === 0 && currentlyIn))
+  //   ) {
+  //     Toast.show({
+  //       type: "info",
+  //       text1: "You have to choose cities in order to continue",
+  //       text2: "Please return to the home page and select cities",
+  //       position: "top",
+  //       visibilityTime: 4000,
+  //       autoHide: true,
+  //       topOffset: 280,
+  //       bottomOffset: 40,
+  //     });
+  //     navigation.replace("Main", { screen: "Home" });
+  //   } else {
+  //     // Update tripData.cityNameArr only if it's empty and params have data
+  //     if (
+  //       paramCityNameArr &&
+  //       paramCityNameArr.length > 0 &&
+  //       (!globalCityNameArr || globalCityNameArr.length === 0)
+  //     ) {
+  //       setTripData((prevData) => ({
+  //         ...prevData,
+  //         cityNameArr: paramCityNameArr,
+  //       }));
+  //     }
+  //   }
+  // }, [route?.params, tripData.cityNameArr]);
 
-    if (
-      (!globalCityNameArr || globalCityNameArr.length === 0) &&
-      (!paramCityNameArr || paramCityNameArr.length === 0)
-    ) {
-      Toast.show({
-        type: "info",
-        text1: "You have to choose cities in order to continue",
-        text2: "Please return to the home page and select cities",
-        position: "top",
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 280,
-        bottomOffset: 40,
-      });
-      navigation.replace("Main", { screen: "Home" });
-    } else {
-      // Update tripData.cityNameArr only if it's empty and params have data
+  useFocusEffect(
+    useCallback(() => {
+      const globalCityNameArr = tripData.cityNameArr;
+      const paramCityNameArr = route?.params?.cityNameArr;
+
       if (
-        paramCityNameArr &&
-        paramCityNameArr.length > 0 &&
-        (!globalCityNameArr || globalCityNameArr.length === 0)
+        (!globalCityNameArr || globalCityNameArr.length === 0) &&
+        (!paramCityNameArr || paramCityNameArr.length === 0)
       ) {
-        setTripData((prevData) => ({
-          ...prevData,
-          cityNameArr: paramCityNameArr,
-        }));
+        Toast.show({
+          type: "info",
+          text1: "You have to choose cities in order to continue",
+          text2: "Please return to the home page and select cities",
+          position: "top",
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 280,
+          bottomOffset: 40,
+        });
+        navigation.replace("Main", { screen: "Home" });
+      } else {
+        // Update tripData.cityNameArr only if it's empty and params have data
+        if (
+          paramCityNameArr &&
+          paramCityNameArr.length > 0 &&
+          (!globalCityNameArr || globalCityNameArr.length === 0)
+        ) {
+          setTripData((prevData) => ({
+            ...prevData,
+            cityNameArr: paramCityNameArr,
+          }));
+        }
       }
-    }
-  }, [route?.params, tripData.cityNameArr]);
-
-  useFocusEffect(React.useCallback(() => {}, []));
+    }, [route?.params, tripData.cityNameArr])
+  );
   const checkInputs = () => {
     if (daysArr.map(Number) === undefined || daysArr.map(Number) == 0) {
       Toast.show({
@@ -132,6 +167,7 @@ const PageDatePicker = ({ route, navigation }) => {
             return flightTicekt.insertedId;
           }
         );
+        setCurrentlyIn(false);
         setIsLoading(false);
         setTripData((prevData) => ({
           ...prevData,
