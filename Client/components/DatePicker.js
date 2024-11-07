@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet, View } from "react-native";
-import { Button, Portal, Provider, DefaultTheme } from "react-native-paper";
+import { Portal, Provider, DefaultTheme } from "react-native-paper";
+import { TripContext } from "../context/TripContext";
 import {
   DatePickerModal,
   en,
   registerTranslation,
 } from "react-native-paper-dates";
 registerTranslation("en", en);
-const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
-  const [visible, setVisible] = useState(false);
-  // const [dateConfirmed, setDateConfirmed] = useState(false);
+const DatePicker = ({ date, setDate }) => {
+  const [visible, setVisible] = useState(true);
   const openDatePicker = () => setVisible(true);
-  const closeDatePicker = () => setVisible(false);
+  const { tripData, setTripData } = useContext(TripContext);
+  const closeDatePicker = () => {
+    setVisible(false);
+  };
   const onConfirm = (params) => {
+    setTripData((prevData) => ({
+      ...prevData,
+      date: params.date,
+    }));
     setDate(params.date);
-    setDateConfirmed(true);
     closeDatePicker();
   };
   const theme = {
@@ -31,38 +37,33 @@ const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
       placeholder: "#1B3E90",
     },
   };
+  useEffect(() => {
+    if (date === null) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, []);
   return (
     <Provider theme={theme}>
-      {!dateConfirmed ? (
-        <Button
-          mode="elevated"
-          style={styles.button}
-          labelStyle={styles.buttonLabel}
-          onPress={openDatePicker}
-        >
-          Pick a date
-        </Button>
-      ) : (
-        <View style={styles.undoContainer}>
-          <MaterialCommunityIcons
-            name="calendar-refresh"
-            size={26}
-            style={styles.undoButton}
-            color="#2EB8B8"
-            onPress={() => {
-              setDate(null);
-              setDateConfirmed(false);
-            }}
-          />
-        </View>
-      )}
+      <View style={styles.undoContainer}>
+        <MaterialCommunityIcons
+          name="calendar-refresh"
+          size={26}
+          style={styles.undoButton}
+          color="#2EB8B8"
+          onPress={() => {
+            openDatePicker();
+          }}
+        />
+      </View>
       <Portal>
         <DatePickerModal
           mode="single"
           visible={visible}
-          onDismiss={closeDatePicker}
           date={date}
           onConfirm={onConfirm}
+          onDismiss={closeDatePicker}
           theme={theme}
           contentStyle={styles.modalContent}
         />
@@ -72,32 +73,6 @@ const DatePicker = ({ date, setDate, dateConfirmed, setDateConfirmed }) => {
 };
 export default DatePicker;
 const styles = StyleSheet.create({
-  button: {
-    alignSelf: "center",
-    width: "100%",
-    paddingVertical: 8,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
-    marginTop: 50,
-    marginHorizontal: 10,
-    backgroundColor: "#1B3E90",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  buttonLabel: {
-    color: "white",
-    fontSize: 17,
-    fontWeight: "bold",
-    fontFamily: "Roboto-Medium",
-  },
-  modalContent: {
-    backgroundColor: "white",
-  },
   undoContainer: {
     color: "white",
     fontSize: 12,

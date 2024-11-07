@@ -31,16 +31,14 @@ const FullTrip = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const { user, setUser: setGlobalUser } = useUser();
-
-  const PYTHON_UTILITY_SERVER_URL = "https://utilityserver-kka0.onrender.com";
-
   useFocusEffect(
     React.useCallback(() => {
       setIsLoading(false);
+      console.log(tripData);
+
       fetchFlightDetails();
     }, [])
   );
-
   useEffect(() => {
     if (route?.params?.daysArray == undefined) {
       Toast.show({

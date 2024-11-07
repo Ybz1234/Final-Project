@@ -10,7 +10,6 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import DatePicker from "../components/DatePicker";
 import axios from "axios";
-import * as Animatable from "react-native-animatable";
 import PageFrame from "../components/PageFrame";
 import Toast from "react-native-toast-message";
 import BackButton from "../components/BackButton";
@@ -21,49 +20,55 @@ import { useUser } from "../context/UserContext";
 import { TripContext } from "../context/TripContext";
 
 const PageDatePicker = ({ route, navigation }) => {
-  const cityNameArr = route?.params?.cityNameArr || [];
+  const { tripData, setTripData } = useContext(TripContext);
+  const cityNameArr = route?.params?.cityNameArr || tripData.cityNameArr || [];
   const cityArr = cityNameArr.length > 0 ? cityNameArr.slice(1) : [];
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(tripData.date || null);
+  const [daysArr, setDaysArr] = useState(
+    tripData.daysArr.length > 0
+      ? tripData.daysArr
+      : new Array(cityArr.length).fill("")
+  );
   const [isLoading, setIsLoading] = useState(true);
-  const [daysArr, setDaysArr] = useState(new Array(cityArr.length).fill(""));
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const [dateConfirmed, setDateConfirmed] = useState(false);
   const [buttonPressed, setButtonPressed] = useState(false);
   const { user, setUser: setGlobalUser } = useUser();
-  const { tripData, setTripData } = useContext(TripContext);
 
-  //? !route?.params?.cityNameArr
   useEffect(() => {
-    console.log(tripData);
+    const globalCityNameArr = tripData.cityNameArr;
+    const paramCityNameArr = route?.params?.cityNameArr;
 
-    const globalData = tripData.cityNameArr;
-    if (!tripData.cityNameArr || tripData.cityNameArr.length === 0) {
+    if (
+      (!globalCityNameArr || globalCityNameArr.length === 0) &&
+      (!paramCityNameArr || paramCityNameArr.length === 0)
+    ) {
       Toast.show({
         type: "info",
-        text1: "You Have to choose cities in order to continue",
-        text2: "Please return to home page and select cities",
+        text1: "You have to choose cities in order to continue",
+        text2: "Please return to the home page and select cities",
         position: "top",
         visibilityTime: 4000,
         autoHide: true,
         topOffset: 280,
         bottomOffset: 40,
       });
-      navigation.replace("Main", {
-        screen: "Home",
-      });
+      navigation.replace("Main", { screen: "Home" });
     } else {
-      setTripData((prevData) => ({
-        ...prevData,
-        cityNameArr: cityNameArr,
-      }));
+      // Update tripData.cityNameArr only if it's empty and params have data
+      if (
+        paramCityNameArr &&
+        paramCityNameArr.length > 0 &&
+        (!globalCityNameArr || globalCityNameArr.length === 0)
+      ) {
+        setTripData((prevData) => ({
+          ...prevData,
+          cityNameArr: paramCityNameArr,
+        }));
+      }
     }
-  }, [route?.params]);
+  }, [route?.params, tripData.cityNameArr]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsLoading(false);
-    }, [])
-  );
+  useFocusEffect(React.useCallback(() => {}, []));
   const checkInputs = () => {
     if (daysArr.map(Number) === undefined || daysArr.map(Number) == 0) {
       Toast.show({
@@ -157,11 +162,6 @@ const PageDatePicker = ({ route, navigation }) => {
     updatedDaysArr[index] = value;
     setDaysArr(updatedDaysArr);
   };
-  const toggleIsLoading = () => {
-    setTimeout(() => {
-      setIsLoading(true);
-    }, 1500);
-  };
 
   const hadleButtonIsPressed = () => {
     setButtonPressed(true);
@@ -169,20 +169,6 @@ const PageDatePicker = ({ route, navigation }) => {
       setButtonPressed(false);
     }, 4000);
   };
-
-  if (!isLoading) {
-    toggleIsLoading();
-    return (
-      <Animatable.View>
-        <Animatable.Image
-          animation="fadeIn"
-          duration={1500}
-          style={styles.image}
-          source={require("../assets/plane.gif")}
-        />
-      </Animatable.View>
-    );
-  }
 
   return (
     <PageFrame>
@@ -197,12 +183,7 @@ const PageDatePicker = ({ route, navigation }) => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <DatePicker
-            date={date}
-            setDate={setDate}
-            dateConfirmed={dateConfirmed}
-            setDateConfirmed={setDateConfirmed}
-          />
+          <DatePicker date={date} setDate={setDate} />
           {date &&
             cityArr.map((city, index) => (
               <CityDurationInput
