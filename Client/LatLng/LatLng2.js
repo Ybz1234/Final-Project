@@ -16,6 +16,7 @@ export const cities2 = [
   { name: "Tallinn, Estonia", lat: 59.413317, lng: 24.832844 },
   { name: "Helsinki, Finland", lat: 60.317222, lng: 24.963333 },
   { name: "Nantes, France", lat: 47.153333, lng: -1.610833 },
+  { name: "Paris, France", lat: 48.856613, lng: 2.352222 },
   { name: "Lyon, France", lat: 45.720833, lng: 5.079444 },
   { name: "Nice, France", lat: 43.665278, lng: 7.215 },
   { name: "Frankfurt, Germany", lat: 50.037933, lng: 8.562152 },
