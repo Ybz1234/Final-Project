@@ -1,6 +1,5 @@
-import { createAirport, getAllAirports as getAllAirports } from "../../airport/airport.model";
-import "dotenv/config";
-import { createFlight, createFlights } from "../../flight/flight.model";
+import { getAllAirports as getAllAirports } from "../../airport/airport.model";
+import { createFlights } from "../../flight/flight.model";
 import "dotenv/config";
 
 export const insertFlights = async (date: Date) => {
@@ -42,7 +41,7 @@ const generateFlightDate = (baseDate: Date) => {
 
 const iterateFlights = async () => {
   let hoursToAdd = 8;
-  for (let i = 0; i < 180; i++) {
+  for (let i = 0; i < 360; i++) {
     console.log("new inserted", i);
     hoursToAdd = 8 + 24 * i;
     //flight base will always be 8 hours
