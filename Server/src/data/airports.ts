@@ -225,6 +225,17 @@ export const airports: IAirPort[] = [
     iata: "NCE",
     icao: "LFMN",
   },
+  {
+    address: {
+      full_address: "Charles de Gaulle Airport, 95700 Roissy-en-France, France",
+      location: { lat: 49.0097, long: 2.5479 },
+    },
+    name: "Charles de Gaulle Airport",
+    city: "Paris",
+    country: "France",
+    iata: "CDG",
+    icao: "LFPG",
+  },
   // Germany
   {
     address: {
