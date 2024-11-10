@@ -7,4 +7,6 @@ export type IHotel = {
   city: string;
   country: string;
   address: Address;
+  rating: number;
+  night_cost: number;
 };
