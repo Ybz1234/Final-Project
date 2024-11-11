@@ -1,4 +1,2 @@
-import React from 'react';
 import { AirbnbRating } from 'react-native-ratings';
-
-export default () => <AirbnbRating />;
+export default ({ rating = 5 }) => <AirbnbRating defaultRating={rating} />;
