@@ -30,7 +30,6 @@ const HotelSelection = ({ route }) => {
           );
     
           const hotelDataJson = await hotelResponse.json();
-          console.log('API Response:', hotelDataJson); // Log the full API response
     
           if (hotelDataJson && hotelDataJson.hotel) {
             allHotels.push({ city, hotels: hotelDataJson.hotel });
@@ -47,11 +46,11 @@ const HotelSelection = ({ route }) => {
     
 
     fetchHotels();
-  }, [cityArr]); // Re-run effect if cityArr changes
+  }, [cityArr]);
 
   const handleSelect = (hotel) => {
     setSelectedHotel(hotel);
-    setIsConfirmed(false); // Reset confirmation when selecting a new hotel
+    setIsConfirmed(false);
   };
 
   const handleConfirm = (checked) => {
