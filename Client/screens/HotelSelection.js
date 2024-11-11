@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { List } from 'react-native-paper';
 import HotelCard from '../components/HotelCard';
 import ConfirmationCheckbox from '../components/ConfirmationCheckbox';
 
@@ -10,12 +11,13 @@ const HotelSelection = ({ route }) => {
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [error, setError] = useState(null);
+  const [expandedCities, setExpandedCities] = useState({});
 
   useEffect(() => {
     const fetchHotels = async () => {
       try {
         const allHotels = [];
-    
+
         for (let city of cityArr) {
           const hotelResponse = await fetch(
             "https://final-project-sqlv.onrender.com/api/hotels/findHotelsByCity",
@@ -28,14 +30,14 @@ const HotelSelection = ({ route }) => {
               body: JSON.stringify({ city }),
             }
           );
-    
+
           const hotelDataJson = await hotelResponse.json();
-    
+
           if (hotelDataJson && hotelDataJson.hotel) {
             allHotels.push({ city, hotels: hotelDataJson.hotel });
           }
         }
-    
+
         setHotels(allHotels);
       } catch (error) {
         setError("Failed to load hotel data.");
@@ -43,7 +45,6 @@ const HotelSelection = ({ route }) => {
         setLoading(false);
       }
     };
-    
 
     fetchHotels();
   }, [cityArr]);
@@ -57,6 +58,13 @@ const HotelSelection = ({ route }) => {
     setIsConfirmed(checked);
   };
 
+  const toggleCityAccordion = (city) => {
+    setExpandedCities((prev) => ({
+      ...prev,
+      [city]: !prev[city],
+    }));
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.headerText}>Select Your Hotels</Text>
@@ -65,20 +73,27 @@ const HotelSelection = ({ route }) => {
       ) : error ? (
         <Text style={styles.errorMessage}>{error}</Text>
       ) : hotels.length > 0 ? (
-        hotels.map((cityHotels, index) => (
-          <View key={index}>
-            <Text style={styles.cityTitle}>Hotels in {cityHotels.city}</Text>
-            {cityHotels.hotels.map((hotel) => (
-              <HotelCard
-                key={hotel._id}
-                hotel={hotel}
-                onSelect={handleSelect}
-                accessible={true}
-                accessibilityLabel={`Hotel: ${hotel.name}`}
-              />
-            ))}
-          </View>
-        ))
+        <List.Section>
+          {hotels.map((cityHotels, index) => (
+            <List.Accordion
+              key={index}
+              title={`Hotels in ${cityHotels.city}`}
+              expanded={expandedCities[cityHotels.city] || false}
+              onPress={() => toggleCityAccordion(cityHotels.city)}
+              left={(props) => <List.Icon {...props} icon="city" />}
+            >
+              {cityHotels.hotels.map((hotel) => (
+                <HotelCard
+                  key={hotel._id}
+                  hotel={hotel}
+                  onSelect={handleSelect}
+                  accessible={true}
+                  accessibilityLabel={`Hotel: ${hotel.name}`}
+                />
+              ))}
+            </List.Accordion>
+          ))}
+        </List.Section>
       ) : (
         <Text>No hotels available.</Text>
       )}
