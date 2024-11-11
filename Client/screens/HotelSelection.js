@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native';
 import { List } from 'react-native-paper';
 import HotelCard from '../components/HotelCard';
-import ConfirmationCheckbox from '../components/ConfirmationCheckbox';
 
 const HotelSelection = ({ route }) => {
   const { cityArr } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedHotel, setSelectedHotel] = useState(null);
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [selectedHotels, setSelectedHotels] = useState({}); // Store selected hotels per city
+  const [confirmationMessage, setConfirmationMessage] = useState('');
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
 
@@ -49,13 +48,36 @@ const HotelSelection = ({ route }) => {
     fetchHotels();
   }, [cityArr]);
 
-  const handleSelect = (hotel) => {
-    setSelectedHotel(hotel);
-    setIsConfirmed(false);
+  const handleSelect = (city, hotel) => {
+    setSelectedHotels((prevSelected) => {
+      const selectedCityHotels = prevSelected[city] || [];
+      const isHotelSelected = selectedCityHotels.some((h) => h._id === hotel._id);
+
+      if (isHotelSelected) {
+        // If hotel is already selected, remove it
+        return {
+          ...prevSelected,
+          [city]: selectedCityHotels.filter((h) => h._id !== hotel._id),
+        };
+      } else {
+        // If hotel is not selected, add it
+        return {
+          ...prevSelected,
+          [city]: [...selectedCityHotels, hotel],
+        };
+      }
+    });
   };
 
-  const handleConfirm = (checked) => {
-    setIsConfirmed(checked);
+  const handleConfirmSelection = () => {
+    let confirmationText = 'You have selected the following hotels:\n';
+    for (let city in selectedHotels) {
+      confirmationText += `\nIn ${city}:\n`;
+      selectedHotels[city].forEach((hotel) => {
+        confirmationText += `- ${hotel.name}\n`;
+      });
+    }
+    setConfirmationMessage(confirmationText);
   };
 
   const toggleCityAccordion = (city) => {
@@ -86,7 +108,8 @@ const HotelSelection = ({ route }) => {
                 <HotelCard
                   key={hotel._id}
                   hotel={hotel}
-                  onSelect={handleSelect}
+                  onSelect={() => handleSelect(cityHotels.city, hotel)}
+                  selected={selectedHotels[cityHotels.city]?.some((h) => h._id === hotel._id)}
                   accessible={true}
                   accessibilityLabel={`Hotel: ${hotel.name}`}
                 />
@@ -97,14 +120,14 @@ const HotelSelection = ({ route }) => {
       ) : (
         <Text>No hotels available.</Text>
       )}
-      {selectedHotel && (
+
+      {Object.keys(selectedHotels).length > 0 && (
         <View style={styles.selectedHotelContainer}>
-          <Text style={styles.selectedHotelText}>
-            Selected Hotel: {selectedHotel.name}
-          </Text>
-          <ConfirmationCheckbox label="Confirm Selection" onConfirm={handleConfirm} />
-          {isConfirmed && (
-            <Text style={styles.confirmationMessage}>Hotel selection confirmed!</Text>
+          <Button title="Confirm Selection" onPress={handleConfirmSelection} />
+          {confirmationMessage && (
+            <View style={styles.confirmationContainer}>
+              <Text style={styles.confirmationMessage}>{confirmationMessage}</Text>
+            </View>
           )}
         </View>
       )}
@@ -123,12 +146,14 @@ const styles = StyleSheet.create({
   selectedHotelContainer: {
     marginTop: 20,
   },
-  selectedHotelText: {
-    fontSize: 18,
+  confirmationContainer: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
   },
   confirmationMessage: {
+    fontSize: 16,
     color: 'green',
-    marginTop: 10,
   },
   errorMessage: {
     color: 'red',
