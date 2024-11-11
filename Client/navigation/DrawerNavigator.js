@@ -13,6 +13,7 @@ import Profile from "../screens/Profile";
 import FullDestination from "../screens/FullDestination";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import Admin from "../screens/Admin";
+import HotelSelection from "../screens/HotelSelection";
 import { useUser } from "../context/UserContext";
 
 const Drawer = createDrawerNavigator();
@@ -87,6 +88,15 @@ function MainDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Hotels selection"
+        component={HotelSelection}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="city" size={22} color={color} />
           ),
         }}
       />

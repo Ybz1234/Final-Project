@@ -32,7 +32,7 @@ export async function getHotelByNameDB(hotelName: string) {
 export async function getHotelsByCityDB(city: string) {
   let mongo = await DBConnection.getInstance();
   const query = { city: city };
-  const projection = { _id: 0, city: 1, country: 1, name: 1, address: {full_address: 1} };
+  const projection = { _id: 0, city: 1, country: 1, name: 1, address: {full_address: 1}, rating: 1, night_cost: 1 };
   try {
     return await mongo.db(DB_INFO.db).collection(collection).find(query, {projection}).toArray();
   } catch (error) {

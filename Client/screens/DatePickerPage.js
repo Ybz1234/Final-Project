@@ -174,9 +174,19 @@ const PageDatePicker = ({ route, navigation }) => {
           date: date,
           daysArr: daysArr,
         }));
+        // navigation.replace("Main", {
+        //   screen: "Route Info",
+        //   params: {
+        //     flightTickets: data.flightTickets,
+        //     userId: user.user._id,
+        //     daysArray: daysArr,
+        //     date: date,
+        //   },
+        // });
         navigation.replace("Main", {
-          screen: "Route Info",
+          screen: "Hotels selection",
           params: {
+            cityArr: cityArr,
             flightTickets: data.flightTickets,
             userId: user.user._id,
             daysArray: daysArr,
