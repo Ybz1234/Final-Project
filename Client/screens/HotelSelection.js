@@ -4,7 +4,7 @@ import { List } from 'react-native-paper';
 import HotelCard from '../components/HotelCard';
 
 const HotelSelection = ({ route }) => {
-  const { cityArr } = route.params;
+  const { cityArr, daysArray } = route.params; // Destructure daysArray from route params
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotels, setSelectedHotels] = useState({});
@@ -69,14 +69,46 @@ const HotelSelection = ({ route }) => {
     });
   };
 
+  const calculateTotalPrice = (hotel, cityIndex) => {
+    const days = daysArray[cityIndex] || 0; // Get days from daysArray for each city
+    console.log(`Calculating total price for hotel: ${hotel.name} in city ${cityArr[cityIndex]}`);
+    console.log(`Price per night: ${hotel.price}, Days: ${days}`);
+    return hotel.price * days; // Multiply the price per night by the number of days
+  };
+
   const handleConfirmSelection = () => {
     let confirmationText = 'You have selected the following hotels:\n';
+    let totalPrice = 0;
+
     for (let city in selectedHotels) {
       confirmationText += `\nIn ${city}:\n`;
-      selectedHotels[city].forEach((hotel) => {
-        confirmationText += `- ${hotel.name}\n`;
+      selectedHotels[city].forEach((hotel, index) => {
+        // Log the selected hotel and the associated city index
+        console.log(`Selected hotel: ${hotel.name} in ${city}`);
+        console.log(`Index in daysArray: ${index}`);
+
+        // Ensure the days value is valid for each hotel
+        const days = daysArray[index] && !isNaN(daysArray[index]) ? daysArray[index] : 1;  // Default to 1 day if undefined or NaN
+        const pricePerNight = hotel?.night_cost && !isNaN(hotel?.night_cost) ? hotel?.night_cost : 0; // Default to 0 if price is invalid
+
+        // If the price is 0, warn the user
+        if (pricePerNight === 0) {
+          console.warn(`Invalid price for hotel: ${hotel.name} in ${city}`);
+        }
+
+        // Log the days and price per night for the hotel
+        console.log(`Price per night for ${hotel.name}: $${pricePerNight}`);
+        console.log(`Days selected for ${hotel.name}: ${days}`);
+
+        const totalHotelPrice = pricePerNight * days;  // Calculate total price for the hotel stay
+        totalPrice += totalHotelPrice;  // Add to total price
+
+        confirmationText += `- ${hotel.name} for ${days} day(s): $${totalHotelPrice.toFixed(2)}\n`;
       });
     }
+
+    // Add the total price of all selected hotels
+    confirmationText += `\nTotal price for all selections: $${totalPrice.toFixed(2)}`;
     setConfirmationMessage(confirmationText);
   };
 
