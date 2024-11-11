@@ -49,7 +49,8 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-table-component": "^1.2.2",
     "react-native-toast-message": "^2.2.1",
-    "react-native-vector-icons": "^10.2.0"
+    "react-native-vector-icons": "^10.2.0",
+    "react-world-flags": "^1.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
