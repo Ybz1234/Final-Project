@@ -13,7 +13,7 @@ const FullDestination = ({ route }) => {
 
   useEffect(() => {
     if (processedDestinations) {
-      // sendToMail();
+      sendToMail();
     }
     if (!destinations || !processedDestinations) {
       Toast.show({
