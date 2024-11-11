@@ -7,7 +7,7 @@ const HotelSelection = ({ route }) => {
   const { cityArr } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedHotels, setSelectedHotels] = useState({}); // Store selected hotels per city
+  const [selectedHotels, setSelectedHotels] = useState({});
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
