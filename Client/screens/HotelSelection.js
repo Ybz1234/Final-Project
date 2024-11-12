@@ -87,17 +87,17 @@ const HotelSelection = ({ route }) => {
     for (let city in selectedHotels) {
       confirmationText += `\nIn ${city}:\n`;
       selectedHotels[city].forEach((hotel) => {
-        const nights = nightsPerHotel[hotel._id] || 0;
-        const totalHotelPrice = hotel.night_cost * nights;
+        const totalHotelPrice = calculateTotalPrice(hotel);
         totalPrice += totalHotelPrice;
 
-        confirmationText += `- ${hotel.name} for ${nights} night(s): $${totalHotelPrice.toFixed(2)}\n`;
+        confirmationText += `- ${hotel.name} for ${nightsPerHotel[hotel._id] || 1} night(s): $${totalHotelPrice.toFixed(2)}\n`;
       });
     }
 
     confirmationText += `\nTotal price for all selections: $${totalPrice.toFixed(2)}`;
     setConfirmationMessage(confirmationText);
   };
+
 
   const toggleCityAccordion = (city) => {
     setExpandedCities((prev) => ({
