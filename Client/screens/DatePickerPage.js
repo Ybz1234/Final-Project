@@ -34,40 +34,6 @@ const PageDatePicker = ({ route, navigation }) => {
   const [buttonPressed, setButtonPressed] = useState(false);
   const { user, setUser: setGlobalUser } = useUser();
   const [currentlyIn, setCurrentlyIn] = useState(false);
-  // useEffect(() => {
-  //   setCurrentlyIn(true);
-  //   const globalCityNameArr = tripData.cityNameArr;
-  //   const paramCityNameArr = route?.params?.cityNameArr;
-
-  //   if (
-  //     (!globalCityNameArr || globalCityNameArr.length === 0) &&
-  //     (!paramCityNameArr || (paramCityNameArr.length === 0 && currentlyIn))
-  //   ) {
-  //     Toast.show({
-  //       type: "info",
-  //       text1: "You have to choose cities in order to continue",
-  //       text2: "Please return to the home page and select cities",
-  //       position: "top",
-  //       visibilityTime: 4000,
-  //       autoHide: true,
-  //       topOffset: 280,
-  //       bottomOffset: 40,
-  //     });
-  //     navigation.replace("Main", { screen: "Home" });
-  //   } else {
-  //     // Update tripData.cityNameArr only if it's empty and params have data
-  //     if (
-  //       paramCityNameArr &&
-  //       paramCityNameArr.length > 0 &&
-  //       (!globalCityNameArr || globalCityNameArr.length === 0)
-  //     ) {
-  //       setTripData((prevData) => ({
-  //         ...prevData,
-  //         cityNameArr: paramCityNameArr,
-  //       }));
-  //     }
-  //   }
-  // }, [route?.params, tripData.cityNameArr]);
 
   useFocusEffect(
     useCallback(() => {
