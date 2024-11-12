@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="city" />;
+const LeftContent = (props) => <Avatar.Icon {...props} icon="city" style={{ backgroundColor: '#1B3E90' }}/>;
 
 const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
   const [loading, setLoading] = useState(false);

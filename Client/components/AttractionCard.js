@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="map-marker" />;
+const LeftContent = (props) => <Avatar.Icon {...props} icon="map-marker" style={{ backgroundColor: '#1B3E90' }}/>;
 
 const AttractionCard = ({ attraction, onSelect }) => {
     const [loading, setLoading] = useState(false);
