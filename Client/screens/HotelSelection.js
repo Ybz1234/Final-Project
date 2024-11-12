@@ -3,7 +3,7 @@ import { ScrollView, View, Text, ActivityIndicator, StyleSheet, Button } from 'r
 import { List } from 'react-native-paper';
 import HotelCard from '../components/HotelCard';
 
-const HotelSelection = ({ route }) => {
+const HotelSelection = ({ route, navigation }) => {
   const { cityArr } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,12 +98,20 @@ const HotelSelection = ({ route }) => {
     setConfirmationMessage(confirmationText);
   };
 
-
   const toggleCityAccordion = (city) => {
     setExpandedCities((prev) => ({
       ...prev,
       [city]: !prev[city],
     }));
+  };
+
+  const handleNavigateToAttractions = () => {
+    navigation.replace("Main", {
+      screen: "Attractions selection",
+      params: {
+        cityArr: cityArr
+      },
+    });
   };
 
   return (
@@ -149,6 +157,8 @@ const HotelSelection = ({ route }) => {
           )}
         </View>
       )}
+
+      <Button title="Select Attractions" onPress={handleNavigateToAttractions} />
     </ScrollView>
   );
 };

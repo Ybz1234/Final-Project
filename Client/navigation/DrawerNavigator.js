@@ -15,6 +15,7 @@ import CustomDrawerContent from "../components/CustomDrawerContent";
 import Admin from "../screens/Admin";
 import HotelSelection from "../screens/HotelSelection";
 import { useUser } from "../context/UserContext";
+import AttractionSelection from "../screens/AttractionSelection";
 
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
@@ -97,6 +98,15 @@ function MainDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="city" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Attractions selection"
+        component={AttractionSelection}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="ferris-wheel" size={22} color={color} />
           ),
         }}
       />
