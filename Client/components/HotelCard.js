@@ -9,7 +9,7 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
   const rating = hotel?.rating || 0;
 
   const handleNightChange = (nights) => {
-    setSelectedNights(hotel._id, parseInt(nights) || 0); // Set nights for this hotel
+    setSelectedNights(hotel._id, parseInt(nights) || 0);
   };
 
   return (
