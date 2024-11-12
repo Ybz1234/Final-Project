@@ -4,10 +4,11 @@ import { List } from 'react-native-paper';
 import HotelCard from '../components/HotelCard';
 
 const HotelSelection = ({ route }) => {
-  const { cityArr, daysArray } = route.params; // Destructure daysArray from route params
+  const { cityArr } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotels, setSelectedHotels] = useState({});
+  const [nightsPerHotel, setNightsPerHotel] = useState({});
   const [confirmationMessage, setConfirmationMessage] = useState('');
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
@@ -54,13 +55,11 @@ const HotelSelection = ({ route }) => {
       const isHotelSelected = selectedCityHotels.some((h) => h._id === hotel._id);
 
       if (isHotelSelected) {
-        // If hotel is already selected, remove it
         return {
           ...prevSelected,
           [city]: selectedCityHotels.filter((h) => h._id !== hotel._id),
         };
       } else {
-        // If hotel is not selected, add it
         return {
           ...prevSelected,
           [city]: [...selectedCityHotels, hotel],
@@ -69,11 +68,16 @@ const HotelSelection = ({ route }) => {
     });
   };
 
-  const calculateTotalPrice = (hotel, cityIndex) => {
-    const days = daysArray[cityIndex] || 0; // Get days from daysArray for each city
-    console.log(`Calculating total price for hotel: ${hotel.name} in city ${cityArr[cityIndex]}`);
-    console.log(`Price per night: ${hotel.price}, Days: ${days}`);
-    return hotel.price * days; // Multiply the price per night by the number of days
+  const setSelectedNights = (hotelId, nights) => {
+    setNightsPerHotel((prev) => ({
+      ...prev,
+      [hotelId]: nights,
+    }));
+  };
+
+  const calculateTotalPrice = (hotel) => {
+    const nights = nightsPerHotel[hotel._id] || 1; // Default to 1 night if not set
+    return hotel.night_cost * nights;
   };
 
   const handleConfirmSelection = () => {
@@ -82,32 +86,15 @@ const HotelSelection = ({ route }) => {
 
     for (let city in selectedHotels) {
       confirmationText += `\nIn ${city}:\n`;
-      selectedHotels[city].forEach((hotel, index) => {
-        // Log the selected hotel and the associated city index
-        console.log(`Selected hotel: ${hotel.name} in ${city}`);
-        console.log(`Index in daysArray: ${index}`);
+      selectedHotels[city].forEach((hotel) => {
+        const nights = nightsPerHotel[hotel._id] || 1;
+        const totalHotelPrice = hotel.night_cost * nights;
+        totalPrice += totalHotelPrice;
 
-        // Ensure the days value is valid for each hotel
-        const days = daysArray[index] && !isNaN(daysArray[index]) ? daysArray[index] : 1;  // Default to 1 day if undefined or NaN
-        const pricePerNight = hotel?.night_cost && !isNaN(hotel?.night_cost) ? hotel?.night_cost : 0; // Default to 0 if price is invalid
-
-        // If the price is 0, warn the user
-        if (pricePerNight === 0) {
-          console.warn(`Invalid price for hotel: ${hotel.name} in ${city}`);
-        }
-
-        // Log the days and price per night for the hotel
-        console.log(`Price per night for ${hotel.name}: $${pricePerNight}`);
-        console.log(`Days selected for ${hotel.name}: ${days}`);
-
-        const totalHotelPrice = pricePerNight * days;  // Calculate total price for the hotel stay
-        totalPrice += totalHotelPrice;  // Add to total price
-
-        confirmationText += `- ${hotel.name} for ${days} day(s): $${totalHotelPrice.toFixed(2)}\n`;
+        confirmationText += `- ${hotel.name} for ${nights} night(s): $${totalHotelPrice.toFixed(2)}\n`;
       });
     }
 
-    // Add the total price of all selected hotels
     confirmationText += `\nTotal price for all selections: $${totalPrice.toFixed(2)}`;
     setConfirmationMessage(confirmationText);
   };
@@ -141,9 +128,8 @@ const HotelSelection = ({ route }) => {
                   key={hotel._id}
                   hotel={hotel}
                   onSelect={() => handleSelect(cityHotels.city, hotel)}
-                  selected={selectedHotels[cityHotels.city]?.some((h) => h._id === hotel._id)}
-                  accessible={true}
-                  accessibilityLabel={`Hotel: ${hotel.name}`}
+                  selectedNights={nightsPerHotel[hotel._id] || 1}
+                  setSelectedNights={setSelectedNights}
                 />
               ))}
             </List.Accordion>
