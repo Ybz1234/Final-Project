@@ -76,7 +76,7 @@ const HotelSelection = ({ route }) => {
   };
 
   const calculateTotalPrice = (hotel) => {
-    const nights = nightsPerHotel[hotel._id] || 1; // Default to 1 night if not set
+    const nights = nightsPerHotel[hotel._id] || 0;
     return hotel.night_cost * nights;
   };
 
@@ -87,7 +87,7 @@ const HotelSelection = ({ route }) => {
     for (let city in selectedHotels) {
       confirmationText += `\nIn ${city}:\n`;
       selectedHotels[city].forEach((hotel) => {
-        const nights = nightsPerHotel[hotel._id] || 1;
+        const nights = nightsPerHotel[hotel._id] || 0;
         const totalHotelPrice = hotel.night_cost * nights;
         totalPrice += totalHotelPrice;
 
@@ -128,7 +128,7 @@ const HotelSelection = ({ route }) => {
                   key={hotel._id}
                   hotel={hotel}
                   onSelect={() => handleSelect(cityHotels.city, hotel)}
-                  selectedNights={nightsPerHotel[hotel._id] || 1}
+                  selectedNights={nightsPerHotel[hotel._id] || ''}
                   setSelectedNights={setSelectedNights}
                 />
               ))}
