@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Card, Text, ActivityIndicator } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // or 'react-native-vector-icons/MaterialCommunityIcons'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PrimaryButton from './PrimaryButton';
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="map-marker" />;
