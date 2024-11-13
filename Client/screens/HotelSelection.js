@@ -16,6 +16,9 @@ const HotelSelection = ({ route, navigation }) => {
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
 
+  const MAIN_SERVER = "https://final-project-sqlv.onrender.com/api";
+  const COLLECTION = "hotels";
+
   useEffect(() => {
     const fetchHotels = async () => {
       try {
@@ -23,7 +26,7 @@ const HotelSelection = ({ route, navigation }) => {
 
         for (let city of cityArr) {
           const hotelResponse = await fetch(
-            "https://final-project-sqlv.onrender.com/api/hotels/findHotelsByCity",
+            `${MAIN_SERVER}/${COLLECTION}/findHotelsByCity`,
             {
               method: "POST",
               headers: {

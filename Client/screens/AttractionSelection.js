@@ -15,6 +15,9 @@ const AttractionSelection = ({ route }) => {
     const [error, setError] = useState(null);
     const [expandedCities, setExpandedCities] = useState({});
 
+    const MAIN_SERVER = "https://final-project-sqlv.onrender.com/api";
+    const COLLECTION = "Attractions";
+
     useEffect(() => {
         const fetchAttractions = async () => {
             setLoading(true);
@@ -23,7 +26,7 @@ const AttractionSelection = ({ route }) => {
             try {
                 const responses = await Promise.all(
                     cityArr.map(city =>
-                        fetch("https://final-project-sqlv.onrender.com/api/Attractions/findAttractionsByCity", {
+                        fetch(`${MAIN_SERVER}/${COLLECTION}/findAttractionsByCity`, {
                             method: "POST",
                             headers: {
                                 Accept: "application/json",
