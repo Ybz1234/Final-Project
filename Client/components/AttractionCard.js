@@ -17,11 +17,11 @@ const AttractionCard = ({ attraction, onSelect }) => {
         try {
             const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}&client_id=${UNSPLASH_ACCESS_KEY}`;
             const response = await axios.get(url);
-            if (response.data.results.length > 0) {
-                setAttractionImageUrl(response.data.results[0].urls.regular);
-            } else {
+            // if (response.data.results.length > 0) {
+            //     setAttractionImageUrl(response.data.results[0].urls.regular);
+            // } else {
                 setAttractionImageUrl("https://via.placeholder.com/150");
-            }
+            //}
         } catch (error) {
             console.error("Error fetching attraction image:", error);
             setAttractionImageUrl("https://via.placeholder.com/150");

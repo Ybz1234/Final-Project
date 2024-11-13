@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native';
 import { List } from 'react-native-paper';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HotelCard from '../components/HotelCard';
+import PageFrame from '../components/PageFrame';
+import PrimaryButton from '../components/PrimaryButton';
 
 const HotelSelection = ({ route, navigation }) => {
   const { cityArr } = route.params;
@@ -115,57 +118,74 @@ const HotelSelection = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.headerText}>Select Your Hotels</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : error ? (
-        <Text style={styles.errorMessage}>{error}</Text>
-      ) : hotels.length > 0 ? (
-        <List.Section>
-          {hotels.map((cityHotels, index) => (
-            <List.Accordion
-              key={index}
-              title={`Hotels in ${cityHotels.city}`}
-              expanded={expandedCities[cityHotels.city] || false}
-              onPress={() => toggleCityAccordion(cityHotels.city)}
-              left={(props) => <List.Icon {...props} icon="city" />}
-            >
-              {cityHotels.hotels.map((hotel) => (
-                <HotelCard
-                  key={hotel._id}
-                  hotel={hotel}
-                  onSelect={() => handleSelect(cityHotels.city, hotel)}
-                  selectedNights={nightsPerHotel[hotel._id] || ''}
-                  setSelectedNights={setSelectedNights}
-                />
-              ))}
-            </List.Accordion>
-          ))}
-        </List.Section>
-      ) : (
-        <Text>No hotels available.</Text>
-      )}
-
-      {Object.keys(selectedHotels).length > 0 && (
-        <View style={styles.selectedHotelContainer}>
-          <Button title="Confirm Selection" onPress={handleConfirmSelection} />
-          {confirmationMessage && (
-            <View style={styles.confirmationContainer}>
-              <Text style={styles.confirmationMessage}>{confirmationMessage}</Text>
+    <PageFrame>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.headerText}>Select Your Hotels</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : error ? (
+          <Text style={styles.errorMessage}>{error}</Text>
+        ) : hotels.length > 0 ? (
+          <List.Section>
+            {hotels.map((cityHotels, index) => (
+              <List.Accordion
+                key={index}
+                title={`Hotels in ${cityHotels.city}`}
+                expanded={expandedCities[cityHotels.city] || false}
+                onPress={() => toggleCityAccordion(cityHotels.city)}
+                left={(props) => <List.Icon {...props} icon="city" />}
+              >
+                {cityHotels.hotels.map((hotel) => (
+                  <HotelCard
+                    key={hotel._id}
+                    hotel={hotel}
+                    onSelect={() => handleSelect(cityHotels.city, hotel)}
+                    selectedNights={nightsPerHotel[hotel._id] || ''}
+                    setSelectedNights={setSelectedNights}
+                  />
+                ))}
+              </List.Accordion>
+            ))}
+          </List.Section>
+        ) : (
+          <Text>No hotels available.</Text>
+        )}
+        {Object.keys(selectedHotels).length > 0 && (
+          <View style={styles.selectedHotelContainer}>
+            <Button title="Confirm Selection" onPress={handleConfirmSelection} />
+            {confirmationMessage && (
+              <View style={styles.confirmationContainer}>
+                <Text style={styles.confirmationMessage}>{confirmationMessage}</Text>
+              </View>
+            )}
+          </View>
+        )}
+        <PrimaryButton
+          style={styles.button}
+          onPress={handleNavigateToAttractions}
+          icon={() => (
+            <View style={styles.iconContainer}>
+              <Text style={styles.buttonText}>Select Attractions</Text>
+              <MaterialCommunityIcons name="ferris-wheel" size={22} color="white" />
             </View>
           )}
-        </View>
-      )}
-
-      <Button title="Select Attractions" onPress={handleNavigateToAttractions} />
-    </ScrollView>
+        />
+      </ScrollView>
+    </PageFrame>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    width: 400,
+    backgroundColor: "white",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   headerText: {
     fontSize: 24,
@@ -185,6 +205,21 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: 'red',
+  },
+  button: {
+    width: "60%",
+    alignSelf: "center",
+    paddingHorizontal: 20,
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  buttonText: {
+    marginRight: 8,
+    fontSize: 17,
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
