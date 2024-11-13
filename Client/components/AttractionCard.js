@@ -49,6 +49,7 @@ const AttractionCard = ({ attraction, onSelect }) => {
             <Card.Title title={attraction.name} subtitle={attraction.city} left={LeftContent} />
             <Card.Content>
                 <Text variant="titleLarge">{attraction.description || "No description available."}</Text>
+                <Text variant="bodyMedium">{attraction.address.full_address}</Text>
             </Card.Content>
 
             {attractionImageUrl ? (
