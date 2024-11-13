@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, ActivityIndicator, StyleSheet, Button } from 'react-native';
-import { List } from 'react-native-paper';
+import { ScrollView, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { List, Card, Headline, Divider } from 'react-native-paper';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HotelCard from '../components/HotelCard';
 import PageFrame from '../components/PageFrame';
@@ -12,7 +12,6 @@ const HotelSelection = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [selectedHotels, setSelectedHotels] = useState({});
   const [nightsPerHotel, setNightsPerHotel] = useState({});
-  const [confirmationMessage, setConfirmationMessage] = useState('');
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
 
@@ -23,7 +22,6 @@ const HotelSelection = ({ route, navigation }) => {
     const fetchHotels = async () => {
       try {
         const allHotels = [];
-
         for (let city of cityArr) {
           const hotelResponse = await fetch(
             `${MAIN_SERVER}/${COLLECTION}/findHotelsByCity`,
@@ -74,6 +72,21 @@ const HotelSelection = ({ route, navigation }) => {
     });
   };
 
+  const handleRemoveHotel = (city, hotel) => {
+    setSelectedHotels((prevSelected) => {
+      const selectedCityHotels = prevSelected[city] || [];
+      return {
+        ...prevSelected,
+        [city]: selectedCityHotels.filter((h) => h._id !== hotel._id),
+      };
+    });
+
+    setNightsPerHotel((prev) => {
+      const { [hotel._id]: removed, ...remainingNights } = prev;
+      return remainingNights;
+    });
+  };
+
   const setSelectedNights = (hotelId, nights) => {
     setNightsPerHotel((prev) => ({
       ...prev,
@@ -86,22 +99,16 @@ const HotelSelection = ({ route, navigation }) => {
     return hotel.night_cost * nights;
   };
 
-  const handleConfirmSelection = () => {
-    let confirmationText = 'You have selected the following hotels:\n';
-    let totalPrice = 0;
-
-    for (let city in selectedHotels) {
-      confirmationText += `\nIn ${city}:\n`;
-      selectedHotels[city].forEach((hotel) => {
-        const totalHotelPrice = calculateTotalPrice(hotel);
-        totalPrice += totalHotelPrice;
-
-        confirmationText += `- ${hotel.name} for ${nightsPerHotel[hotel._id] || 1} night(s): $${totalHotelPrice.toFixed(2)}\n`;
-      });
-    }
-
-    confirmationText += `\nTotal price for all selections: $${totalPrice.toFixed(2)}`;
-    setConfirmationMessage(confirmationText);
+  const calculateGrandTotal = () => {
+    return Object.keys(selectedHotels).reduce((total, city) => {
+      return (
+        total +
+        selectedHotels[city].reduce(
+          (cityTotal, hotel) => cityTotal + calculateTotalPrice(hotel),
+          0
+        )
+      );
+    }, 0);
   };
 
   const toggleCityAccordion = (city) => {
@@ -115,7 +122,7 @@ const HotelSelection = ({ route, navigation }) => {
     navigation.replace("Main", {
       screen: "Attractions selection",
       params: {
-        cityArr: cityArr
+        cityArr: cityArr,
       },
     });
   };
@@ -153,16 +160,48 @@ const HotelSelection = ({ route, navigation }) => {
         ) : (
           <Text>No hotels available.</Text>
         )}
+
         {Object.keys(selectedHotels).length > 0 && (
           <View style={styles.selectedHotelContainer}>
-            <Button title="Confirm Selection" onPress={handleConfirmSelection} />
-            {confirmationMessage && (
-              <View style={styles.confirmationContainer}>
-                <Text style={styles.confirmationMessage}>{confirmationMessage}</Text>
+            <Text style={styles.confirmationHeader}>Order Confirmation</Text>
+            <Divider style={styles.divider} />
+            {Object.keys(selectedHotels).map((city) => (
+              <View key={city}>
+                <Headline style={styles.cityText}>{city}</Headline>
+                {selectedHotels[city].map((hotel) => (
+                  <Card key={hotel._id} style={styles.hotelCard}>
+                    <Card.Content>
+                      <Text style={styles.labelText}>
+                        Hotel Name: <Text style={styles.valueText}>{hotel.name}</Text>
+                      </Text>
+                      <Text style={styles.labelText}>
+                        Nights: <Text style={styles.valueText}>{nightsPerHotel[hotel._id] || 1}</Text>
+                      </Text>
+                      <Text style={styles.labelText}>
+                        Total Price: <Text style={styles.valueText}>${calculateTotalPrice(hotel).toFixed(2)}</Text>
+                      </Text>
+                      <PrimaryButton
+                        onPress={() => handleRemoveHotel(city, hotel)}
+                        color="red"
+                        style={styles.removeButton}
+                      >
+                        <View style={styles.buttonContent}>
+                          <Text style={styles.removeButtonText}>Remove</Text>
+                          <MaterialCommunityIcons name="trash-can" size={20} color="white" />
+                        </View>
+                      </PrimaryButton>
+                    </Card.Content>
+                  </Card>
+                ))}
               </View>
-            )}
+            ))}
+            <Divider style={styles.divider} />
+            <Text style={styles.grandTotalText}>
+              Grand Total: <Text style={styles.totalPrice}>${calculateGrandTotal().toFixed(2)}</Text>
+            </Text>
           </View>
         )}
+
         <PrimaryButton
           style={styles.button}
           onPress={handleNavigateToAttractions}
@@ -196,15 +235,18 @@ const styles = StyleSheet.create({
   },
   selectedHotelContainer: {
     marginTop: 20,
+    paddingBottom: 10,
   },
-  confirmationContainer: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
+  confirmationHeader: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#1B3E90",
+    textAlign: "center",
+    marginBottom: 10,
   },
-  confirmationMessage: {
-    fontSize: 16,
-    color: 'green',
+  divider: {
+    backgroundColor: "#1B3E90",
+    marginVertical: 10,
   },
   errorMessage: {
     color: 'red',
@@ -213,6 +255,7 @@ const styles = StyleSheet.create({
     width: "60%",
     alignSelf: "center",
     paddingHorizontal: 20,
+    marginTop: 20,
   },
   iconContainer: {
     flexDirection: "row",
@@ -223,6 +266,52 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: "white",
     fontWeight: "bold",
+  },
+  hotelCard: {
+    marginBottom: 20,
+    padding: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  labelText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1B3E90",
+  },
+  valueText: {
+    fontWeight: "normal",
+    color: "#000",
+  },
+  grandTotalText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1B3E90",
+    textAlign: "right",
+  },
+  removeButton: {
+    marginTop: 10,
+    backgroundColor: "red",
+    alignSelf: "flex-start",
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  removeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    marginRight: 8,
+  },
+  totalPrice: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "green",
   },
 });
 
