@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { List, Card, Headline, Divider } from 'react-native-paper';
+import React, { useState, useEffect } from "react";
+import {
+  ScrollView,
+  View,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
+import { List, Card, Headline, Divider } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import HotelCard from '../components/HotelCard';
-import PageFrame from '../components/PageFrame';
-import PrimaryButton from '../components/PrimaryButton';
+import HotelCard from "../components/HotelCard";
+import PageFrame from "../components/PageFrame";
+import PrimaryButton from "../components/PrimaryButton";
 
 const HotelSelection = ({ route, navigation }) => {
   const { cityArr } = route.params;
@@ -56,7 +62,9 @@ const HotelSelection = ({ route, navigation }) => {
   const handleSelect = (city, hotel) => {
     setSelectedHotels((prevSelected) => {
       const selectedCityHotels = prevSelected[city] || [];
-      const isHotelSelected = selectedCityHotels.some((h) => h._id === hotel._id);
+      const isHotelSelected = selectedCityHotels.some(
+        (h) => h._id === hotel._id
+      );
 
       if (isHotelSelected) {
         return {
@@ -150,7 +158,7 @@ const HotelSelection = ({ route, navigation }) => {
                     key={hotel._id}
                     hotel={hotel}
                     onSelect={() => handleSelect(cityHotels.city, hotel)}
-                    selectedNights={nightsPerHotel[hotel._id] || ''}
+                    selectedNights={nightsPerHotel[hotel._id] || ""}
                     setSelectedNights={setSelectedNights}
                   />
                 ))}
@@ -172,13 +180,20 @@ const HotelSelection = ({ route, navigation }) => {
                   <Card key={hotel._id} style={styles.hotelCard}>
                     <Card.Content>
                       <Text style={styles.labelText}>
-                        Hotel Name: <Text style={styles.valueText}>{hotel.name}</Text>
+                        Hotel Name:{" "}
+                        <Text style={styles.valueText}>{hotel.name}</Text>
                       </Text>
                       <Text style={styles.labelText}>
-                        Nights: <Text style={styles.valueText}>{nightsPerHotel[hotel._id] || 1}</Text>
+                        Nights:{" "}
+                        <Text style={styles.valueText}>
+                          {nightsPerHotel[hotel._id] || 1}
+                        </Text>
                       </Text>
                       <Text style={styles.labelText}>
-                        Total Price: <Text style={styles.valueText}>${calculateTotalPrice(hotel).toFixed(2)}</Text>
+                        Total Price:{" "}
+                        <Text style={styles.valueText}>
+                          ${calculateTotalPrice(hotel).toFixed(2)}
+                        </Text>
                       </Text>
                       <PrimaryButton
                         onPress={() => handleRemoveHotel(city, hotel)}
@@ -187,7 +202,11 @@ const HotelSelection = ({ route, navigation }) => {
                       >
                         <View style={styles.buttonContent}>
                           <Text style={styles.removeButtonText}>Remove</Text>
-                          <MaterialCommunityIcons name="trash-can" size={20} color="white" />
+                          <MaterialCommunityIcons
+                            name="trash-can"
+                            size={20}
+                            color="white"
+                          />
                         </View>
                       </PrimaryButton>
                     </Card.Content>
@@ -197,7 +216,10 @@ const HotelSelection = ({ route, navigation }) => {
             ))}
             <Divider style={styles.divider} />
             <Text style={styles.grandTotalText}>
-              Grand Total: <Text style={styles.totalPrice}>${calculateGrandTotal().toFixed(2)}</Text>
+              Grand Total:{" "}
+              <Text style={styles.totalPrice}>
+                ${calculateGrandTotal().toFixed(2)}
+              </Text>
             </Text>
           </View>
         )}
@@ -208,7 +230,11 @@ const HotelSelection = ({ route, navigation }) => {
           icon={() => (
             <View style={styles.iconContainer}>
               <Text style={styles.buttonText}>Select Attractions</Text>
-              <MaterialCommunityIcons name="ferris-wheel" size={22} color="white" />
+              <MaterialCommunityIcons
+                name="ferris-wheel"
+                size={22}
+                color="white"
+              />
             </View>
           )}
         />
@@ -219,9 +245,10 @@ const HotelSelection = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 50,
     padding: 16,
-    width: 400,
-    backgroundColor: "white",
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -231,6 +258,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
+    fontFamily: "Roboto-BoldItalic",
+    color: "#1B3E90",
     marginBottom: 16,
   },
   selectedHotelContainer: {
@@ -249,7 +278,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   errorMessage: {
-    color: 'red',
+    color: "red",
   },
   button: {
     width: "60%",
