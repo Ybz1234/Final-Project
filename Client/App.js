@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import MyDrawer from "./navigation/DrawerNavigator";
 import "react-native-gesture-handler";
@@ -11,8 +12,12 @@ import Toast from "react-native-toast-message";
 import { createNavigationContainerRef } from "@react-navigation/native";
 import { UserProvider } from "./context/UserContext";
 import { TripProvider } from "./context/TripContext";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import
+import axios from "axios"; // Added import
 
+const projectId = "c7abc98a-16c6-4bb1-9a11-d2ea14fe3eb7";
 const navigationRef = createNavigationContainerRef();
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -20,6 +25,7 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
 async function registerForPushNotificationsAsync() {
   if (Device.isDevice) {
     const { status: existingStatus } =
@@ -37,16 +43,7 @@ async function registerForPushNotificationsAsync() {
       return;
     }
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    const projectId =
-      Constants.manifest.extra?.eas?.projectId ||
-      Constants.expoConfig?.extra?.eas?.projectId ||
-      Constants.manifest?.projectId;
-
-    if (!projectId) {
-      Alert.alert("Error", "Project ID not found");
-      return;
-    }
+    // const projectId = "c7abc98a-16c6-4bb1-9a11-d2ea14fe3eb7";
 
     try {
       const pushToken = (
@@ -55,6 +52,10 @@ async function registerForPushNotificationsAsync() {
         })
       ).data;
       console.log("Expo Push Token:", pushToken);
+
+      // Store the push token locally
+      await AsyncStorage.setItem("expoPushToken", pushToken);
+
       return pushToken;
     } catch (e) {
       Alert.alert("Error", e.message);
@@ -112,6 +113,7 @@ function App() {
         Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
   const loadFonts = async () => {
     await Font.loadAsync({
       "Roboto-Black": require("./assets/Roboto/Roboto-Black.ttf"),
@@ -153,17 +155,18 @@ function App() {
 export default App;
 
 registerRootComponent(App);
+
 /**Teal shade for app!
  * #248F8F (rgb(36,143,143))
-#2EB8B8 (rgb(46,184,184))
-#47D1D1 (rgb(71,209,209))
-#5CD6D6 (rgb(92,214,214))
-#33CCA6 (rgb(51,204,166))
-#33CCB3 (rgb(51,204,179))
-#33CCBF (rgb(51,204,191))
-*/
+ * #2EB8B8 (rgb(46,184,184))
+ * #47D1D1 (rgb(71,209,209))
+ * #5CD6D6 (rgb(92,214,214))
+ * #33CCA6 (rgb(51,204,166))
+ * #33CCB3 (rgb(51,204,179))
+ * #33CCBF (rgb(51,204,191))
+ */
 
-//?ACTIVE COLOR PALLATE
+//?ACTIVE COLOR PALETTE
 /*
 shade of teals- #70DBDB ,#29A3A3
 deep blue - #1B3E90
