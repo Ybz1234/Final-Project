@@ -172,3 +172,20 @@ shade of teals- #70DBDB ,#29A3A3
 deep blue - #1B3E90
 opacity white teal - rgba(255, 255, 255, 0.8)
 */
+//?ALTERNATIVE COLOR PALETTE
+/*
+// Light purple (like GitHub's lighter accent)
+"#f5f0ff"  // Very light purple background
+"#f6f8ff"  // Light purple-blue tint
+"#f1e8ff"  // Soft light purple
+
+// Medium purple (like GitHub's primary purple)
+"#8250df"  // GitHub's main purple
+"#6e40c9"  // Slightly darker variant
+"#7957d5"  // Medium bright purple
+
+// Darker purple (for emphasis/borders)
+"#5a32a3"  // Deep purple
+"#4c2889"  // Rich dark purple
+#1B0233
+*/
