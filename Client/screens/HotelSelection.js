@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexWrap: "nowrap",
-  },  
+  },
   removeButtonText: {
     color: "white",
     fontWeight: "bold",
