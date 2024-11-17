@@ -15,7 +15,7 @@ const AttractionSelection = ({ route, navigation }) => {
         date,
         selectedHotels,
     } = route.params;
-    
+
     const [attractions, setAttractions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedAttractions, setSelectedAttractions] = useState({});
