@@ -128,6 +128,7 @@ const HotelSelection = ({ route, navigation }) => {
   };
 
   const handleNavigateToAttractions = () => {
+    console.log("Navigating to Attractions with:", cityArr);
     navigation.replace("Main", {
       screen: "Attractions selection",
       params: {
@@ -159,7 +160,6 @@ const HotelSelection = ({ route, navigation }) => {
         ) : hotels.length > 0 ? (
           <List.Section>
             {hotels.map((cityHotels, index) => {
-              // Sort hotels based on sortOrder
               const sortedHotels = [...cityHotels.hotels].sort((a, b) => {
                 if (sortOrder === "asc") {
                   return a.night_cost - b.night_cost;
@@ -271,7 +271,9 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 50,
     padding: 16,
-    width: "120%",
+    width: "100%",
+    maxWidth: 420,
+    alignSelf: "center",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 8,
     shadowColor: "#000",
@@ -360,12 +362,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "red",
     alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   buttonContent: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-  },
+    justifyContent: "center",
+    flexWrap: "nowrap",
+  },  
   removeButtonText: {
     color: "white",
     fontWeight: "bold",
