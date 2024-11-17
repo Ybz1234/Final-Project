@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, ScrollView } from 'react-native';
+import { Text, ScrollView, View, ActivityIndicator } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 
 const FinalDetails = ({ route }) => {
@@ -14,6 +14,7 @@ const FinalDetails = ({ route }) => {
   } = route.params;
 
   const [userDetails, setUserDetails] = useState(null);
+  const [loading, setLoading] = useState(true); // for handling loading state
 
   useEffect(() => {
     fetchUserDetails(userId);
@@ -24,41 +25,55 @@ const FinalDetails = ({ route }) => {
       const response = await fetch(`https://final-project-sqlv.onrender.com/api/user/${userId}`);
       const data = await response.json();
       setUserDetails(data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching user details:', error);
+      setLoading(false);
     }
   };
 
-  const renderHotelDetails = () => {
-    if (!Array.isArray(selectedHotels)) {
-      return <Text>No hotels selected.</Text>;
+  const renderDetailsSection = (title, items, renderItem) => {
+    if (!items || items.length === 0) {
+      return <Text>{`No ${title.toLowerCase()} selected.`}</Text>;
     }
 
-    return selectedHotels.map((hotel) => (
-      <Card key={hotel._id} style={{ marginBottom: 10 }}>
-        <Card.Title title={hotel.name} subtitle={`${hotel.city}, ${hotel.country}`} />
-        <Card.Content>
-          <Text>{hotel.address.full_address}</Text>
-          <Text>Cost per night: ${hotel.night_cost}</Text>
-        </Card.Content>
-      </Card>
-    ));
+    return (
+      <View>
+        <Text style={{ fontSize: 18, marginVertical: 10 }}>{title}:</Text>
+        {items.map((item, index) => renderItem(item, index))}
+      </View>
+    );
   };
 
-  const renderAttractionDetails = () => {
-    if (!Array.isArray(selectedAttractions)) {
-      return <Text>No attractions selected.</Text>;
-    }
+  const renderFlightDetails = (flight, index) => (
+    <Card key={index} style={{ marginBottom: 10 }}>
+      <Card.Title title={flight.flightNumber} subtitle={`${flight.origin} to ${flight.destination}`} />
+      <Card.Content>
+        <Text>Departure: {flight.departureTime}</Text>
+        <Text>Arrival: {flight.arrivalTime}</Text>
+        <Text>Price: ${flight.price}</Text>
+      </Card.Content>
+    </Card>
+  );
 
-    return selectedAttractions.map((attraction) => (
-      <Card key={attraction._id} style={{ marginBottom: 10 }}>
-        <Card.Title title={attraction.name} subtitle={attraction.city} />
-        <Card.Content>
-          <Text>{attraction.description}</Text>
-        </Card.Content>
-      </Card>
-    ));
-  };
+  const renderHotelDetails = (hotel, index) => (
+    <Card key={index} style={{ marginBottom: 10 }}>
+      <Card.Title title={hotel.name} subtitle={`${hotel.city}, ${hotel.country}`} />
+      <Card.Content>
+        <Text>{hotel.address.full_address}</Text>
+        <Text>Cost per night: ${hotel.night_cost}</Text>
+      </Card.Content>
+    </Card>
+  );
+
+  const renderAttractionDetails = (attraction, index) => (
+    <Card key={index} style={{ marginBottom: 10 }}>
+      <Card.Title title={attraction.name} subtitle={attraction.city} />
+      <Card.Content>
+        <Text>{attraction.description}</Text>
+      </Card.Content>
+    </Card>
+  );
 
   return (
     <ScrollView style={{ padding: 10 }}>
@@ -68,28 +83,30 @@ const FinalDetails = ({ route }) => {
         Date: {date}
       </Text>
 
-      <Text style={{ fontSize: 18, marginVertical: 10 }}>Flight Tickets:</Text>
-      {flightTickets.map((ticket, index) => (
-        <Card key={index} style={{ marginBottom: 10 }}>
-          <Card.Title title={ticket.flightNumber} subtitle={`${ticket.origin} to ${ticket.destination}`} />
-          <Card.Content>
-            <Text>Departure: {ticket.departureTime}</Text>
-            <Text>Arrival: {ticket.arrivalTime}</Text>
-            <Text>Price: ${ticket.price}</Text>
-          </Card.Content>
-        </Card>
-      ))}
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+          {/* Display Flight Tickets */}
+          {renderDetailsSection('Flight Tickets', flightTickets, renderFlightDetails)}
 
-      <Text style={{ fontSize: 18, marginVertical: 10 }}>Selected Hotels:</Text>
-      {renderHotelDetails()}
+          {/* Display Selected Hotels */}
+          {renderDetailsSection('Selected Hotels', selectedHotels, renderHotelDetails)}
 
-      <Text style={{ fontSize: 18, marginVertical: 10 }}>Selected Attractions:</Text>
-      {renderAttractionDetails()}
+          {/* Display Selected Attractions */}
+          {renderDetailsSection('Selected Attractions', selectedAttractions, renderAttractionDetails)}
 
-      {userDetails && (
-        <Button style={{ marginTop: 20 }} mode="contained" onPress={() => alert('Booking Complete')}>
-          Complete Booking
-        </Button>
+          {/* User Details and Booking Button */}
+          {userDetails && (
+            <View style={{ marginTop: 20 }}>
+              <Text>{`User: ${userDetails.name}`}</Text>
+              <Text>{`Email: ${userDetails.email}`}</Text>
+              <Button mode="contained" onPress={() => alert('Booking Complete')}>
+                Complete Booking
+              </Button>
+            </View>
+          )}
+        </>
       )}
     </ScrollView>
   );

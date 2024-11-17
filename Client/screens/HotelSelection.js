@@ -143,6 +143,7 @@ const HotelSelection = ({ route, navigation }) => {
         userId: userId,
         daysArray: daysArray,
         date: date,
+        selectedHotels: selectedHotels,
       },
     });
   };
