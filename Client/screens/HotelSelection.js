@@ -133,6 +133,10 @@ const HotelSelection = ({ route, navigation }) => {
       screen: "Attractions selection",
       params: {
         cityArr: cityArr,
+        flightTickets: data.flightTickets,
+        userId: user.user._id,
+        daysArray: daysArr,
+        date: date,
       },
     });
   };
