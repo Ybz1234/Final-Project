@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 50,
     padding: 16,
-    width: "95%",
+    width: "120%",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 8,
     shadowColor: "#000",
