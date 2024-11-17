@@ -13,7 +13,13 @@ import PageFrame from "../components/PageFrame";
 import PrimaryButton from "../components/PrimaryButton";
 
 const HotelSelection = ({ route, navigation }) => {
-  const { cityArr } = route.params;
+  const { 
+    cityArr, 
+    flightTickets, 
+    userId, 
+    daysArray, 
+    date 
+  } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotels, setSelectedHotels] = useState({});
@@ -133,9 +139,9 @@ const HotelSelection = ({ route, navigation }) => {
       screen: "Attractions selection",
       params: {
         cityArr: cityArr,
-        flightTickets: data.flightTickets,
-        userId: user.user._id,
-        daysArray: daysArr,
+        flightTickets: flightTickets,
+        userId: userId,
+        daysArray: daysArray,
         date: date,
       },
     });

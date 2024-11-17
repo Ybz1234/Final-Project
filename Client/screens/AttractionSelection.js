@@ -6,8 +6,16 @@ import PageFrame from '../components/PageFrame';
 import PrimaryButton from '../components/PrimaryButton';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AttractionSelection = ({ route }) => {
-    const { cityArr } = route.params;
+const AttractionSelection = ({ route, navigation }) => {
+    const {
+        cityArr,
+        flightTickets,
+        userId,
+        daysArray,
+        date,
+        selectedHotels,
+    } = route.params;
+    
     const [attractions, setAttractions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedAttractions, setSelectedAttractions] = useState({});
@@ -93,6 +101,18 @@ const AttractionSelection = ({ route }) => {
         }));
     };
 
+    const handleProceed = () => {
+        navigation.navigate('Booking', {
+            cityArr,
+            flightTickets,
+            userId,
+            daysArray,
+            date,
+            selectedAttractions,
+            selectedHotels,
+        });
+    };
+
     return (
         <PageFrame>
             <ScrollView contentContainerStyle={styles.container}>
@@ -142,6 +162,16 @@ const AttractionSelection = ({ route }) => {
                                 <Text style={styles.confirmationMessage}>{confirmationMessage}</Text>
                             </View>
                         )}
+                        <PrimaryButton
+                            style={styles.button}
+                            onPress={handleProceed}
+                            icon={() => (
+                                <View style={styles.iconContainer}>
+                                    <Text style={styles.buttonText}>Proceed to Final Details</Text>
+                                    <MaterialCommunityIcons name="check-circle" size={22} color="white" />
+                                </View>
+                            )}
+                        />
                     </View>
                 )}
             </ScrollView>

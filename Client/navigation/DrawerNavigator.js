@@ -10,12 +10,12 @@ import FullTrip from "../screens/FullTrip";
 import PageDatePicker from "../screens/DatePickerPage";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import Profile from "../screens/Profile";
-import FullDestination from "../screens/FullDestination";
 import CustomDrawerContent from "../components/CustomDrawerContent";
 import Admin from "../screens/Admin";
 import HotelSelection from "../screens/HotelSelection";
 import { useUser } from "../context/UserContext";
 import AttractionSelection from "../screens/AttractionSelection";
+import FinalDetails from "../screens/FinalDetails";
 
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
@@ -75,15 +75,6 @@ function MainDrawer() {
         }}
       />
       <Drawer.Screen
-        name="Booking"
-        component={FullDestination}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="book-open" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -107,6 +98,15 @@ function MainDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="ferris-wheel" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Booking"
+        component={FinalDetails}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="book-open" size={22} color={color} />
           ),
         }}
       />
