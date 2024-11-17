@@ -102,8 +102,6 @@ const AttractionSelection = ({ route, navigation }) => {
     };
 
     const handleProceed = () => {
-        console.log("selectedAttractions", selectedAttractions);
-        console.log("selectedHotels", selectedHotels);
         navigation.navigate('Booking', {
             cityArr,
             flightTickets,

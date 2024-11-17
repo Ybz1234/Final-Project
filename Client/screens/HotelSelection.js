@@ -134,7 +134,6 @@ const HotelSelection = ({ route, navigation }) => {
   };
 
   const handleNavigateToAttractions = () => {
-    console.log("Navigating to Attractions with:", cityArr);
     navigation.replace("Main", {
       screen: "Attractions selection",
       params: {
