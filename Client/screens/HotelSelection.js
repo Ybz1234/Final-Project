@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import { List, Card, Headline, Divider } from "react-native-paper";
+import { List, Card, Headline, Divider, IconButton } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HotelCard from "../components/HotelCard";
 import PageFrame from "../components/PageFrame";
@@ -20,6 +20,7 @@ const HotelSelection = ({ route, navigation }) => {
   const [nightsPerHotel, setNightsPerHotel] = useState({});
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
+  const [sortOrder, setSortOrder] = useState("asc");
 
   const MAIN_SERVER = "https://final-project-sqlv.onrender.com/api";
   const COLLECTION = "hotels";
@@ -134,36 +135,59 @@ const HotelSelection = ({ route, navigation }) => {
       },
     });
   };
-
+  const toggleSortOrder = () => {
+    setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+  };
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.headerText}>Select Your Hotels</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Select Your Hotels</Text>
+          <IconButton
+            style={{ top: -5, right: -15 }}
+            icon={sortOrder === "asc" ? "sort-ascending" : "sort-descending"}
+            size={22}
+            iconColor="#1B3E90"
+            onPress={toggleSortOrder}
+          />
+        </View>
+
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : error ? (
           <Text style={styles.errorMessage}>{error}</Text>
         ) : hotels.length > 0 ? (
           <List.Section>
-            {hotels.map((cityHotels, index) => (
-              <List.Accordion
-                key={index}
-                title={`Hotels in ${cityHotels.city}`}
-                expanded={expandedCities[cityHotels.city] || false}
-                onPress={() => toggleCityAccordion(cityHotels.city)}
-                left={(props) => <List.Icon {...props} icon="city" />}
-              >
-                {cityHotels.hotels.map((hotel) => (
-                  <HotelCard
-                    key={hotel._id}
-                    hotel={hotel}
-                    onSelect={() => handleSelect(cityHotels.city, hotel)}
-                    selectedNights={nightsPerHotel[hotel._id] || ""}
-                    setSelectedNights={setSelectedNights}
-                  />
-                ))}
-              </List.Accordion>
-            ))}
+            {hotels.map((cityHotels, index) => {
+              // Sort hotels based on sortOrder
+              const sortedHotels = [...cityHotels.hotels].sort((a, b) => {
+                if (sortOrder === "asc") {
+                  return a.night_cost - b.night_cost;
+                } else {
+                  return b.night_cost - a.night_cost;
+                }
+              });
+
+              return (
+                <List.Accordion
+                  key={index}
+                  title={`Hotels in ${cityHotels.city}`}
+                  expanded={expandedCities[cityHotels.city] || false}
+                  onPress={() => toggleCityAccordion(cityHotels.city)}
+                  left={(props) => <List.Icon {...props} icon="city" />}
+                >
+                  {sortedHotels.map((hotel) => (
+                    <HotelCard
+                      key={hotel._id}
+                      hotel={hotel}
+                      onSelect={() => handleSelect(cityHotels.city, hotel)}
+                      selectedNights={nightsPerHotel[hotel._id] || ""}
+                      setSelectedNights={setSelectedNights}
+                    />
+                  ))}
+                </List.Accordion>
+              );
+            })}
           </List.Section>
         ) : (
           <Text>No hotels available.</Text>
@@ -247,7 +271,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 50,
     padding: 16,
-    width: "100%",
+    width: "95%",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 8,
     shadowColor: "#000",
@@ -255,6 +279,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerText: {
     fontSize: 24,
@@ -311,6 +340,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#1B3E90",
+  },
+  icon: {
+    textShadowColor: "#1B3E90",
+    alignItems: "right",
+    fontWeight: "bold",
   },
   valueText: {
     fontWeight: "normal",
