@@ -13,12 +13,12 @@ import PageFrame from "../components/PageFrame";
 import PrimaryButton from "../components/PrimaryButton";
 
 const HotelSelection = ({ route, navigation }) => {
-  const { 
-    cityArr, 
-    flightTickets, 
-    userId, 
-    daysArray, 
-    date 
+  const {
+    cityArr,
+    flightTickets,
+    userId,
+    daysArray,
+    date
   } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
