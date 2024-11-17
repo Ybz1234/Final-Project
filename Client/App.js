@@ -188,4 +188,5 @@ opacity white teal - rgba(255, 255, 255, 0.8)
 "#5a32a3"  // Deep purple
 "#4c2889"  // Rich dark purple
 #1B0233
+#07002A
 */
