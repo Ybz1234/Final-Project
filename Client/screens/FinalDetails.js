@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, ScrollView, View, ActivityIndicator } from "react-native";
 import { Card } from "react-native-paper";
+import SumCard from "../components/SumCard";
 
 const FinalDetails = ({ route }) => {
   const { userId, selectedHotels, selectedAttractions, date } = route.params;
@@ -107,8 +108,7 @@ const FinalDetails = ({ route }) => {
 
   return (
     <ScrollView style={{ padding: 10 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold" }}>Flight Details</Text>
-
+      <SumCard title="Flight Details" iconType="flight" />
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : flightDetails.length > 0 ? (
@@ -117,10 +117,7 @@ const FinalDetails = ({ route }) => {
         <Text>No flight details available.</Text>
       )}
 
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 20 }}>
-        Selected Hotels
-      </Text>
-
+      <SumCard title="Selected Hotels" iconType="hotel" />
       {selectedHotels && Object.keys(selectedHotels).length > 0 ? (
         Object.keys(selectedHotels).map((city, cityIndex) => (
           <View key={cityIndex}>
@@ -145,10 +142,7 @@ const FinalDetails = ({ route }) => {
         <Text>No hotels selected.</Text>
       )}
 
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 20 }}>
-        Selected Attractions
-      </Text>
-
+      <SumCard title="Selected Attractions" iconType="attraction" />
       {selectedAttractions && Object.keys(selectedAttractions).length > 0 ? (
         Object.keys(selectedAttractions).map((city, cityIndex) => (
           <View key={cityIndex}>
