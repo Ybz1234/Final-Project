@@ -6,6 +6,7 @@ const FinalDetails = ({ route }) => {
   const { userId, selectedHotels, selectedAttractions, date } = route.params;
 
   const [flightDetails, setFlightDetails] = useState([]);
+  const [airportDetails, setAirportDetails] = useState({});
   const [loading, setLoading] = useState(true);
 
   const fetchFlightDetails = async () => {
@@ -25,15 +26,45 @@ const FinalDetails = ({ route }) => {
       );
 
       if (!response.ok) {
-        console.error("Error:", response.statusText);
+        console.error("Error fetching flight details:", response.statusText);
         setLoading(false);
         return;
       }
 
       const data = await response.json();
-      setFlightDetails(data.flightTickets || []);
+
+      if (data.flightTickets && data.flightTickets.length > 0) {
+        setFlightDetails(data.flightTickets);
+
+        const cities = Array.from(
+          new Set(
+            data.flightTickets.flatMap((ticket) => [
+              ticket.departureCity,
+              ticket.arrivalCity,
+            ])
+          )
+        );
+
+        const airportPromises = cities.map((city) =>
+          fetch(
+            `https://final-project-sqlv.onrender.com/api/Airports/getAirPortByCity?city=${encodeURIComponent(
+              city
+            )}`
+          ).then((res) => res.json())
+        );
+
+        const airports = await Promise.all(airportPromises);
+        const airportData = airports.reduce((acc, curr) => {
+          if (curr.airport && curr.airport.length > 0) {
+            acc[curr.airport[0].city] = curr.airport[0];
+          }
+          return acc;
+        }, {});
+
+        setAirportDetails(airportData);
+      }
     } catch (error) {
-      console.error("Error fetching flight details:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -43,21 +74,36 @@ const FinalDetails = ({ route }) => {
     fetchFlightDetails();
   }, []);
 
-  // Helper function to render flight details
-  const renderFlightDetails = (flight, index) => (
-    <Card key={index} style={{ marginBottom: 10 }}>
-      <Card.Title title={`Flight ${index + 1}`} />
-      <Card.Content>
-        <Text>Flight ID: {flight._id}</Text>
-        <Text>Departure City: {flight.departureCity}</Text>
-        <Text>Arrival City: {flight.arrivalCity}</Text>
-        <Text>
-          Flight Date: {new Date(flight.flightDate).toLocaleDateString()}{" "}
-          {flight.flightHour}:{flight.flightMinute.toString().padStart(2, "0")}
-        </Text>
-      </Card.Content>
-    </Card>
-  );
+  const renderFlightDetails = (flight, index) => {
+    const departureAirport = airportDetails[flight.departureCity];
+    const arrivalAirport = airportDetails[flight.arrivalCity];
+
+    return (
+      <Card key={index} style={{ marginBottom: 10 }}>
+        <Card.Title title="Flight Details" />
+        <Card.Content>
+          <Text>Flight ID: {flight.flightId}</Text>
+          <Text>
+            From: {flight.departureCity}{" "}
+            {departureAirport && `(${departureAirport.name})`}
+          </Text>
+          <Text>
+            To: {flight.arrivalCity}{" "}
+            {arrivalAirport && `(${arrivalAirport.name})`}
+          </Text>
+          <Text>
+            Departure Time:{" "}
+            {`${String(flight.flightHour).padStart(2, "0")}:${String(
+              flight.flightMinute
+            ).padStart(2, "0")}`}
+          </Text>
+          <Text>
+            Date: {new Date(flight.flightDate).toLocaleDateString()}
+          </Text>
+        </Card.Content>
+      </Card>
+    );
+  };
 
   return (
     <ScrollView style={{ padding: 10 }}>
@@ -78,10 +124,15 @@ const FinalDetails = ({ route }) => {
       {selectedHotels && Object.keys(selectedHotels).length > 0 ? (
         Object.keys(selectedHotels).map((city, cityIndex) => (
           <View key={cityIndex}>
-            <Text style={{ fontSize: 18, marginVertical: 10 }}>{city} Hotels:</Text>
+            <Text style={{ fontSize: 18, marginVertical: 10 }}>
+              {city} Hotels:
+            </Text>
             {selectedHotels[city].map((hotel, index) => (
               <Card key={index} style={{ marginBottom: 10 }}>
-                <Card.Title title={hotel.name} subtitle={`${hotel.city}, ${hotel.country}`} />
+                <Card.Title
+                  title={hotel.name}
+                  subtitle={`${hotel.city}, ${hotel.country}`}
+                />
                 <Card.Content>
                   <Text>{hotel.address.full_address}</Text>
                   <Text>Cost per night: ${hotel.night_cost}</Text>
@@ -106,7 +157,10 @@ const FinalDetails = ({ route }) => {
             </Text>
             {selectedAttractions[city].map((attraction, index) => (
               <Card key={index} style={{ marginBottom: 10 }}>
-                <Card.Title title={attraction.name} subtitle={attraction.city} />
+                <Card.Title
+                  title={attraction.name}
+                  subtitle={attraction.city}
+                />
                 <Card.Content>
                   <Text>{attraction.description}</Text>
                 </Card.Content>
