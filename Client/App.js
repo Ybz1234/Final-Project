@@ -189,4 +189,14 @@ opacity white teal - rgba(255, 255, 255, 0.8)
 "#4c2889"  // Rich dark purple
 #1B0233
 #07002A
+
+// Real GitHub's color palette
+#151b23
+#0d1117
+#010409
+#8957e5
+
+// Others
+#f3f3f5
+#f0f0f2
 */
