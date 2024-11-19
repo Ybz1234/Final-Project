@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="map-marker" style={{ backgroundColor: '#1B3E90' }}/>;
+const LeftContent = (props) => <Avatar.Icon {...props} icon="map-marker" style={{ backgroundColor: '#8957e5' }} />;
 
 const AttractionCard = ({ attraction, onSelect }) => {
     const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ const AttractionCard = ({ attraction, onSelect }) => {
             // if (response.data.results.length > 0) {
             //     setAttractionImageUrl(response.data.results[0].urls.regular);
             // } else {
-                setAttractionImageUrl("https://via.placeholder.com/150");
+            setAttractionImageUrl("https://via.placeholder.com/150");
             //}
         } catch (error) {
             console.error("Error fetching attraction image:", error);
@@ -45,11 +45,17 @@ const AttractionCard = ({ attraction, onSelect }) => {
     };
 
     return (
-        <Card style={{ marginVertical: 8 }}>
-            <Card.Title title={attraction.name} subtitle={attraction.city} left={LeftContent} />
+        <Card style={{ marginVertical: 8, backgroundColor: '#151b23' }}>
+            <Card.Title
+                title={attraction.name}
+                subtitle={attraction.city}
+                left={LeftContent}
+                titleStyle={{ color: "white" }}
+                subtitleStyle={{ color: "white" }}
+            />
             <Card.Content>
-                <Text variant="titleLarge">{attraction.description || "No description available."}</Text>
-                <Text variant="bodyMedium">{attraction.address.full_address}</Text>
+                <Text variant="titleLarge" style={{ color: "white" }}>{attraction.description || "No description available."}</Text>
+                <Text variant="bodyMedium" style={{ color: "white" }}>{attraction.address.full_address}</Text>
             </Card.Content>
 
             {attractionImageUrl ? (

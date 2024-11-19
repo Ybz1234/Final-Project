@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width: "90%",
     alignItems: "center",
     padding: 15,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: "#f1e8ff",
     borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
@@ -40,9 +40,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   cityText: {
-    alignSelf: "flex-start", // Corrected 'left' to 'flex-start'
+    alignSelf: "flex-start",
     marginBottom: 12,
-    color: "#1B3E90",
+    color: "#8957e5",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 20,

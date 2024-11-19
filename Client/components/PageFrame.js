@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   container: {
     shadowColor: "#000",
     flex: 1,
-    backgroundColor: "#2EB8B8",
+    backgroundColor: "#151b23",
     alignItems: "center",
     width: "100%",
     height: "100%",

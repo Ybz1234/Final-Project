@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   backbuttonLabel: {
-    color: "rgba(255, 255, 255, 0.8)",
+    color: "#8957e5",
     fontSize: 23,
   },
 });

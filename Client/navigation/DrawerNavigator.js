@@ -29,21 +29,21 @@ function MainDrawer() {
       minSwipeDistance={1250}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-        headerTintColor: "#1B3E90",
+        headerTintColor: "#8957e5",
         headerTitle: "",
         swipeEnabled: true,
         drawerType: "back",
         headerStyle: {
-          backgroundColor: "#2EB8B8",
+          backgroundColor: "#0d1117",
         },
         headerBackgroundColor: "#29A3A3",
         overlayColor: "rgba(255, 255, 255, 0.6)",
         drawerStyle: {
           width: 210,
-          backgroundColor: "#2EB8B8",
+          backgroundColor: "#0d1117",
         },
         lazy: true,
-        drawerActiveTintColor: "#1B3E90",
+        drawerActiveTintColor: "#8957e5",
         drawerInactiveTintColor: "rgba(255, 255, 255, 0.8)",
       }}
     >

@@ -25,7 +25,7 @@ const CustomDrawerContent = (props) => {
               ? `${user.user.firstName[0]}${user.user.lastName[0]}`
               : "G"
           }
-          style={{ backgroundColor: "#1B3E90" }}
+          style={{ backgroundColor: "#151b23" }}
         />
       </View>
 
@@ -35,7 +35,7 @@ const CustomDrawerContent = (props) => {
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <View style={styles.logoutContainer}>
-          <MaterialCommunityIcons name="logout" size={22} color="#1B3E90" />
+          <MaterialCommunityIcons name="logout" size={22} color="#8957e5" />
           <Text style={styles.logoutText}>Logout</Text>
         </View>
       </TouchableOpacity>
@@ -48,7 +48,7 @@ export default CustomDrawerContent;
 const styles = StyleSheet.create({
   profileContainer: {
     padding: 20,
-    backgroundColor: "#2EB8B8",
+    backgroundColor: "#0d1117",
     borderRadius: 60,
     borderColor: "rgba(255, 255, 255, 0.8)",
     width: "60%",
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     fontSize: 16,
-    color: "#1B3E90",
+    color: "#8957e5",
     marginLeft: 10,
     fontWeight: "bold",
   },

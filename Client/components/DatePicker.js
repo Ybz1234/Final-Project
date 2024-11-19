@@ -28,13 +28,13 @@ const DatePicker = ({ date, setDate }) => {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: "#1B3E90",
-      accent: "#1B3E90",
-      surface: "white",
-      background: "white",
-      onSurface: "#1B3E90",
-      text: "#1B3E90",
-      placeholder: "#1B3E90",
+      primary: "#8957e5",
+      accent: "#8957e5",
+      surface: "#0d1117",
+      background: "#8957e5",
+      onSurface: "#8957e5",
+      text: "#0d1117",
+      placeholder: "#8957e5",
     },
   };
   useEffect(() => {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 12,
     fontWeight: "bold",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: "#8957e5",
     borderRadius: 15,
     fontFamily: "Roboto-Medium",
     padding: 5,
@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
   },
   undoButton: {
     alignSelf: "left",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    color: "lightblue",
+    backgroundColor: "#8957e5",
+    color: "white",
     shadowColor: "#000",
   },
   undoButtonLabel: {

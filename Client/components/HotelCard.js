@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="city" style={{ backgroundColor: '#1B3E90' }}/>;
+const LeftContent = (props) => <Avatar.Icon {...props} icon="city" style={{ backgroundColor: '#8957e5' }}/>;
 
 const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
   const [loading, setLoading] = useState(false);
@@ -52,15 +52,17 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
   };
 
   return (
-    <Card style={{ marginVertical: 8 }}>
+    <Card style={{ marginVertical: 8, backgroundColor: '#151b23' }}>
       <Card.Title
         title={hotel.name}
         subtitle={`${hotel.city}, ${hotel.country}`}
         left={LeftContent}
+        titleStyle={{ color: "white" }}
+        subtitleStyle={{ color: "white" }}
       />
       <Card.Content>
-        <Text variant="titleLarge">{hotel.address.full_address}</Text>
-        <Text variant="bodyMedium">Cost per night: ${nightCost}</Text>
+        <Text variant="titleLarge" style={{ color: "white" }}>{hotel.address.full_address}</Text>
+        <Text variant="bodyMedium" style={{ color: "white" }}>Cost per night: ${nightCost}</Text>
         <StarRating rating={rating} />
         <TextInput
           label="Number of nights"
@@ -74,7 +76,7 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
       {imageUrl ? (
         <Card.Cover source={{ uri: imageUrl }} />
       ) : (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#0d1117" />
       )}
 
       <Card.Actions>

@@ -125,7 +125,7 @@ const AttractionSelection = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.headerText}>Select Attractions</Text>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#151b23" />
         ) : error ? (
           <Text style={styles.errorMessage}>{error}</Text>
         ) : attractions.length > 0 ? (
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     width: "110%",
     fontFamily: "Roboto-BoldItalic",
-    color: "#1B3E90",
+    color: "#8957e5",
     marginBottom: 16,
   },
   selectedAttractionContainer: {

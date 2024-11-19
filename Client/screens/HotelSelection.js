@@ -229,13 +229,13 @@ const HotelSelection = ({ route, navigation }) => {
             style={{ top: -5, right: -15 }}
             icon={sortOrder === "asc" ? "sort-ascending" : "sort-descending"}
             size={22}
-            iconColor="#1B3E90"
+            iconColor="#8957e5"
             onPress={toggleSortOrder}
           />
         </View>
 
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#151b23" />
         ) : error ? (
           <Text style={styles.errorMessage}>{error}</Text>
         ) : hotels.length > 0 ? (
@@ -255,7 +255,7 @@ const HotelSelection = ({ route, navigation }) => {
                   title={`Hotels in ${cityHotels.city}`}
                   expanded={expandedCities[cityHotels.city] || false}
                   onPress={() => toggleCityAccordion(cityHotels.city)}
-                  left={(props) => <List.Icon {...props} icon="city" />}
+                  left={(props) => <List.Icon {...props} icon="city"/>}
                 >
                   {sortedHotels.map((hotel) => (
                     <HotelCard
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: "100%",
     alignSelf: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: "#f1e8ff",
     borderRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontFamily: "Roboto-BoldItalic",
-    color: "#1B3E90",
+    color: "#8957e5",
     marginBottom: 16,
   },
   selectedHotelContainer: {
@@ -379,12 +379,12 @@ const styles = StyleSheet.create({
   confirmationHeader: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#1B3E90",
+    color: "#8957e5",
     textAlign: "center",
     marginBottom: 10,
   },
   divider: {
-    backgroundColor: "#1B3E90",
+    backgroundColor: "#8957e5",
     marginVertical: 10,
   },
   errorMessage: {
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#1B3E90",
+    color: "#8957e5",
   },
   icon: {
     textShadowColor: "#1B3E90",
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   grandTotalText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#1B3E90",
+    color: "#000",
     textAlign: "right",
   },
   removeButton: {

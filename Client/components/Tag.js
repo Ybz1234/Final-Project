@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   text: {
-    color: "#1B3E90",
+    color: "#0d1117",
     fontSize: 15,
     fontWeight: "500",
   },

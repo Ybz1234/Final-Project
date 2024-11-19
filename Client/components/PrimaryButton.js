@@ -10,7 +10,7 @@ const PrimaryButton = ({
   labelStyle,
   iconColor = "white",
   mode = "elevated",
-  backgroundColor = "#1B3E90",
+  backgroundColor = "#8957e5",
   ...props
 }) => {
   return (

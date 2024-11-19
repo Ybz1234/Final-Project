@@ -231,8 +231,8 @@ export default function SignUp({ navigation, route }) {
                   onChangeText={setFirstName}
                   style={styles.input}
                   mode="outlined"
-                  theme={{ colors: { primary: "#29A3A3" } }}
-                  placeholderTextColor="#29A3A3"
+                  theme={{ colors: { primary: "#8957e5" } }}
+                  placeholderTextColor="#8957e5"
                 />
                 <TextInput
                   label="Last Name"
@@ -240,8 +240,8 @@ export default function SignUp({ navigation, route }) {
                   onChangeText={setLastName}
                   style={styles.input}
                   mode="outlined"
-                  theme={{ colors: { primary: "#29A3A3" } }}
-                  placeholderTextColor="#29A3A3"
+                  theme={{ colors: { primary: "#8957e5" } }}
+                  placeholderTextColor="#8957e5"
                 />
               </>
             )}
@@ -254,8 +254,8 @@ export default function SignUp({ navigation, route }) {
               autoCapitalize="none"
               style={styles.input}
               mode="outlined"
-              theme={{ colors: { primary: "#29A3A3" } }}
-              placeholderTextColor="#29A3A3"
+              theme={{ colors: { primary: "#8957e5" } }}
+              placeholderTextColor="#8957e5"
             />
             <TextInput
               label="Password"
@@ -264,8 +264,8 @@ export default function SignUp({ navigation, route }) {
               secureTextEntry
               style={styles.input}
               mode="outlined"
-              theme={{ colors: { primary: "#29A3A3" } }}
-              placeholderTextColor="#29A3A3"
+              theme={{ colors: { primary: "#8957e5" } }}
+              placeholderTextColor="#8957e5"
             />
             <Button
               mode="contained"
@@ -273,7 +273,7 @@ export default function SignUp({ navigation, route }) {
               style={styles.button}
               contentStyle={{ paddingVertical: 8 }}
               labelStyle={{ fontSize: 18 }}
-              buttonColor="#29A3A3"
+              buttonColor="#8957e5"
             >
               {isSignUp ? "Sign Up" : "Login"}
             </Button>
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   headline: {
     fontSize: 38,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: "#8957e5",
     textAlign: "center",
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     textShadowOffset: { width: 2, height: 2 },
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: "90%",
     maxWidth: 400,
-    backgroundColor: "white",
+    backgroundColor: "#f1e8ff",
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     fontFamily: "Roboto-BoldItalic",
-    color: "#29A3A3",
+    color: "#8957e5",
     textAlign: "center",
     marginBottom: 5,
   },
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     width: "60%",
     marginTop: 16,
     marginBottom: 16,
-    backgroundColor: "#29A3A3",
+    backgroundColor: "#8957e5",
     borderRadius: 8,
     elevation: 4,
     shadowColor: "#000",
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   switchText: {
-    color: "#29A3A3",
+    color: "#8957e5",
     marginTop: 20,
     fontSize: 18,
     textAlign: "center",
