@@ -29,6 +29,10 @@ const Home = ({ navigation, route }) => {
     }
   }, [tripData.cityNameArr]);
 
+  useEffect(() => {
+    updateMarkersFromCityNames(cityNameArr);
+  }, [cityNameArr]);
+
   const CleanMarks = () => {
     setMarkers([]);
     setCityNameArr([]);
@@ -82,7 +86,6 @@ const Home = ({ navigation, route }) => {
 
   const removeCity = (index) => {
     setCityNameArr((prevArr) => prevArr.filter((_, i) => i !== index));
-    setMarkers((prevMarkers) => prevMarkers.filter((_, i) => i !== index));
     console.log("cityNameArr from remove city", cityNameArr);
   };
   const checkNameArr = () => {
@@ -106,24 +109,8 @@ const Home = ({ navigation, route }) => {
         const cityName = city.name.split(",")[0].trim();
         if (!cityNameArr.includes(cityName)) {
           setCityNameArr((prevArr) => [...prevArr, cityName]);
-          setMarkers((prevMarkers) => [
-            ...prevMarkers,
-            { latitude: city.lat, longitude: city.lng },
-          ]);
         }
         console.log("cityNameArr from onSearch", cityNameArr);
-      } else {
-        // setTimeout(() => {
-        //   Toast.show({
-        //     type: "info",
-        //     text1: "no city in the name of",
-        //     text2: query,
-        //     visibilityTime: 2000,
-        //     position: "top",
-        //     autoHide: true,
-        //     bottomOffset: 50,
-        //   });
-        // }, 3500);
       }
     }
   };
