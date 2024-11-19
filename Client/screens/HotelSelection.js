@@ -150,7 +150,6 @@ const HotelSelection = ({ route, navigation }) => {
   };
 
   const validateSelections = () => {
-    // Check if any hotels have been selected
     const totalSelectedHotels = Object.keys(selectedHotels).reduce(
       (total, city) => total + selectedHotels[city].length,
       0
@@ -162,13 +161,11 @@ const HotelSelection = ({ route, navigation }) => {
         text1: "No Hotels Selected",
         text2: "Please select at least one hotel before proceeding.",
       });
-      return false; // Return false to indicate validation failed
+      return false;
     }
 
-    // Validate total nights per city and ensure at least one hotel per city
     for (const city of cityArr) {
       const cityHotels = selectedHotels[city] || [];
-      // If no hotels selected for this city, show error
       if (cityHotels.length === 0) {
         Toast.show({
           type: "error",
@@ -177,7 +174,7 @@ const HotelSelection = ({ route, navigation }) => {
         });
         return false;
       }
-      // Sum up the nights for this city's hotels
+
       let totalNights = 0;
       for (const hotel of cityHotels) {
         const nights = parseInt(nightsPerHotel[hotel._id]) || 0;
@@ -355,7 +352,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 16,
     width: "100%",
-    // maxWidth: 420,
     alignSelf: "center",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 30,
@@ -445,6 +441,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "red",
     alignSelf: "flex-start",
+    borderRadius: 15,
   },
   buttonContent: {
     flexDirection: "row",
