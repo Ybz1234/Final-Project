@@ -5,7 +5,7 @@ import SumCard from "../components/SumCard";
 import PageFrame from "../components/PageFrame";
 
 const FinalDetails = ({ route }) => {
-  const { userId, selectedHotels, selectedAttractions, date } = route.params;
+  const { userId, selectedHotels, selectedAttractions, date, totalPrices } = route.params;
 
   const [flightDetails, setFlightDetails] = useState([]);
   const [airportDetails, setAirportDetails] = useState({});
@@ -109,6 +109,47 @@ const FinalDetails = ({ route }) => {
       );
     });
 
+  const renderHotelDetails = () =>
+    selectedHotels && Object.keys(selectedHotels).length > 0 ? (
+      Object.entries(selectedHotels).map(([city, hotels]) => (
+        <View key={city}>
+          <Text style={styles.sectionHeader}>{city} Hotels:</Text>
+          {hotels.map((hotel, index) => {
+            const hotelTotalPrice = totalPrices[city]?.find(
+              (hotelPrice) => hotelPrice.hotelId === hotel._id
+            )?.totalPrice;
+
+            const totalCost = hotelTotalPrice ? hotelTotalPrice : "Price not available";
+
+            return renderCard(
+              hotel.name,
+              `${hotel.city}, ${hotel.country}`,
+              [
+                `Address: ${hotel.address.full_address}`,
+                `Total Stay Fee: $${totalCost}`,
+              ]
+            );
+          })}
+        </View>
+      ))
+    ) : (
+      <Text style={styles.noDetailsText}>No hotels selected.</Text>
+    );
+
+  const renderAttractionDetails = () =>
+    selectedAttractions && Object.keys(selectedAttractions).length > 0 ? (
+      Object.entries(selectedAttractions).map(([city, attractions]) => (
+        <View key={city}>
+          <Text style={styles.sectionHeader}>{city} Attractions:</Text>
+          {attractions.map((attraction, index) =>
+            renderCard(attraction.name, attraction.city, [attraction.description])
+          )}
+        </View>
+      ))
+    ) : (
+      <Text style={styles.noDetailsText}>No attractions selected.</Text>
+    );
+
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
@@ -122,40 +163,10 @@ const FinalDetails = ({ route }) => {
         )}
 
         <SumCard title="Selected Hotels" iconType="hotel" />
-        {selectedHotels && Object.keys(selectedHotels).length > 0 ? (
-          Object.entries(selectedHotels).map(([city, hotels]) => (
-            <View key={city}>
-              <Text style={styles.sectionHeader}>{city} Hotels:</Text>
-              {hotels.map((hotel, index) =>
-                renderCard(
-                  hotel.name,
-                  `${hotel.city}, ${hotel.country}`,
-                  [`Address: ${hotel.address.full_address}`, `Cost: $${hotel.night_cost}`]
-                )
-              )}
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noDetailsText}>No hotels selected.</Text>
-        )}
+        {renderHotelDetails()}
 
         <SumCard title="Selected Attractions" iconType="attraction" />
-        {selectedAttractions && Object.keys(selectedAttractions).length > 0 ? (
-          Object.entries(selectedAttractions).map(([city, attractions]) => (
-            <View key={city}>
-              <Text style={styles.sectionHeader}>{city} Attractions:</Text>
-              {attractions.map((attraction, index) =>
-                renderCard(
-                  attraction.name,
-                  attraction.city,
-                  [attraction.description]
-                )
-              )}
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noDetailsText}>No attractions selected.</Text>
-        )}
+        {renderAttractionDetails()}
       </ScrollView>
     </PageFrame>
   );

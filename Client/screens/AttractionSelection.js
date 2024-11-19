@@ -14,6 +14,7 @@ const AttractionSelection = ({ route, navigation }) => {
         daysArray,
         date,
         selectedHotels,
+        totalPrices
     } = route.params;
 
     const [attractions, setAttractions] = useState([]);
@@ -110,6 +111,7 @@ const AttractionSelection = ({ route, navigation }) => {
             date,
             selectedAttractions,
             selectedHotels,
+            totalPrices
         });
     };
 

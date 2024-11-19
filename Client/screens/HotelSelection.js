@@ -134,6 +134,26 @@ const HotelSelection = ({ route, navigation }) => {
   };
 
   const handleNavigateToAttractions = () => {
+    const totalPrices = Object.keys(selectedHotels).reduce((total, city) => {
+      console.log(`Processing city: ${city}`);
+
+      const cityHotels = selectedHotels[city];
+      const hotelPrices = cityHotels.map((hotel) => {
+
+        const totalPrice = calculateTotalPrice(hotel);
+
+        return {
+          hotelId: hotel._id,
+          totalPrice: totalPrice,
+        };
+      });
+
+      return {
+        ...total,
+        [city]: hotelPrices,
+      };
+    }, {});
+
     navigation.replace("Main", {
       screen: "Attractions selection",
       params: {
@@ -143,9 +163,12 @@ const HotelSelection = ({ route, navigation }) => {
         daysArray: daysArray,
         date: date,
         selectedHotels: selectedHotels,
+        totalPrices: totalPrices,
       },
     });
   };
+
+
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
   };
