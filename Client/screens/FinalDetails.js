@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Text, ScrollView, View, ActivityIndicator } from "react-native";
+import { Text, ScrollView, View, ActivityIndicator, StyleSheet } from "react-native";
 import { Card } from "react-native-paper";
 import SumCard from "../components/SumCard";
+import PageFrame from "../components/PageFrame";
 
 const FinalDetails = ({ route }) => {
   const { userId, selectedHotels, selectedAttractions, date } = route.params;
@@ -75,98 +76,115 @@ const FinalDetails = ({ route }) => {
     fetchFlightDetails();
   }, []);
 
-  const renderFlightDetails = (flight, index) => {
-    const departureAirport = airportDetails[flight.departureCity];
-    const arrivalAirport = airportDetails[flight.arrivalCity];
+  const renderCard = (title, subtitle, details) => (
+    <Card style={styles.card}>
+      <Card.Title title={title} subtitle={subtitle} />
+      <Card.Content>
+        {details.map((detail, index) => (
+          <Text key={index} style={styles.cardText}>
+            {detail}
+          </Text>
+        ))}
+      </Card.Content>
+    </Card>
+  );
 
-    return (
-      <Card key={index} style={{ marginBottom: 10 }}>
-        <Card.Title title="Flight Details" />
-        <Card.Content>
-          <Text>Flight ID: {flight.flightId}</Text>
-          <Text>
-            From: {flight.departureCity}{" "}
-            {departureAirport && `(${departureAirport.name})`}
-          </Text>
-          <Text>
-            To: {flight.arrivalCity}{" "}
-            {arrivalAirport && `(${arrivalAirport.name})`}
-          </Text>
-          <Text>
-            Departure Time:{" "}
-            {`${String(flight.flightHour).padStart(2, "0")}:${String(
-              flight.flightMinute
-            ).padStart(2, "0")}`}
-          </Text>
-          <Text>
-            Date: {new Date(flight.flightDate).toLocaleDateString()}
-          </Text>
-        </Card.Content>
-      </Card>
-    );
-  };
+  const renderFlightDetails = () =>
+    flightDetails.map((flight, index) => {
+      const departureAirport = airportDetails[flight.departureCity];
+      const arrivalAirport = airportDetails[flight.arrivalCity];
+
+      return renderCard(
+        "Flight Details",
+        `${flight.departureCity} to ${flight.arrivalCity}`,
+        [
+          `Flight ID: ${flight.flightId}`,
+          `From: ${flight.departureCity} (${departureAirport?.name || "N/A"})`,
+          `To: ${flight.arrivalCity} (${arrivalAirport?.name || "N/A"})`,
+          `Departure Time: ${String(flight.flightHour).padStart(2, "0")}:${String(
+            flight.flightMinute
+          ).padStart(2, "0")}`,
+          `Date: ${new Date(flight.flightDate).toLocaleDateString()}`,
+        ]
+      );
+    });
 
   return (
-    <ScrollView style={{ padding: 10 }}>
-      <SumCard title="Flight Details" iconType="flight" />
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : flightDetails.length > 0 ? (
-        flightDetails.map((flight, index) => renderFlightDetails(flight, index))
-      ) : (
-        <Text>No flight details available.</Text>
-      )}
+    <PageFrame>
+      <ScrollView contentContainerStyle={styles.container}>
+        <SumCard title="Flight Details" iconType="flight" />
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : flightDetails.length > 0 ? (
+          renderFlightDetails()
+        ) : (
+          <Text style={styles.noDetailsText}>No flight details available.</Text>
+        )}
 
-      <SumCard title="Selected Hotels" iconType="hotel" />
-      {selectedHotels && Object.keys(selectedHotels).length > 0 ? (
-        Object.keys(selectedHotels).map((city, cityIndex) => (
-          <View key={cityIndex}>
-            <Text style={{ fontSize: 18, marginVertical: 10 }}>
-              {city} Hotels:
-            </Text>
-            {selectedHotels[city].map((hotel, index) => (
-              <Card key={index} style={{ marginBottom: 10 }}>
-                <Card.Title
-                  title={hotel.name}
-                  subtitle={`${hotel.city}, ${hotel.country}`}
-                />
-                <Card.Content>
-                  <Text>{hotel.address.full_address}</Text>
-                  <Text>Cost per night: ${hotel.night_cost}</Text>
-                </Card.Content>
-              </Card>
-            ))}
-          </View>
-        ))
-      ) : (
-        <Text>No hotels selected.</Text>
-      )}
+        <SumCard title="Selected Hotels" iconType="hotel" />
+        {selectedHotels && Object.keys(selectedHotels).length > 0 ? (
+          Object.entries(selectedHotels).map(([city, hotels]) => (
+            <View key={city}>
+              <Text style={styles.sectionHeader}>{city} Hotels:</Text>
+              {hotels.map((hotel, index) =>
+                renderCard(
+                  hotel.name,
+                  `${hotel.city}, ${hotel.country}`,
+                  [`Address: ${hotel.address.full_address}`, `Cost: $${hotel.night_cost}`]
+                )
+              )}
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noDetailsText}>No hotels selected.</Text>
+        )}
 
-      <SumCard title="Selected Attractions" iconType="attraction" />
-      {selectedAttractions && Object.keys(selectedAttractions).length > 0 ? (
-        Object.keys(selectedAttractions).map((city, cityIndex) => (
-          <View key={cityIndex}>
-            <Text style={{ fontSize: 18, marginVertical: 10 }}>
-              {city} Attractions:
-            </Text>
-            {selectedAttractions[city].map((attraction, index) => (
-              <Card key={index} style={{ marginBottom: 10 }}>
-                <Card.Title
-                  title={attraction.name}
-                  subtitle={attraction.city}
-                />
-                <Card.Content>
-                  <Text>{attraction.description}</Text>
-                </Card.Content>
-              </Card>
-            ))}
-          </View>
-        ))
-      ) : (
-        <Text>No attractions selected.</Text>
-      )}
-    </ScrollView>
+        <SumCard title="Selected Attractions" iconType="attraction" />
+        {selectedAttractions && Object.keys(selectedAttractions).length > 0 ? (
+          Object.entries(selectedAttractions).map(([city, attractions]) => (
+            <View key={city}>
+              <Text style={styles.sectionHeader}>{city} Attractions:</Text>
+              {attractions.map((attraction, index) =>
+                renderCard(
+                  attraction.name,
+                  attraction.city,
+                  [attraction.description]
+                )
+              )}
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noDetailsText}>No attractions selected.</Text>
+        )}
+      </ScrollView>
+    </PageFrame>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
+  card: {
+    marginBottom: 10,
+    borderRadius: 10,
+    elevation: 3,
+    backgroundColor: "#fff",
+  },
+  cardText: {
+    fontSize: 16,
+  },
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  noDetailsText: {
+    fontSize: 16,
+    textAlign: "center",
+    color: "#888",
+    marginVertical: 20,
+  },
+});
 
 export default FinalDetails;

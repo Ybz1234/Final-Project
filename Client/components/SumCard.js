@@ -17,19 +17,43 @@ const SumCard = ({ title, iconType }) => {
     };
 
     return (
-        <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 24, fontWeight: "bold" }}>{title}</Text>
-            <IconButton
-                icon={getIcon()}
-                size={30}
+        <View
+            style={{
+                marginBottom: 20,
+                padding: 10,
+                backgroundColor: "#E8F0FE",
+                borderRadius: 10,
+                shadowColor: "#000",
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                shadowOffset: { width: 0, height: 2 },
+                elevation: 3,
+                alignItems: "center",
+            }}
+        >
+            <View
                 style={{
+                    width: 60,
+                    height: 60,
                     backgroundColor: "#1B3E90",
-                    borderRadius: 50,
-                    padding: 10,
+                    borderRadius: 30,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: 10,
                 }}
-                iconColor="white"
-                onPress={() => {}}
-            />
+            >
+                <IconButton
+                    icon={getIcon()}
+                    size={30}
+                    iconColor="#FFF"
+                    style={{
+                        margin: 0,
+                    }}
+                />
+            </View>
+            <Text style={{ fontSize: 24, fontWeight: "bold", color: "#1B3E90" }}>
+                {title}
+            </Text>
         </View>
     );
 };
