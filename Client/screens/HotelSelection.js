@@ -6,20 +6,23 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import { List, Card, Headline, Divider, IconButton } from "react-native-paper";
+import {
+  List,
+  Card,
+  Headline,
+  Divider,
+  IconButton,
+  Button,
+} from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HotelCard from "../components/HotelCard";
 import PageFrame from "../components/PageFrame";
+import Toast from "react-native-toast-message";
+
 import PrimaryButton from "../components/PrimaryButton";
 
 const HotelSelection = ({ route, navigation }) => {
-  const {
-    cityArr,
-    flightTickets,
-    userId,
-    daysArray,
-    date
-  } = route.params;
+  const { cityArr, flightTickets, userId, daysArray, date } = route.params;
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotels, setSelectedHotels] = useState({});
@@ -30,6 +33,11 @@ const HotelSelection = ({ route, navigation }) => {
 
   const MAIN_SERVER = "https://final-project-sqlv.onrender.com/api";
   const COLLECTION = "hotels";
+
+  const cityDaysMap = {};
+  cityArr.forEach((city, index) => {
+    cityDaysMap[city] = daysArray[index];
+  });
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -74,11 +82,19 @@ const HotelSelection = ({ route, navigation }) => {
       );
 
       if (isHotelSelected) {
+        setNightsPerHotel((prev) => {
+          const { [hotel._id]: _, ...rest } = prev;
+          return rest;
+        });
         return {
           ...prevSelected,
           [city]: selectedCityHotels.filter((h) => h._id !== hotel._id),
         };
       } else {
+        setNightsPerHotel((prev) => ({
+          ...prev,
+          [hotel._id]: prev[hotel._id] || cityDaysMap[city],
+        }));
         return {
           ...prevSelected,
           [city]: [...selectedCityHotels, hotel],
@@ -133,41 +149,76 @@ const HotelSelection = ({ route, navigation }) => {
     }));
   };
 
-  const handleNavigateToAttractions = () => {
-    const totalPrices = Object.keys(selectedHotels).reduce((total, city) => {
-      console.log(`Processing city: ${city}`);
+  const validateSelections = () => {
+    // Check if any hotels have been selected
+    const totalSelectedHotels = Object.keys(selectedHotels).reduce(
+      (total, city) => total + selectedHotels[city].length,
+      0
+    );
 
-      const cityHotels = selectedHotels[city];
-      const hotelPrices = cityHotels.map((hotel) => {
-
-        const totalPrice = calculateTotalPrice(hotel);
-
-        return {
-          hotelId: hotel._id,
-          totalPrice: totalPrice,
-        };
+    if (totalSelectedHotels === 0) {
+      Toast.show({
+        type: "error",
+        text1: "No Hotels Selected",
+        text2: "Please select at least one hotel before proceeding.",
       });
+      return false; // Return false to indicate validation failed
+    }
 
-      return {
-        ...total,
-        [city]: hotelPrices,
-      };
-    }, {});
-
-    navigation.replace("Main", {
-      screen: "Attractions selection",
-      params: {
-        cityArr: cityArr,
-        flightTickets: flightTickets,
-        userId: userId,
-        daysArray: daysArray,
-        date: date,
-        selectedHotels: selectedHotels,
-        totalPrices: totalPrices,
-      },
-    });
+    // Validate total nights per city and ensure at least one hotel per city
+    for (const city of cityArr) {
+      const cityHotels = selectedHotels[city] || [];
+      // If no hotels selected for this city, show error
+      if (cityHotels.length === 0) {
+        Toast.show({
+          type: "error",
+          text1: `No Hotel Selected in ${city}`,
+          text2: `Please select at least one hotel for ${city}.`,
+        });
+        return false;
+      }
+      // Sum up the nights for this city's hotels
+      let totalNights = 0;
+      for (const hotel of cityHotels) {
+        const nights = parseInt(nightsPerHotel[hotel._id]) || 0;
+        totalNights += nights;
+      }
+      const allocatedDays = cityDaysMap[city];
+      if (totalNights > allocatedDays) {
+        Toast.show({
+          type: "error",
+          text1: `Too many nights in ${city}`,
+          text2: `You have selected ${totalNights} nights but only ${allocatedDays} days are allocated to ${city}.`,
+        });
+        return false;
+      } else if (totalNights < allocatedDays) {
+        Toast.show({
+          type: "error",
+          text1: `Not enough nights in ${city}`,
+          text2: `You have selected ${totalNights} nights but ${allocatedDays} days are allocated to ${city}.`,
+        });
+        return false;
+      }
+    }
+    return true;
   };
 
+  const handleNavigateToAttractions = () => {
+    if (validateSelections()) {
+      navigation.replace("Main", {
+        screen: "Attractions selection",
+        params: {
+          cityArr: cityArr,
+          flightTickets: flightTickets,
+          userId: userId,
+          daysArray: daysArray,
+          date: date,
+          selectedHotels: selectedHotels,
+          nightsPerHotel: nightsPerHotel,
+        },
+      });
+    }
+  };
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
@@ -252,9 +303,8 @@ const HotelSelection = ({ route, navigation }) => {
                           ${calculateTotalPrice(hotel).toFixed(2)}
                         </Text>
                       </Text>
-                      <PrimaryButton
+                      <Button
                         onPress={() => handleRemoveHotel(city, hotel)}
-                        color="red"
                         style={styles.removeButton}
                       >
                         <View style={styles.buttonContent}>
@@ -265,7 +315,7 @@ const HotelSelection = ({ route, navigation }) => {
                             color="white"
                           />
                         </View>
-                      </PrimaryButton>
+                      </Button>
                     </Card.Content>
                   </Card>
                 ))}
@@ -305,10 +355,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 16,
     width: "100%",
-    maxWidth: 420,
+    // maxWidth: 420,
     alignSelf: "center",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
-    borderRadius: 8,
+    borderRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -395,8 +445,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "red",
     alignSelf: "flex-start",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
   },
   buttonContent: {
     flexDirection: "row",
