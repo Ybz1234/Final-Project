@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
+    color: "#fff",
   },
   noDetailsText: {
     fontSize: 16,

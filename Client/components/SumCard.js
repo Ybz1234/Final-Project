@@ -21,7 +21,7 @@ const SumCard = ({ title, iconType }) => {
             style={{
                 marginBottom: 20,
                 padding: 10,
-                backgroundColor: "#E8F0FE",
+                backgroundColor: "#f1e8ff",
                 borderRadius: 10,
                 shadowColor: "#000",
                 shadowOpacity: 0.2,
@@ -35,7 +35,7 @@ const SumCard = ({ title, iconType }) => {
                 style={{
                     width: 60,
                     height: 60,
-                    backgroundColor: "#1B3E90",
+                    backgroundColor: "#8957e5",
                     borderRadius: 30,
                     justifyContent: "center",
                     alignItems: "center",
@@ -51,7 +51,7 @@ const SumCard = ({ title, iconType }) => {
                     }}
                 />
             </View>
-            <Text style={{ fontSize: 24, fontWeight: "bold", color: "#1B3E90" }}>
+            <Text style={{ fontSize: 24, fontWeight: "bold", color: "#8957e5" }}>
                 {title}
             </Text>
         </View>
