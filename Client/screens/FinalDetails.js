@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, ScrollView, View, ActivityIndicator, StyleSheet } from "react-native";
+import { Text, ScrollView, View, ActivityIndicator, StyleSheet, Button } from "react-native";
 import { Card } from "react-native-paper";
 import SumCard from "../components/SumCard";
 import PageFrame from "../components/PageFrame";
@@ -150,6 +150,31 @@ const FinalDetails = ({ route }) => {
       <Text style={styles.noDetailsText}>No attractions selected.</Text>
     );
 
+  // Function to log the finalDetailsData object with detailed information
+  const logFinalDetails = () => {
+    const logData = {
+      flights: flightDetails.map(flight => ({
+        from: `${flight.departureCity} (${airportDetails[flight.departureCity]?.name || 'N/A'})`,
+        to: `${flight.arrivalCity} (${airportDetails[flight.arrivalCity]?.name || 'N/A'})`,
+        departureTime: `${String(flight.flightHour).padStart(2, '0')}:${String(flight.flightMinute).padStart(2, '0')}`,
+        date: new Date(flight.flightDate).toLocaleDateString(),
+      })),
+      hotels: Object.entries(selectedHotels).map(([city, hotels]) => ({
+        city,
+        hotels: hotels.map(hotel => ({
+          name: hotel.name,
+          address: hotel.address.full_address,
+          totalStayFee: totalPrices[city]?.find(hotelPrice => hotelPrice.hotelId === hotel._id)?.totalPrice || "Price not available",
+          attractions: selectedAttractions[city]?.map(attraction => ({
+            name: attraction.name,
+            description: attraction.description,
+          })),
+        })),
+      })),
+    };
+    console.log("Final Details Data:", JSON.stringify(logData, null, 2));
+  };
+
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
@@ -167,6 +192,11 @@ const FinalDetails = ({ route }) => {
 
         <SumCard title="Selected Attractions" iconType="attraction" />
         {renderAttractionDetails()}
+
+        {/* Button to log the finalDetailsData */}
+        <View style={styles.buttonContainer}>
+          <Button title="Log Final Details" onPress={logFinalDetails} />
+        </View>
       </ScrollView>
     </PageFrame>
   );
@@ -196,6 +226,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#888",
     marginVertical: 20,
+  },
+  buttonContainer: {
+    marginVertical: 20,
+    alignItems: "center",
   },
 });
 
