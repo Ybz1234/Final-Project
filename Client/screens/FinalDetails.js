@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  ScrollView,
-  View,
-  ActivityIndicator,
-  StyleSheet,
-  Button,
-} from "react-native";
+import { Text, ScrollView, View, ActivityIndicator, StyleSheet, } from "react-native";
 import { useUser } from "../context/UserContext";
 import { Card } from "react-native-paper";
 import SumCard from "../components/SumCard";
 import PageFrame from "../components/PageFrame";
 import { useNavigation } from "@react-navigation/native";
+import PrimaryButton from "../components/PrimaryButton";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const FinalDetails = ({ route }) => {
   const { userId, selectedHotels, selectedAttractions, date, totalPrices } = route.params;
@@ -116,7 +111,6 @@ const FinalDetails = ({ route }) => {
     flightDetails.map((flight, index) => {
       const departureAirport = airportDetails[flight.departureCity];
       const arrivalAirport = airportDetails[flight.arrivalCity];
-
       return renderCard(
         "Flight Details",
         `${flight.departureCity} to ${flight.arrivalCity}`,
@@ -217,17 +211,12 @@ const FinalDetails = ({ route }) => {
         }),
       };
 
-      console.log("Booking Email: ", toEmail);
-      console.log("Booking Details:", JSON.stringify(bookingDetails, null, 2));
-
       const requestBody = {
         to_email: toEmail,
         booking_details: bookingDetails,
       };
 
-      console.log("Request Body:", JSON.stringify(requestBody, null, 2));
-
-      const response = await fetch(`${UTILITY_SERVER}/routes/send_booking_email`, {  // Using UTILITY_SERVER
+      const response = await fetch(`${UTILITY_SERVER}/routes/send_booking_email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -275,7 +264,19 @@ const FinalDetails = ({ route }) => {
         {renderAttractionDetails()}
 
         <View style={styles.buttonContainer}>
-          <Button title="Confirm order" onPress={sendFinalDetails} />
+          <PrimaryButton
+            onPress={sendFinalDetails}
+            icon={() => (
+              <View style={styles.iconContainer}>
+                <Text style={styles.buttonText}>Confirm booking</Text>
+                <MaterialCommunityIcons
+                  name="check-circle"
+                  size={22}
+                  color="white"
+                />
+              </View>
+            )}
+          />
         </View>
       </ScrollView>
     </PageFrame>
@@ -332,6 +333,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#010409",
     fontFamily: "Roboto-Medium",
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    left: 10,
+  },
+  buttonText: {
+    alignSelf: "center",
+    margin: 8,
+    fontSize: 17,
+    left: 5,
+    color: "white",
+    fontWeight: "bold",
   },
 });
 

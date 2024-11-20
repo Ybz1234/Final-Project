@@ -1,7 +1,8 @@
 import { IAttraction } from "../attractionRecomendation/attaracionRecomendation.type";
 
 export const attractionRecomendations: IAttraction[] = [
-  {
+    // Albania
+    {
       name: "Skanderbeg Square",
       city: "Tirana",
       country: "Albania",
@@ -200,6 +201,397 @@ export const attractionRecomendations: IAttraction[] = [
           location: { lat: 41.324292, long: 19.819113 }
       },
       description: "A public square named after the famous American architect Frank Lloyd Wright."
+  },
+  // Austria
+  {
+    name: "Minimundus",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Villacher Str. 239, 9210 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.615133, long: 14.274140 }
+    },
+    description: "A miniature park featuring replicas of famous buildings from around the world."
+  },
+  {
+    name: "Wörthersee",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Wörthersee, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.616667, long: 14.266667 }
+    },
+    description: "A beautiful lake known for its clear waters, surrounded by mountains and beaches."
+  },
+  {
+    name: "Lindwurm Fountain",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Alter Platz, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624672, long: 14.312196 }
+    },
+    description: "A historic fountain featuring the city's dragon mascot, the Lindwurm."
+  },
+  {
+    name: "Klagenfurt Cathedral",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Domplatz 1, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624077, long: 14.312774 }
+    },
+    description: "A magnificent Gothic cathedral in the heart of Klagenfurt."
+  },
+  {
+    name: "Botanical Garden Klagenfurt",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Universitätsstraße 69, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.626785, long: 14.302936 }
+    },
+    description: "A beautifully landscaped garden with a large collection of plants and flowers."
+  },
+  {
+    name: "Schloss Eltz",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Eltzstraße 1, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.633333, long: 14.315000 }
+    },
+    description: "A medieval-style castle offering scenic views and a glimpse into the region's history."
+  },
+  {
+    name: "Klagenfurt City Museum",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Neuer Platz 6, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624756, long: 14.312333 }
+    },
+    description: "A museum showcasing the cultural history and heritage of Klagenfurt and its surroundings."
+  },
+  {
+    name: "Pyramidenkogel",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Pyramidenkogel, 9074 Keutschach am See, Austria",
+      location: { lat: 46.606398, long: 14.201408 }
+    },
+    description: "A viewing tower offering panoramic views of the Wörthersee and surrounding areas."
+  },
+  {
+    name: "Museum of Modern Art Kärnten",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Burggasse 8, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624130, long: 14.310413 }
+    },
+    description: "A contemporary art museum with exhibits showcasing Austrian and international artists."
+  },
+  {
+    name: "Alter Platz",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Alter Platz, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624218, long: 14.311609 }
+    },
+    description: "A historic square in the city center with beautiful architecture and local cafes."
+  },
+  {
+    name: "Klagenfurt Zoo",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Klopeinersee Straße 8, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624444, long: 14.317222 }
+    },
+    description: "A zoo that houses a variety of animals, perfect for family visits."
+  },
+  {
+    name: "Stadtgalerie Klagenfurt",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Götzstraße 1, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.623789, long: 14.314228 }
+    },
+    description: "A shopping mall with a variety of stores and restaurants."
+  },
+  {
+    name: "Rauschelesee",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Rauschelesee, 9074 Keutschach am See, Austria",
+      location: { lat: 46.620000, long: 14.188889 }
+    },
+    description: "A serene lake located near Klagenfurt, ideal for nature walks and relaxation."
+  },
+  {
+    name: "Gosser Bierklinik",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Schlossstraße 12, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.620000, long: 14.314444 }
+    },
+    description: "A historic beer hall offering local brews and a traditional Austrian menu."
+  },
+  {
+    name: "Klagenfurt Festival",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Neuer Platz, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624222, long: 14.312389 }
+    },
+    description: "A cultural festival celebrating arts, music, and local traditions in the heart of Klagenfurt."
+  },
+  {
+    name: "Worthersee Promenade",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Wörthersee, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.616667, long: 14.260000 }
+    },
+    description: "A scenic lakeside promenade ideal for walking, jogging, and cycling."
+  },
+  {
+    name: "Klagenfurt Market Square",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Neuer Platz, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624056, long: 14.311700 }
+    },
+    description: "A lively market square with local vendors, perfect for shopping and sightseeing."
+  },
+  {
+    name: "Wörthersee Railway Station",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Bahnhofstraße 23, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.624200, long: 14.324567 }
+    },
+    description: "A major railway station providing connections to various parts of Austria and Europe."
+  },
+  {
+    name: "Kloster Wörth",
+    city: "Klagenfurt",
+    country: "Austria",
+    address: {
+      full_address: "Wörthersee, 9020 Klagenfurt am Wörthersee, Austria",
+      location: { lat: 46.615833, long: 14.283333 }
+    },
+    description: "A historic monastery located on the Wörthersee, offering peaceful surroundings and cultural heritage."
+  },
+  {
+    name: "St. Stephen's Cathedral",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Stephansplatz 3, 1010 Vienna, Austria",
+      location: { lat: 48.208174, long: 16.370500 }
+    },
+    description: "The stunning Gothic cathedral located at the heart of Vienna."
+  },
+  {
+    name: "Schönbrunn Palace",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Schönbrunner Schloßstraße 47, 1130 Vienna, Austria",
+      location: { lat: 48.184181, long: 16.312480 }
+    },
+    description: "A former imperial summer residence with expansive gardens and a zoo."
+  },
+  {
+    name: "Hofburg Palace",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Michaelerkuppel, 1010 Vienna, Austria",
+      location: { lat: 48.206389, long: 16.370500 }
+    },
+    description: "The imperial palace, home to the Habsburg dynasty and now housing several museums."
+  },
+  {
+    name: "Belvedere Palace",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Prinz Eugen-Straße 27, 1030 Vienna, Austria",
+      location: { lat: 48.191390, long: 16.376253 }
+    },
+    description: "A Baroque palace complex housing a large art collection, including Klimt's 'The Kiss'."
+  },
+  {
+    name: "Prater Park",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Prater, 1020 Vienna, Austria",
+      location: { lat: 48.211180, long: 16.402413 }
+    },
+    description: "A large public park famous for the Giant Ferris Wheel and the Prater amusement park."
+  },
+  {
+    name: "Albertina Museum",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Albertinaplatz 1, 1010 Vienna, Austria",
+      location: { lat: 48.202660, long: 16.369953 }
+    },
+    description: "A major art museum known for its collection of graphic arts and old master prints."
+  },
+  {
+    name: "Vienna State Opera",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Opernring 2, 1010 Vienna, Austria",
+      location: { lat: 48.201388, long: 16.370500 }
+    },
+    description: "One of the most prestigious opera houses in the world."
+  },
+  {
+    name: "Kunsthistorisches Museum",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Maria-Theresien-Platz, 1010 Vienna, Austria",
+      location: { lat: 48.203138, long: 16.358670 }
+    },
+    description: "The Museum of Art History, housing an impressive collection of art from the Renaissance to the Baroque."
+  },
+  {
+    name: "Vienna City Hall",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Rathausplatz 1, 1010 Vienna, Austria",
+      location: { lat: 48.210317, long: 16.370629 }
+    },
+    description: "The magnificent Gothic-style city hall that hosts various events and festivals."
+  },
+  {
+    name: "Naschmarkt",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "1070 Vienna, Austria",
+      location: { lat: 48.199090, long: 16.368000 }
+    },
+    description: "A bustling outdoor market offering fresh produce, international foods, and specialty items."
+  },
+  {
+    name: "Hundertwasserhaus",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Kegelgasse 34-38, 1030 Vienna, Austria",
+      location: { lat: 48.204263, long: 16.393710 }
+    },
+    description: "A colorful and unconventional apartment building designed by artist Friedensreich Hundertwasser."
+  },
+  {
+    name: "Stephansplatz",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Stephansplatz, 1010 Vienna, Austria",
+      location: { lat: 48.208174, long: 16.370500 }
+    },
+    description: "A central square in Vienna, known for St. Stephen's Cathedral and its shopping streets."
+  },
+  {
+    name: "MuseumsQuartier",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Museumsplatz 1, 1070 Vienna, Austria",
+      location: { lat: 48.206122, long: 16.360522 }
+    },
+    description: "One of the largest cultural complexes in the world, home to art museums, cafes, and shops."
+  },
+  {
+    name: "Donauinsel",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Donauinsel, 1220 Vienna, Austria",
+      location: { lat: 48.258333, long: 16.497500 }
+    },
+    description: "An island in the Danube River offering outdoor activities, picnic spots, and scenic views."
+  },
+  {
+    name: "Spanish Riding School",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Michaelerplatz 1, 1010 Vienna, Austria",
+      location: { lat: 48.205836, long: 16.367453 }
+    },
+    description: "A historic equestrian academy famous for its performances of classical dressage."
+  },
+  {
+    name: "Praterstern",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Praterstern, 1020 Vienna, Austria",
+      location: { lat: 48.216667, long: 16.413611 }
+    },
+    description: "A major transportation hub and area known for its proximity to the Prater park and amusement rides."
+  },
+  {
+    name: "Karlskirche",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Karlsplatz, 1040 Vienna, Austria",
+      location: { lat: 48.197716, long: 16.370628 }
+    },
+    description: "A Baroque church known for its stunning architecture and beautiful dome."
+  },
+  {
+    name: "Maria-Theresien-Platz",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Maria-Theresien-Platz, 1010 Vienna, Austria",
+      location: { lat: 48.203138, long: 16.358670 }
+    },
+    description: "A grand square located between the Kunsthistorisches Museum and the Naturhistorisches Museum."
+  },
+  {
+    name: "Vienna Zoo",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Maxingstraße 13b, 1130 Vienna, Austria",
+      location: { lat: 48.190700, long: 16.256490 }
+    },
+    description: "One of the oldest zoos in the world, located near Schönbrunn Palace."
+  },
+  {
+    name: "Museum of Natural History",
+    city: "Vienna",
+    country: "Austria",
+    address: {
+      full_address: "Burgring 7, 1010 Vienna, Austria",
+      location: { lat: 48.204146, long: 16.361773 }
+    },
+    description: "A museum with a vast collection of natural history exhibits, from dinosaurs to gems."
   },
   // Belgium
   {
