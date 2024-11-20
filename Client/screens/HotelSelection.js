@@ -268,7 +268,7 @@ const HotelSelection = ({ route, navigation }) => {
                   title={`Hotels in ${cityHotels.city}`}
                   expanded={expandedCities[cityHotels.city] || false}
                   onPress={() => toggleCityAccordion(cityHotels.city)}
-                  left={(props) => <List.Icon {...props} icon="city"/>}
+                  left={(props) => <List.Icon {...props} icon="city" />}
                 >
                   {sortedHotels.map((hotel) => (
                     <HotelCard
@@ -443,11 +443,14 @@ const styles = StyleSheet.create({
   valueText: {
     fontWeight: "normal",
     color: "#000",
+    fontFamily: "Roboto-Italic",
   },
   grandTotalText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#000",
+    fontFamily: "Roboto-BoldItalic",
+
     textAlign: "right",
   },
   removeButton: {
@@ -466,8 +469,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     marginRight: 8,
+    fontFamily: "Roboto-BoldItalic",
   },
   totalPrice: {
+    fontFamily: "Roboto-BoldItalic",
+
     fontSize: 20,
     fontWeight: "bold",
     color: "green",

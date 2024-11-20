@@ -13,7 +13,15 @@ import PrimaryButton from "../components/PrimaryButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const AttractionSelection = ({ route, navigation }) => {
-  const { cityArr, flightTickets, userId, daysArray, date, selectedHotels, totalPrices } = route.params;
+  const {
+    cityArr,
+    flightTickets,
+    userId,
+    daysArray,
+    date,
+    selectedHotels,
+    totalPrices,
+  } = route.params;
   const [attractions, setAttractions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAttractions, setSelectedAttractions] = useState({});
@@ -26,91 +34,98 @@ const AttractionSelection = ({ route, navigation }) => {
 
   useEffect(() => {
     const fetchAttractions = async () => {
-        setLoading(true);
-        setError(null);
+      setLoading(true);
+      setError(null);
 
-        try {
-            const responses = await Promise.all(
-                cityArr.map(city =>
-                    fetch(`${MAIN_SERVER}/${COLLECTION}/findAttractionsByCity`, {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ city }),
-                    })
-                )
-            );
+      try {
+        const responses = await Promise.all(
+          cityArr.map((city) =>
+            fetch(`${MAIN_SERVER}/${COLLECTION}/findAttractionsByCity`, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ city }),
+            })
+          )
+        );
 
-            const allAttractions = await Promise.all(responses.map(async (response, index) => {
-                if (response.ok) {
-                    const data = await response.json();
-                    return { city: cityArr[index], attractions: data.attractions || [] };
-                }
-                return { city: cityArr[index], attractions: [] };
-            }));
+        const allAttractions = await Promise.all(
+          responses.map(async (response, index) => {
+            if (response.ok) {
+              const data = await response.json();
+              return {
+                city: cityArr[index],
+                attractions: data.attractions || [],
+              };
+            }
+            return { city: cityArr[index], attractions: [] };
+          })
+        );
 
-            setAttractions(allAttractions.filter(item => item.attractions.length > 0));
-        } catch (error) {
-            setError("Failed to load attraction data.");
-        } finally {
-            setLoading(false);
-        }
+        setAttractions(
+          allAttractions.filter((item) => item.attractions.length > 0)
+        );
+      } catch (error) {
+        setError("Failed to load attraction data.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchAttractions();
-}, [cityArr]);
+  }, [cityArr]);
 
-const handleSelectAttraction = (city, attraction) => {
-    setSelectedAttractions(prev => {
-        const selected = prev[city] || [];
-        const isSelected = selected.some(item => item._id === attraction._id);
+  const handleSelectAttraction = (city, attraction) => {
+    setSelectedAttractions((prev) => {
+      const selected = prev[city] || [];
+      const isSelected = selected.some((item) => item._id === attraction._id);
 
-        return {
-            ...prev,
-            [city]: isSelected
-                ? selected.filter(item => item._id !== attraction._id)
-                : [...selected, attraction],
-        };
+      return {
+        ...prev,
+        [city]: isSelected
+          ? selected.filter((item) => item._id !== attraction._id)
+          : [...selected, attraction],
+      };
     });
-};
+  };
 
-const handleConfirmSelection = () => {
+  const handleConfirmSelection = () => {
     if (Object.keys(selectedAttractions).length === 0) {
-        setConfirmationMessage("No attractions selected.");
-        return;
+      setConfirmationMessage("No attractions selected.");
+      return;
     }
 
-    let confirmationText = 'You have selected the following attractions:\n';
+    let confirmationText = "You have selected the following attractions:\n";
     for (let city in selectedAttractions) {
-        confirmationText += `\nIn ${city}:\n`;
-        selectedAttractions[city].forEach(attraction => {
-            confirmationText += `- ${attraction.name}\n`;
-        });
+      confirmationText += `\nIn ${city}:\n`;
+      selectedAttractions[city].forEach((attraction) => {
+        confirmationText += `- ${attraction.name}\n`;
+      });
     }
     setConfirmationMessage(confirmationText);
-};
+  };
 
-const toggleCityAccordion = city => {
-    setExpandedCities(prev => ({
-        ...prev,
-        [city]: !prev[city],
+  const toggleCityAccordion = (city) => {
+    setExpandedCities((prev) => ({
+      ...prev,
+      [city]: !prev[city],
     }));
-};
+  };
 
-const handleProceed = () => {
-    navigation.navigate('Booking', {
-        cityArr,
-        flightTickets,
-        userId,
-        daysArray,
-        date,
-        selectedAttractions,
-        selectedHotels,
-        totalPrices
+  const handleProceed = () => {
+    navigation.navigate("Booking", {
+      cityArr,
+      flightTickets,
+      userId,
+      daysArray,
+      date,
+      selectedAttractions,
+      selectedHotels,
+      totalPrices,
     });
-};
+  };
 
   return (
     <PageFrame>
@@ -170,13 +185,10 @@ const handleProceed = () => {
               </View>
             )}
             <PrimaryButton
-              style={styles.button}
               onPress={handleProceed}
               icon={() => (
                 <View style={styles.iconContainer}>
-                  <Text style={styles.buttonText}>
-                    Proceed to Final Details
-                  </Text>
+                  <Text style={styles.buttonText}>Final Details</Text>
                   <MaterialCommunityIcons
                     name="check-circle"
                     size={22}
@@ -224,7 +236,8 @@ const styles = StyleSheet.create({
   },
   confirmationMessage: {
     fontSize: 16,
-    color: "green",
+    color: "black",
+    fontFamily: "Roboto-BoldItalic",
   },
   errorMessage: {
     color: "red",
@@ -237,10 +250,13 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     alignItems: "center",
+    left: 10,
   },
   buttonText: {
-    marginRight: 8,
+    alignSelf: "center",
+    margin: 8,
     fontSize: 17,
+    left: 5,
     color: "white",
     fontWeight: "bold",
   },

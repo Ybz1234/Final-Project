@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Text, ScrollView, View, ActivityIndicator, StyleSheet, Button } from "react-native";
+import {
+  Text,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  Button,
+} from "react-native";
 import { Card } from "react-native-paper";
 import SumCard from "../components/SumCard";
 import PageFrame from "../components/PageFrame";
 
 const FinalDetails = ({ route }) => {
-  const { userId, selectedHotels, selectedAttractions, date, totalPrices } = route.params;
+  const { userId, selectedHotels, selectedAttractions, date, totalPrices } =
+    route.params;
 
   const [flightDetails, setFlightDetails] = useState([]);
   const [airportDetails, setAirportDetails] = useState({});
@@ -78,13 +86,24 @@ const FinalDetails = ({ route }) => {
 
   const renderCard = (title, subtitle, details) => (
     <Card style={styles.card}>
-      <Card.Title title={title} subtitle={subtitle} />
+      <Card.Title
+        titleStyle={styles.cardTitleText}
+        subtitleStyle={styles.cardSubtitleText}
+        style={styles.cardTitle}
+        title={title}
+        subtitle={subtitle}
+      />
       <Card.Content>
-        {details.map((detail, index) => (
-          <Text key={index} style={styles.cardText}>
-            {detail}
-          </Text>
-        ))}
+        {details.map((detail, index) => {
+          const [key, ...rest] = detail.split(":");
+          const value = rest.join(":").trim();
+          return (
+            <Text key={index} style={styles.cardText}>
+              <Text style={styles.cardTextKey}>{key}:</Text>
+              <Text style={styles.cardTextValue}> {value}</Text>
+            </Text>
+          );
+        })}
       </Card.Content>
     </Card>
   );
@@ -101,9 +120,10 @@ const FinalDetails = ({ route }) => {
           `Flight ID: ${flight.flightId}`,
           `From: ${flight.departureCity} (${departureAirport?.name || "N/A"})`,
           `To: ${flight.arrivalCity} (${arrivalAirport?.name || "N/A"})`,
-          `Departure Time: ${String(flight.flightHour).padStart(2, "0")}:${String(
-            flight.flightMinute
-          ).padStart(2, "0")}`,
+          `Departure Time: ${String(flight.flightHour).padStart(
+            2,
+            "0"
+          )}:${String(flight.flightMinute).padStart(2, "0")}`,
           `Date: ${new Date(flight.flightDate).toLocaleDateString()}`,
         ]
       );
@@ -119,16 +139,14 @@ const FinalDetails = ({ route }) => {
               (hotelPrice) => hotelPrice.hotelId === hotel._id
             )?.totalPrice;
 
-            const totalCost = hotelTotalPrice ? hotelTotalPrice : "Price not available";
+            const totalCost = hotelTotalPrice
+              ? hotelTotalPrice
+              : "Price not available";
 
-            return renderCard(
-              hotel.name,
-              `${hotel.city}, ${hotel.country}`,
-              [
-                `Address: ${hotel.address.full_address}`,
-                `Total Stay Fee: $${totalCost}`,
-              ]
-            );
+            return renderCard(hotel.name, `${hotel.city}, ${hotel.country}`, [
+              `Address: ${hotel.address.full_address}`,
+              `Total Stay Fee: $${totalCost}`,
+            ]);
           })}
         </View>
       ))
@@ -142,7 +160,9 @@ const FinalDetails = ({ route }) => {
         <View key={city}>
           <Text style={styles.sectionHeader}>{city} Attractions:</Text>
           {attractions.map((attraction, index) =>
-            renderCard(attraction.name, attraction.city, [attraction.description])
+            renderCard(attraction.name, attraction.city, [
+              `Description: ${attraction.description}`,
+            ])
           )}
         </View>
       ))
@@ -153,19 +173,28 @@ const FinalDetails = ({ route }) => {
   // Function to log the finalDetailsData object with detailed information
   const logFinalDetails = () => {
     const logData = {
-      flights: flightDetails.map(flight => ({
-        from: `${flight.departureCity} (${airportDetails[flight.departureCity]?.name || 'N/A'})`,
-        to: `${flight.arrivalCity} (${airportDetails[flight.arrivalCity]?.name || 'N/A'})`,
-        departureTime: `${String(flight.flightHour).padStart(2, '0')}:${String(flight.flightMinute).padStart(2, '0')}`,
+      flights: flightDetails.map((flight) => ({
+        from: `${flight.departureCity} (${
+          airportDetails[flight.departureCity]?.name || "N/A"
+        })`,
+        to: `${flight.arrivalCity} (${
+          airportDetails[flight.arrivalCity]?.name || "N/A"
+        })`,
+        departureTime: `${String(flight.flightHour).padStart(2, "0")}:${String(
+          flight.flightMinute
+        ).padStart(2, "0")}`,
         date: new Date(flight.flightDate).toLocaleDateString(),
       })),
       hotels: Object.entries(selectedHotels).map(([city, hotels]) => ({
         city,
-        hotels: hotels.map(hotel => ({
+        hotels: hotels.map((hotel) => ({
           name: hotel.name,
           address: hotel.address.full_address,
-          totalStayFee: totalPrices[city]?.find(hotelPrice => hotelPrice.hotelId === hotel._id)?.totalPrice || "Price not available",
-          attractions: selectedAttractions[city]?.map(attraction => ({
+          totalStayFee:
+            totalPrices[city]?.find(
+              (hotelPrice) => hotelPrice.hotelId === hotel._id
+            )?.totalPrice || "Price not available",
+          attractions: selectedAttractions[city]?.map((attraction) => ({
             name: attraction.name,
             description: attraction.description,
           })),
@@ -210,10 +239,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 10,
     elevation: 3,
-    backgroundColor: "#fff",
   },
   cardText: {
     fontSize: 16,
+    color: "black",
+    marginBottom: 5,
+  },
+  cardTextKey: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 16,
+    color: "black",
+  },
+  cardTextValue: {
+    fontFamily: "Roboto-Light",
+    fontSize: 16,
+    color: "black",
   },
   sectionHeader: {
     fontSize: 20,
@@ -230,6 +270,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 20,
     alignItems: "center",
+  },
+  cardTitleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#8957e5",
+    fontFamily: "Roboto-BoldItalic",
+  },
+  cardSubtitleText: {
+    fontSize: 16,
+    color: "#010409",
+    fontFamily: "Roboto-Medium",
   },
 });
 

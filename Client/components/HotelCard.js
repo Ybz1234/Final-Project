@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Avatar, Card, Text, TextInput, ActivityIndicator } from 'react-native-paper';
-import PrimaryButton from './PrimaryButton';
-import StarRating from './Rating';
-import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Avatar,
+  Card,
+  Text,
+  TextInput,
+  ActivityIndicator,
+} from "react-native-paper";
+import PrimaryButton from "./PrimaryButton";
+import StarRating from "./Rating";
+import { MaterialCommunityIcons } from "react-native-vector-icons";
+import axios from "axios";
 
 const UNSPLASH_ACCESS_KEY = "lHBWLGm7YURX1Uk9XrDLxNSvcrtwC1rLY5k3rjF5CTs";
 
-const LeftContent = (props) => <Avatar.Icon {...props} icon="city" style={{ backgroundColor: '#8957e5' }}/>;
+const LeftContent = (props) => (
+  <Avatar.Icon {...props} icon="city" style={{ backgroundColor: "#8957e5" }} />
+);
 
 const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
   const [loading, setLoading] = useState(false);
@@ -18,12 +26,14 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
 
   const fetchHotelImage = async (query) => {
     try {
-      const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}&client_id=${UNSPLASH_ACCESS_KEY}`;
+      const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(
+        query
+      )}&client_id=${UNSPLASH_ACCESS_KEY}`;
       const response = await axios.get(url);
       // if (response.data.results.length > 0) {
       //   setImageUrl(response.data.results[0].urls.regular);
       // } else {
-        setImageUrl("https://via.placeholder.com/150");
+      setImageUrl("https://via.placeholder.com/150");
       //}
     } catch (error) {
       console.error("Error fetching hotel image:", error);
@@ -52,7 +62,7 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
   };
 
   return (
-    <Card style={{ marginVertical: 8, backgroundColor: '#151b23' }}>
+    <Card style={{ marginVertical: 8, backgroundColor: "#151b23" }}>
       <Card.Title
         title={hotel.name}
         subtitle={`${hotel.city}, ${hotel.country}`}
@@ -61,15 +71,19 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
         subtitleStyle={{ color: "white" }}
       />
       <Card.Content>
-        <Text variant="titleLarge" style={{ color: "white" }}>{hotel.address.full_address}</Text>
-        <Text variant="bodyMedium" style={{ color: "white" }}>Cost per night: ${nightCost}</Text>
+        <Text variant="titleLarge" style={{ color: "white" }}>
+          {hotel.address.full_address}
+        </Text>
+        <Text variant="bodyMedium" style={{ color: "white" }}>
+          Cost per night: ${nightCost}
+        </Text>
         <StarRating rating={rating} />
         <TextInput
           label="Number of nights"
           keyboardType="numeric"
           value={selectedNights.toString()}
           onChangeText={handleNightChange}
-          style={{ marginTop: 8 }}
+          style={{ margin: 15, width: "100%", alignSelf: "center" }}
         />
       </Card.Content>
 
@@ -86,7 +100,7 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
           ) : selected ? (
             <MaterialCommunityIcons name="check" size={20} color="white" />
           ) : (
-            'Select'
+            "Select"
           )}
         </PrimaryButton>
       </Card.Actions>
