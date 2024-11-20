@@ -56,7 +56,6 @@ const PageDatePicker = ({ route, navigation }) => {
         });
         navigation.replace("Main", { screen: "Home" });
       } else {
-        // Update tripData.cityNameArr only if it's empty and params have data
         if (
           paramCityNameArr &&
           paramCityNameArr.length > 0 &&
@@ -140,15 +139,6 @@ const PageDatePicker = ({ route, navigation }) => {
           date: date,
           daysArr: daysArr,
         }));
-        // navigation.replace("Main", {
-        //   screen: "Route Info",
-        //   params: {
-        //     flightTickets: data.flightTickets,
-        //     userId: user.user._id,
-        //     daysArray: daysArr,
-        //     date: date,
-        //   },
-        // });
         navigation.replace("Main", {
           screen: "Hotels selection",
           params: {

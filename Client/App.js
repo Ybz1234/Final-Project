@@ -12,10 +12,10 @@ import Toast from "react-native-toast-message";
 import { createNavigationContainerRef } from "@react-navigation/native";
 import { UserProvider } from "./context/UserContext";
 import { TripProvider } from "./context/TripContext";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Added import
-import axios from "axios"; // Added import
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const projectId = "c7abc98a-16c6-4bb1-9a11-d2ea14fe3eb7";
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const navigationRef = createNavigationContainerRef();
 
 Notifications.setNotificationHandler({
@@ -42,8 +42,6 @@ async function registerForPushNotificationsAsync() {
       );
       return;
     }
-
-    // const projectId = "c7abc98a-16c6-4bb1-9a11-d2ea14fe3eb7";
 
     try {
       const pushToken = (
@@ -131,7 +129,6 @@ function App() {
     });
     setFontsLoaded(true);
   };
-
   useEffect(() => {
     loadFonts();
   }, []);
@@ -139,7 +136,6 @@ function App() {
   if (!fontsLoaded) {
     return null;
   }
-
   return (
     <UserProvider>
       <TripProvider>
@@ -151,52 +147,5 @@ function App() {
     </UserProvider>
   );
 }
-
 export default App;
-
 registerRootComponent(App);
-
-/**Teal shade for app!
- * #248F8F (rgb(36,143,143))
- * #2EB8B8 (rgb(46,184,184))
- * #47D1D1 (rgb(71,209,209))
- * #5CD6D6 (rgb(92,214,214))
- * #33CCA6 (rgb(51,204,166))
- * #33CCB3 (rgb(51,204,179))
- * #33CCBF (rgb(51,204,191))
- */
-
-//?ACTIVE COLOR PALETTE
-/*
-shade of teals- #70DBDB ,#29A3A3
-deep blue - #1B3E90
-opacity white teal - rgba(255, 255, 255, 0.8)
-*/
-//?ALTERNATIVE COLOR PALETTE
-/*
-// Light purple (like GitHub's lighter accent)
-"#f5f0ff"  // Very light purple background
-"#f6f8ff"  // Light purple-blue tint
-"#f1e8ff"  // Soft light purple
-
-// Medium purple (like GitHub's primary purple)
-"#8250df"  // GitHub's main purple
-"#6e40c9"  // Slightly darker variant
-"#7957d5"  // Medium bright purple
-
-// Darker purple (for emphasis/borders)
-"#5a32a3"  // Deep purple
-"#4c2889"  // Rich dark purple
-#1B0233
-#07002A
-
-// Real GitHub's color palette
-#151b23
-#0d1117
-#010409
-#8957e5
-
-// Others
-#f3f3f5
-#f0f0f2
-*/

@@ -30,11 +30,11 @@ const HotelCard = ({ hotel, onSelect, selectedNights, setSelectedNights }) => {
         query
       )}&client_id=${UNSPLASH_ACCESS_KEY}`;
       const response = await axios.get(url);
-      // if (response.data.results.length > 0) {
-      //   setImageUrl(response.data.results[0].urls.regular);
-      // } else {
-      setImageUrl("https://via.placeholder.com/150");
-      //}
+      if (response.data.results.length > 0) {
+        setImageUrl(response.data.results[0].urls.regular);
+      } else {
+        setImageUrl("https://via.placeholder.com/150");
+      }
     } catch (error) {
       console.error("Error fetching hotel image:", error);
       setImageUrl("https://via.placeholder.com/150");

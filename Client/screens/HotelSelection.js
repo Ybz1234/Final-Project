@@ -19,13 +19,10 @@ import HotelCard from "../components/HotelCard";
 import PageFrame from "../components/PageFrame";
 import Toast from "react-native-toast-message";
 import PrimaryButton from "../components/PrimaryButton";
-import { TripContext } from "../context/TripContext"; // Import TripContext
+import { TripContext } from "../context/TripContext";
 
 const HotelSelection = ({ route, navigation }) => {
-  // Safely access route.params
   const params = route.params || {};
-
-  // Destructure variables from route.params or set to undefined
   const {
     cityArr: routeCityArr,
     flightTickets: routeFlightTickets,
@@ -33,18 +30,13 @@ const HotelSelection = ({ route, navigation }) => {
     daysArray: routeDaysArray,
     date: routeDate,
   } = params;
-
-  // Access TripContext
   const { tripData, setTripData } = useContext(TripContext);
-
-  // Get variables from route.params or TripContext
   const cityArr = routeCityArr || tripData.cityNameArr;
   const flightTickets = routeFlightTickets || tripData.flightTickets;
   const userId = routeUserId || tripData.userId;
   const daysArray = routeDaysArray || tripData.daysArr;
   const date = routeDate || tripData.date;
 
-  // Check if cityArr is available
   if (!cityArr || cityArr.length === 0) {
     navigation.navigate("Home");
     return null; // Prevent further rendering
@@ -57,10 +49,8 @@ const HotelSelection = ({ route, navigation }) => {
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
   const [sortOrder, setSortOrder] = useState("asc");
-
   const MAIN_SERVER = "https://final-project-sqlv.onrender.com/api";
   const COLLECTION = "hotels";
-
   const cityDaysMap = {};
   cityArr.forEach((city, index) => {
     cityDaysMap[city] = daysArray[index];
@@ -97,7 +87,6 @@ const HotelSelection = ({ route, navigation }) => {
         setLoading(false);
       }
     };
-
     fetchHotels();
   }, [cityArr]);
 

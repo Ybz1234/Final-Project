@@ -2,23 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { cities2 } from "../LatLng/LatLng2";
-
-const CustomMap = ({
-  markers,
-  setMarkers,
-  cityNameArr,
-  setCityNameArr,
-  style,
-}) => {
+const CustomMap = ({ markers, setMarkers, setCityNameArr, style }) => {
   const [position, setPosition] = useState(null);
-
   const calcDis = (pointA, pointB) => {
     return Math.sqrt(
       Math.pow(pointB.lat - pointA.lat, 2) +
         Math.pow(pointB.lng - pointA.lng, 2)
     );
   };
-
   const autoLocation = (lat, lng, markers) => {
     const customMarker = { lat, lng };
     if (markers.length < 1) {

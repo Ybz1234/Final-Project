@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { TextInput, IconButton } from "react-native-paper";
 import * as Animatable from "react-native-animatable";
-
 const AnimatedSearchBar = ({
   placeholder = "Type In Destination...",
   placeholderTextColor = "#888",
   onSearch,
-  style,
   inputStyle,
   containerStyle,
   animationFocused = "pulse",
@@ -63,8 +61,8 @@ const AnimatedSearchBar = ({
           placeholderTextColor={placeholderTextColor}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          underlineColor="transparent" // Added this line
-          activeUnderlineColor="transparent" // Added this line
+          underlineColor="transparent"
+          activeUnderlineColor="transparent"
           onChangeText={handleChangeText}
           value={searchQuery}
         />
@@ -99,5 +97,4 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
   },
 });
-
 export default AnimatedSearchBar;
