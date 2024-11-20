@@ -7,6 +7,7 @@ import PageFrame from "../components/PageFrame";
 import { useNavigation } from "@react-navigation/native";
 import PrimaryButton from "../components/PrimaryButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import * as Notifications from "expo-notifications";
 
 const FinalDetails = ({ route }) => {
   const { userId, selectedHotels, selectedAttractions, date, totalPrices } = route.params;
@@ -233,12 +234,31 @@ const FinalDetails = ({ route }) => {
 
       const result = await response.json();
       console.log("API Response Data:", result);
-      alert("Details sent successfully!");
+      sendPushNotification();
       handleProceed();
     } catch (error) {
       console.error("Error occurred in sendFinalDetails:", error);
       alert("An error occurred while sending details. Check the console for more information.");
     }
+  };
+
+  const sendPushNotification = async () => {
+    const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
+    const message = {
+      to: expoPushToken,
+      sound: "default",
+      title: "Congratulations, " + user.user?.firstName + "!",
+      body: "Check your email for your booking details!",
+    };
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-Encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
   };
 
   const handleProceed = () => {
