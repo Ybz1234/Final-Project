@@ -7,17 +7,21 @@ import {
   StyleSheet,
   Button,
 } from "react-native";
+import { useUser } from "../context/UserContext";
 import { Card } from "react-native-paper";
 import SumCard from "../components/SumCard";
 import PageFrame from "../components/PageFrame";
+import { useNavigation } from "@react-navigation/native";
 
 const FinalDetails = ({ route }) => {
-  const { userId, selectedHotels, selectedAttractions, date, totalPrices } =
-    route.params;
-
+  const { userId, selectedHotels, selectedAttractions, date, totalPrices } = route.params;
+  const navigation = useNavigation();
+  const { user, setUser: setGlobalUser } = useUser();
   const [flightDetails, setFlightDetails] = useState([]);
   const [airportDetails, setAirportDetails] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const UTILITY_SERVER = "https://utilityserver-kka0.onrender.com";
 
   const fetchFlightDetails = async () => {
     try {
@@ -170,38 +174,86 @@ const FinalDetails = ({ route }) => {
       <Text style={styles.noDetailsText}>No attractions selected.</Text>
     );
 
-  // Function to log the finalDetailsData object with detailed information
-  const logFinalDetails = () => {
-    const logData = {
-      flights: flightDetails.map((flight) => ({
-        from: `${flight.departureCity} (${
-          airportDetails[flight.departureCity]?.name || "N/A"
-        })`,
-        to: `${flight.arrivalCity} (${
-          airportDetails[flight.arrivalCity]?.name || "N/A"
-        })`,
-        departureTime: `${String(flight.flightHour).padStart(2, "0")}:${String(
-          flight.flightMinute
-        ).padStart(2, "0")}`,
-        date: new Date(flight.flightDate).toLocaleDateString(),
-      })),
-      hotels: Object.entries(selectedHotels).map(([city, hotels]) => ({
-        city,
-        hotels: hotels.map((hotel) => ({
-          name: hotel.name,
-          address: hotel.address.full_address,
-          totalStayFee:
-            totalPrices[city]?.find(
-              (hotelPrice) => hotelPrice.hotelId === hotel._id
-            )?.totalPrice || "Price not available",
-          attractions: selectedAttractions[city]?.map((attraction) => ({
-            name: attraction.name,
-            description: attraction.description,
-          })),
-        })),
-      })),
-    };
-    console.log("Final Details Data:", JSON.stringify(logData, null, 2));
+  const sendFinalDetails = async () => {
+    try {
+      console.log("User email from context:", user?.user?.email);
+
+      const toEmail = user?.user?.email;
+      if (!toEmail) {
+        console.error("Error: User email is not available.");
+        alert("User email is missing. Please ensure you are logged in.");
+        return;
+      }
+
+      const bookingDetails = {
+        flights: flightDetails.map((flight) => {
+          const from = `${flight.departureCity} (${airportDetails[flight.departureCity]?.name || "N/A"})`;
+          const to = `${flight.arrivalCity} (${airportDetails[flight.arrivalCity]?.name || "N/A"})`;
+          const departureTime = `${String(flight.flightHour).padStart(2, "0")}:${String(flight.flightMinute).padStart(2, "0")}`;
+          const date = new Date(flight.flightDate).toLocaleDateString();
+
+          return { from, to, departureTime, date };
+        }),
+        hotels: Object.entries(selectedHotels).map(([city, hotels]) => {
+          return {
+            city,
+            hotels: hotels.map((hotel) => {
+              const totalStayFee =
+                totalPrices[city]?.find((hotelPrice) => hotelPrice.hotelId === hotel._id)?.totalPrice || "Price not available";
+
+              return {
+                name: hotel.name,
+                address: hotel.address.full_address,
+                totalStayFee,
+                attractions: selectedAttractions[city]?.map((attraction) => {
+                  return {
+                    name: attraction.name,
+                    description: attraction.description,
+                  };
+                }),
+              };
+            }),
+          };
+        }),
+      };
+
+      console.log("Booking Email: ", toEmail);
+      console.log("Booking Details:", JSON.stringify(bookingDetails, null, 2));
+
+      const requestBody = {
+        to_email: toEmail,
+        booking_details: bookingDetails,
+      };
+
+      console.log("Request Body:", JSON.stringify(requestBody, null, 2));
+
+      const response = await fetch(`${UTILITY_SERVER}/routes/send_booking_email`, {  // Using UTILITY_SERVER
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error("Error Response from API:", errorResponse);
+        alert("Failed to send details. Please try again.");
+        return;
+      }
+
+      const result = await response.json();
+      console.log("API Response Data:", result);
+      alert("Details sent successfully!");
+      handleProceed();
+    } catch (error) {
+      console.error("Error occurred in sendFinalDetails:", error);
+      alert("An error occurred while sending details. Check the console for more information.");
+    }
+  };
+
+  const handleProceed = () => {
+    navigation.navigate("Confirmation", {userId});
   };
 
   return (
@@ -222,9 +274,8 @@ const FinalDetails = ({ route }) => {
         <SumCard title="Selected Attractions" iconType="attraction" />
         {renderAttractionDetails()}
 
-        {/* Button to log the finalDetailsData */}
         <View style={styles.buttonContainer}>
-          <Button title="Log Final Details" onPress={logFinalDetails} />
+          <Button title="Confirm order" onPress={sendFinalDetails} />
         </View>
       </ScrollView>
     </PageFrame>

@@ -16,6 +16,7 @@ import HotelSelection from "../screens/HotelSelection";
 import { useUser } from "../context/UserContext";
 import AttractionSelection from "../screens/AttractionSelection";
 import FinalDetails from "../screens/FinalDetails";
+import Confirmation from "../screens/Confirmation";
 
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
@@ -107,6 +108,15 @@ function MainDrawer() {
         options={{
           drawerIcon: ({ color }) => (
             <MaterialCommunityIcons name="book-open" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Confirmation"
+        component={Confirmation}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="party-popper" size={22} color={color} />
           ),
         }}
       />

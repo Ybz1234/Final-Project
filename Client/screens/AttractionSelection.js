@@ -228,6 +228,7 @@ const styles = StyleSheet.create({
   },
   selectedAttractionContainer: {
     marginTop: 20,
+    alignItems: "center",
   },
   confirmationContainer: {
     marginTop: 20,
