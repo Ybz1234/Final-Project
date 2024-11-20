@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ScrollView,
   View,
@@ -18,11 +18,38 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import HotelCard from "../components/HotelCard";
 import PageFrame from "../components/PageFrame";
 import Toast from "react-native-toast-message";
-
 import PrimaryButton from "../components/PrimaryButton";
+import { TripContext } from "../context/TripContext"; // Import TripContext
 
 const HotelSelection = ({ route, navigation }) => {
-  const { cityArr, flightTickets, userId, daysArray, date } = route.params;
+  // Safely access route.params
+  const params = route.params || {};
+
+  // Destructure variables from route.params or set to undefined
+  const {
+    cityArr: routeCityArr,
+    flightTickets: routeFlightTickets,
+    userId: routeUserId,
+    daysArray: routeDaysArray,
+    date: routeDate,
+  } = params;
+
+  // Access TripContext
+  const { tripData, setTripData } = useContext(TripContext);
+
+  // Get variables from route.params or TripContext
+  const cityArr = routeCityArr || tripData.cityNameArr;
+  const flightTickets = routeFlightTickets || tripData.flightTickets;
+  const userId = routeUserId || tripData.userId;
+  const daysArray = routeDaysArray || tripData.daysArr;
+  const date = routeDate || tripData.date;
+
+  // Check if cityArr is available
+  if (!cityArr || cityArr.length === 0) {
+    navigation.navigate("Home");
+    return null; // Prevent further rendering
+  }
+
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHotels, setSelectedHotels] = useState({});
