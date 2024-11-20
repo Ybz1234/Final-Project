@@ -270,7 +270,7 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#70DBDB",
+    backgroundColor: "#151b23",
   },
   title: {
     fontSize: 38,
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#1B3E90",
+    backgroundColor: "#8957e5",
     padding: 10,
     borderRadius: 8,
     marginVertical: 1,
