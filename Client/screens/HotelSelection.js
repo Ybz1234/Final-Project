@@ -20,6 +20,7 @@ import PageFrame from "../components/PageFrame";
 import Toast from "react-native-toast-message";
 import PrimaryButton from "../components/PrimaryButton";
 import { TripContext } from "../context/TripContext";
+import SumCard from "../components/SumCard";
 
 const HotelSelection = ({ route, navigation }) => {
   const params = route.params || {};
@@ -252,8 +253,9 @@ const HotelSelection = ({ route, navigation }) => {
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
+      <SumCard title="               Select Your Hotels               " iconType="hotel" />
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Select Your Hotels</Text>
+          <Text style={styles.headerText}>Sort hotels by prices</Text>
           <IconButton
             style={{ top: -5, right: -15 }}
             icon={sortOrder === "asc" ? "sort-ascending" : "sort-descending"}
@@ -370,7 +372,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: "100%",
     alignSelf: "center",
-    backgroundColor: "#f1e8ff",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -384,8 +386,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   headerText: {
-    fontSize: 24,
-    fontFamily: "Roboto-BoldItalic",
+    fontSize: 25,
+    fontFamily: "Roboto-Regular",
     color: "#8957e5",
     marginBottom: 16,
   },

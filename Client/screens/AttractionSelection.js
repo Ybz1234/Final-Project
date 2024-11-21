@@ -11,6 +11,7 @@ import AttractionCard from "../components/AttractionCard";
 import PageFrame from "../components/PageFrame";
 import PrimaryButton from "../components/PrimaryButton";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SumCard from "../components/SumCard";
 
 const AttractionSelection = ({ route, navigation }) => {
   const {
@@ -130,7 +131,7 @@ const AttractionSelection = ({ route, navigation }) => {
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.headerText}>Select Attractions</Text>
+      <SumCard title="Select Attractions" iconType="attraction" />
         {loading ? (
           <ActivityIndicator size="large" color="#151b23" />
         ) : error ? (

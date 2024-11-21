@@ -268,7 +268,7 @@ const FinalDetails = ({ route }) => {
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
-        <SumCard title="Flight Details" iconType="flight" />
+        <SumCard title="Selected Flight" iconType="flight" />
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : flightDetails.length > 0 ? (
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     alignItems: "center",
-    left: 10,
+    left: 5,
   },
   buttonText: {
     alignSelf: "center",

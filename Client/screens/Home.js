@@ -9,6 +9,7 @@ import PrimaryButton from "../components/PrimaryButton";
 import AnimatedSearchBar from "../components/AnimatedSearchBar";
 import CustomMap from "../components/CustomMap";
 import { TripContext } from "../context/TripContext";
+import SumCard from "../components/SumCard";
 
 const Home = ({ navigation, route }) => {
   const [markers, setMarkers] = useState([]);
@@ -117,7 +118,8 @@ const Home = ({ navigation, route }) => {
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Headline style={styles.headline}>Choose your destinations</Headline>
+      <SumCard title="       Pin - Point Your Destinations       " iconType="map-marker" />
+        {/* <Headline style={styles.headline}>Choose your destinations</Headline> */}
         <AnimatedSearchBar onSearch={onSearch} />
         <CustomMap
           markers={markers}
@@ -143,6 +145,9 @@ const Home = ({ navigation, route }) => {
   );
 };
 const styles = StyleSheet.create({
+  scrollContainer: {
+    paddingTop: 20, // Adjust padding top here
+  },
   headline: {
     marginTop: 10,
     marginBottom: 30,

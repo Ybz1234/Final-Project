@@ -11,6 +11,10 @@ const SumCard = ({ title, iconType }) => {
         return "city";
       case "attraction":
         return "ferris-wheel";
+      case "map-marker":
+        return "map-marker";
+      case "calendar":
+        return "calendar";
       default:
         return "question";
     }
@@ -33,10 +37,10 @@ const SumCard = ({ title, iconType }) => {
     >
       <View
         style={{
-          width: 60,
-          height: 60,
+          width: 50,
+          height: 50,
           backgroundColor: "#8957e5",
-          borderRadius: 30,
+          borderRadius: 25,
           justifyContent: "center",
           alignItems: "center",
           marginBottom: 10,
@@ -44,7 +48,7 @@ const SumCard = ({ title, iconType }) => {
       >
         <IconButton
           icon={getIcon()}
-          size={30}
+          size={24}
           iconColor="#FFF"
           style={{
             margin: 0,

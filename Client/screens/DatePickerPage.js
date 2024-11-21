@@ -18,6 +18,7 @@ import CloseButton from "../components/CloseButton";
 import CityDurationInput from "../components/CityDurationInput";
 import { useUser } from "../context/UserContext";
 import { TripContext } from "../context/TripContext";
+import SumCard from "../components/SumCard";
 
 const PageDatePicker = ({ route, navigation }) => {
   const { tripData, setTripData } = useContext(TripContext);
@@ -185,6 +186,7 @@ const PageDatePicker = ({ route, navigation }) => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
+          <SumCard title="       Select your stay duration       " iconType="calendar" />
           <DatePicker date={date} setDate={setDate} />
           {date &&
             cityArr.map((city, index) => (
