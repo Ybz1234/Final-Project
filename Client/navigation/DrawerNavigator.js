@@ -68,15 +68,6 @@ function MainDrawer() {
       />
 
       <Drawer.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name="Hotels"
         component={HotelSelection}
         options={{
@@ -117,6 +108,15 @@ function MainDrawer() {
               size={22}
               color={color}
             />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account" size={22} color={color} />
           ),
         }}
       />
