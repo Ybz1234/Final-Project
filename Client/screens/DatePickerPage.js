@@ -186,7 +186,7 @@ const PageDatePicker = ({ route, navigation }) => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <SumCard title="       Select your stay duration       " iconType="calendar" />
+          <SumCard title="       Select Your Stay Duration       " iconType="calendar" />
           <DatePicker date={date} setDate={setDate} />
           {date &&
             cityArr.map((city, index) => (
