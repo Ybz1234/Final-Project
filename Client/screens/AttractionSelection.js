@@ -184,19 +184,9 @@ const AttractionSelection = ({ route, navigation }) => {
                 </Text>
               </View>
             )}
-            <PrimaryButton
-              onPress={handleProceed}
-              icon={() => (
-                <View style={styles.iconContainer}>
-                  <Text style={styles.buttonText}>Final Details</Text>
-                  <MaterialCommunityIcons
-                    name="check-circle"
-                    size={22}
-                    color="white"
-                  />
-                </View>
-              )}
-            />
+            <PrimaryButton onPress={handleProceed} style={styles.button}>
+              <Text style={styles.buttonText}>Continue</Text>
+            </PrimaryButton>
           </View>
         )}
       </ScrollView>
@@ -209,7 +199,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 16,
     width: 380,
-    // maxWidth: 420,
     alignSelf: "center",
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: 30,

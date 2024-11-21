@@ -356,21 +356,9 @@ const HotelSelection = ({ route, navigation }) => {
             </Text>
           </View>
         )}
-
-        <PrimaryButton
-          style={styles.button}
-          onPress={handleNavigateToAttractions}
-          icon={() => (
-            <View style={styles.iconContainer}>
-              <Text style={styles.buttonText}>Select Attractions</Text>
-              <MaterialCommunityIcons
-                name="ferris-wheel"
-                size={22}
-                color="white"
-              />
-            </View>
-          )}
-        />
+        <PrimaryButton style={styles.button} onPress={handleNavigateToAttractions}>
+          <Text style={styles.buttonText}>Continue</Text>
+        </PrimaryButton>
       </ScrollView>
     </PageFrame>
   );

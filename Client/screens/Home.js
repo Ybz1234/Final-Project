@@ -136,12 +136,8 @@ const Home = ({ navigation, route }) => {
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <PrimaryButton onPress={CleanMarks} icon="trash-can">
-          Clean
-        </PrimaryButton>
-        <PrimaryButton onPress={handleNextPage} icon="airplane-takeoff">
-          Fly Me A Travel
-        </PrimaryButton>
+        <PrimaryButton onPress={CleanMarks}>Clean</PrimaryButton>
+        <PrimaryButton onPress={handleNextPage}>Continue</PrimaryButton>
       </View>
     </PageFrame>
   );

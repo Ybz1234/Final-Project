@@ -200,7 +200,7 @@ const PageDatePicker = ({ route, navigation }) => {
             {buttonPressed ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              "Fly Me A Travel"
+              "Continue"
             )}
           </PrimaryButton>
         </ScrollView>
