@@ -66,15 +66,7 @@ function MainDrawer() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Route Info"
-        component={FullTrip}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="airplane" size={22} color={color} />
-          ),
-        }}
-      />
+
       <Drawer.Screen
         name="Profile"
         component={Profile}
@@ -98,7 +90,11 @@ function MainDrawer() {
         component={AttractionSelection}
         options={{
           drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="ferris-wheel" size={22} color={color} />
+            <MaterialCommunityIcons
+              name="ferris-wheel"
+              size={22}
+              color={color}
+            />
           ),
         }}
       />
@@ -116,7 +112,11 @@ function MainDrawer() {
         component={Confirmation}
         options={{
           drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons name="party-popper" size={22} color={color} />
+            <MaterialCommunityIcons
+              name="party-popper"
+              size={22}
+              color={color}
+            />
           ),
         }}
       />
