@@ -119,7 +119,6 @@ const Home = ({ navigation, route }) => {
     <PageFrame>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SumCard title="       Pin - Point Your Destinations       " iconType="map-marker" />
-        {/* <Headline style={styles.headline}>Choose your destinations</Headline> */}
         <AnimatedSearchBar onSearch={onSearch} />
         <CustomMap
           markers={markers}

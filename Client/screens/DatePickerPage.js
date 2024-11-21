@@ -141,7 +141,7 @@ const PageDatePicker = ({ route, navigation }) => {
           daysArr: daysArr,
         }));
         navigation.replace("Main", {
-          screen: "Hotels selection",
+          screen: "Hotels",
           params: {
             cityArr: cityArr,
             flightTickets: data.flightTickets,

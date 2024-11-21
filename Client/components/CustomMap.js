@@ -67,7 +67,7 @@ const CustomMap = ({ markers, setMarkers, setCityNameArr, style }) => {
 const styles = StyleSheet.create({
   map: {
     alignSelf: "center",
-    width: "95%",
+    width: "100%",
     height: 390,
     borderRadius: 10,
     textShadowColor: "rgba(0, 0, 0, 0.8)",

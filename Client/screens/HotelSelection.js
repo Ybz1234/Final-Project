@@ -234,7 +234,7 @@ const HotelSelection = ({ route, navigation }) => {
       };
     }, {});
     navigation.replace("Main", {
-      screen: "Attractions selection",
+      screen: "Attractions",
       params: {
         cityArr: cityArr,
         flightTickets: flightTickets,

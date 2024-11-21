@@ -13,7 +13,7 @@ const CloseButton = ({ onPress, style, iconColor = "#1B3E90" }) => {
 const styles = StyleSheet.create({
   closeButton: {
     position: "absolute",
-    top: -420,
+    top: -370,
     borderRadius: 15,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     position: "relative",

@@ -85,7 +85,7 @@ function MainDrawer() {
         }}
       />
       <Drawer.Screen
-        name="Hotels selection"
+        name="Hotels"
         component={HotelSelection}
         options={{
           drawerIcon: ({ color }) => (
@@ -94,7 +94,7 @@ function MainDrawer() {
         }}
       />
       <Drawer.Screen
-        name="Attractions selection"
+        name="Attractions"
         component={AttractionSelection}
         options={{
           drawerIcon: ({ color }) => (
