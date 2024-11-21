@@ -14,6 +14,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import SumCard from "../components/SumCard";
 
 const AttractionSelection = ({ route, navigation }) => {
+  const params = route.params || {};
+
   const {
     cityArr,
     flightTickets,
@@ -22,13 +24,17 @@ const AttractionSelection = ({ route, navigation }) => {
     date,
     selectedHotels,
     totalPrices,
-  } = route.params;
+  } = params;
   const [attractions, setAttractions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAttractions, setSelectedAttractions] = useState({});
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const [error, setError] = useState(null);
   const [expandedCities, setExpandedCities] = useState({});
+  if (!cityArr || cityArr.length === 0) {
+    navigation.navigate("Home");
+    return null; // Prevent further rendering
+  }
 
   const MAIN_SERVER = "https://final-project-sqlv.onrender.com/api";
   const COLLECTION = "Attractions";
@@ -131,7 +137,7 @@ const AttractionSelection = ({ route, navigation }) => {
   return (
     <PageFrame>
       <ScrollView contentContainerStyle={styles.container}>
-      <SumCard title="Select Attractions" iconType="attraction" />
+        <SumCard title="Select Attractions" iconType="attraction" />
         {loading ? (
           <ActivityIndicator size="large" color="#151b23" />
         ) : error ? (

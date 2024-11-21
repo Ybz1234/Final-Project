@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Text, ScrollView, View, ActivityIndicator, StyleSheet, } from "react-native";
+import {
+  Text,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { useUser } from "../context/UserContext";
 import { Card } from "react-native-paper";
 import SumCard from "../components/SumCard";
@@ -10,12 +16,19 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import * as Notifications from "expo-notifications";
 
 const FinalDetails = ({ route }) => {
-  const { userId, selectedHotels, selectedAttractions, date, totalPrices } = route.params;
+  const params = route.params || {};
+
+  const { userId, selectedHotels, selectedAttractions, date, totalPrices } =
+    params;
   const navigation = useNavigation();
   const { user, setUser: setGlobalUser } = useUser();
   const [flightDetails, setFlightDetails] = useState([]);
   const [airportDetails, setAirportDetails] = useState({});
   const [loading, setLoading] = useState(true);
+
+  if (!userId) {
+    navigation.replace("Main", { screen: "Home" });
+  }
 
   const UTILITY_SERVER = "https://utilityserver-kka0.onrender.com";
 
@@ -182,9 +195,16 @@ const FinalDetails = ({ route }) => {
 
       const bookingDetails = {
         flights: flightDetails.map((flight) => {
-          const from = `${flight.departureCity} (${airportDetails[flight.departureCity]?.name || "N/A"})`;
-          const to = `${flight.arrivalCity} (${airportDetails[flight.arrivalCity]?.name || "N/A"})`;
-          const departureTime = `${String(flight.flightHour).padStart(2, "0")}:${String(flight.flightMinute).padStart(2, "0")}`;
+          const from = `${flight.departureCity} (${
+            airportDetails[flight.departureCity]?.name || "N/A"
+          })`;
+          const to = `${flight.arrivalCity} (${
+            airportDetails[flight.arrivalCity]?.name || "N/A"
+          })`;
+          const departureTime = `${String(flight.flightHour).padStart(
+            2,
+            "0"
+          )}:${String(flight.flightMinute).padStart(2, "0")}`;
           const date = new Date(flight.flightDate).toLocaleDateString();
 
           return { from, to, departureTime, date };
@@ -194,7 +214,9 @@ const FinalDetails = ({ route }) => {
             city,
             hotels: hotels.map((hotel) => {
               const totalStayFee =
-                totalPrices[city]?.find((hotelPrice) => hotelPrice.hotelId === hotel._id)?.totalPrice || "Price not available";
+                totalPrices[city]?.find(
+                  (hotelPrice) => hotelPrice.hotelId === hotel._id
+                )?.totalPrice || "Price not available";
 
               return {
                 name: hotel.name,
@@ -217,13 +239,16 @@ const FinalDetails = ({ route }) => {
         booking_details: bookingDetails,
       };
 
-      const response = await fetch(`${UTILITY_SERVER}/routes/send_booking_email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        `${UTILITY_SERVER}/routes/send_booking_email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       if (!response.ok) {
         const errorResponse = await response.text();
@@ -238,7 +263,9 @@ const FinalDetails = ({ route }) => {
       handleProceed();
     } catch (error) {
       console.error("Error occurred in sendFinalDetails:", error);
-      alert("An error occurred while sending details. Check the console for more information.");
+      alert(
+        "An error occurred while sending details. Check the console for more information."
+      );
     }
   };
 
@@ -262,7 +289,7 @@ const FinalDetails = ({ route }) => {
   };
 
   const handleProceed = () => {
-    navigation.navigate("Confirmation", {userId});
+    navigation.navigate("Confirmation", { userId });
   };
 
   return (
